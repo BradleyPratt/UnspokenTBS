@@ -16,11 +16,12 @@ public class HealthBar : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
     {
-        if(Input.GetMouseButtonDown(0))
-        {
-            TakeDamage();
+        if(GameObject.FindWithTag("HealthBar1")) {
+            if (Input.GetMouseButtonDown(1)) {
+                TakeDamage();
+            }
         }
-	}
+    }
 
     void TakeDamage()
     {
