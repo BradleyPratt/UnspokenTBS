@@ -50,6 +50,8 @@
      <Compile Include="Assets\Health Bar\HealthBar.cs" />
      <Compile Include="Assets\Health Bar\HealthBar2.cs" />
      <Compile Include="Assets\Health Bar\TurnManager.cs" />
+     <Compile Include="Assets\Turn Counter\AIPlayer.cs" />
+     <Compile Include="Assets\Turn Counter\Turn Counter.cs" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>
