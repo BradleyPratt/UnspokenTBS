@@ -4,6 +4,8 @@ using System.Collections;
 public class TurnManager : MonoBehaviour
 {
     public int turnStatus = 0;
+    public int turnCount = 1;
+
 
     // Use this for initialization
     void Start()
@@ -44,5 +46,14 @@ public class TurnManager : MonoBehaviour
         {
             turnStatus = 0;
         }
+
+        turnCount++;
+
     }
+
+    public int GetTurnCount()
+    {
+        return turnCount;
+    }
+
 }
