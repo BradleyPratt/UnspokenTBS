@@ -48,8 +48,15 @@
   <ItemGroup>
      <Compile Include="Assets\Camera\CameraScript.cs" />
      <Compile Include="Assets\Health Bar\HealthBar.cs" />
+<<<<<<< HEAD
      <Compile Include="Assets\Health Bar\TakeDamage.cs" />
      <Compile Include="Assets\Health Bar\TurnManager.cs" />
+=======
+     <Compile Include="Assets\Health Bar\HealthBar2.cs" />
+     <Compile Include="Assets\Health Bar\TurnManager.cs" />
+     <Compile Include="Assets\Main Menu\Game_Start.cs" />
+     <Compile Include="Assets\Main Menu\Quit_Game.cs" />
+>>>>>>> master
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>
