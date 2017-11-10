@@ -15,11 +15,9 @@ public class HealthBar : MonoBehaviour {
     // Use this for initialization
     void Start ()
     {
-        Debug.Log( "started again" );
         currentHp = totalHp;
 
         BuildUnits();
-        Debug.Log( "done done done" );
     }
 	
 	// Update is called once per frame
@@ -27,6 +25,11 @@ public class HealthBar : MonoBehaviour {
     {
         if (currentHp<=0) {
             Destroy( gameObject );
+        }
+
+        if (healthSlider != null)
+        {
+            healthSlider.transform.position = new Vector3(gameObject.transform.position.x-1f, gameObject.transform.position.y-0.5f, gameObject.transform.position.z);
         }
     }
 
@@ -37,12 +40,22 @@ public class HealthBar : MonoBehaviour {
     }
 
     private void BuildUnits() {
+<<<<<<< HEAD
         units=(GameObject.FindGameObjectsWithTag( "Unit"));
         for (int i = numOfUnits; i<units.Length; i++) {
             numOfUnits++;
             GameObject unit = units[i];
 
             Vector3 position = new Vector3(unit.transform.position.x, unit.transform.position.y+0.75f, unit.transform.position.z);
+=======
+        units=GameObject.FindGameObjectsWithTag( "Unit" );
+        for (int i = numOfUnits; i<units.Length; i++) {
+            numOfUnits++;
+            GameObject unit;
+            unit=units[i];
+
+            Vector3 position = new Vector3(unit.transform.position.x-1f, unit.transform.position.y, unit.transform.position.z);
+>>>>>>> master
 
             InstantiateHealthBar(unit, position);
         }
