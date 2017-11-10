@@ -80,6 +80,7 @@
   <ItemGroup>
     <Compile Include="Assets\Camera\CameraScript.cs" />
     <Compile Include="Assets\Health Bar\HealthBar.cs" />
+    <Compile Include="Assets\Health Bar\HealthSlider.cs" />
     <Compile Include="Assets\Health Bar\TakeDamage.cs" />
     <Compile Include="Assets\Health Bar\TurnManager.cs" />
     <Compile Include="Assets\Main Menu\Game_Start.cs" />

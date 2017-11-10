@@ -55,6 +55,8 @@ public class HealthBar : MonoBehaviour {
     private void InstantiateHealthBar( GameObject unit, Vector3 position ) {
         Slider gameObjHealthBar = Instantiate( healthBar, position, Camera.main.transform.rotation ) as Slider;
         unit.AddComponent<HealthBar>().healthSlider=gameObjHealthBar;
+        unit.GetComponent<HealthBar>().healthBar=healthBar;
+        gameObjHealthBar.GetComponent<HealthSlider>().slider = gameObjHealthBar;
         Canvas canvas = FindObjectOfType<Canvas>();
         gameObjHealthBar.transform.SetParent( canvas.transform );
     }

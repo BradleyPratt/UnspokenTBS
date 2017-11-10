@@ -20,14 +20,11 @@ public class TakeDamage : MonoBehaviour
         if (Input.GetMouseButtonDown( 0 )) { // if left button pressed...
             Ray ray = Camera.main.ScreenPointToRay( Input.mousePosition );
             RaycastHit hit;
-            Debug.Log( "he shoots" );
 
             if (Physics.Raycast( ray, out hit )) {
                 HealthBar healthBar = hit.collider.GetComponent<HealthBar>();
-                Debug.Log( "he scores" );
                 if (hit.transform.gameObject.tag=="Unit") {
                     healthBar.TakeDamage( damage );
-                    Debug.Log( "he wins" );
                 }
             }
         }
