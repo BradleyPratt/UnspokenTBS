@@ -40,24 +40,15 @@ public class HealthBar : MonoBehaviour {
     }
 
     private void BuildUnits() {
-<<<<<<< HEAD
-        units=(GameObject.FindGameObjectsWithTag( "Unit"));
-        for (int i = numOfUnits; i<units.Length; i++) {
-            numOfUnits++;
-            GameObject unit = units[i];
-
-            Vector3 position = new Vector3(unit.transform.position.x, unit.transform.position.y+0.75f, unit.transform.position.z);
-=======
         units=GameObject.FindGameObjectsWithTag( "Unit" );
         for (int i = numOfUnits; i<units.Length; i++) {
             numOfUnits++;
             GameObject unit;
             unit=units[i];
 
-            Vector3 position = new Vector3(unit.transform.position.x-1f, unit.transform.position.y, unit.transform.position.z);
->>>>>>> master
+            Vector3 position = new Vector3( unit.transform.position.x-1f, unit.transform.position.y, unit.transform.position.z );
 
-            InstantiateHealthBar(unit, position);
+            InstantiateHealthBar( unit, position );
         }
     }
 
