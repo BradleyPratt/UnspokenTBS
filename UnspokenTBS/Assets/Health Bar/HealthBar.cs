@@ -7,7 +7,7 @@ public class HealthBar : MonoBehaviour {
 
     public float totalHp = 100;
     public float currentHp; 
-    public Slider healthSlider; //HealthSlider, needed for creating Health Sliders
+    Slider healthSlider; //HealthSlider, needed for creating Health Sliders
     GameObject[] units; 
     public Slider healthBar; //Only needed for instantiation
     static int numOfUnits;
@@ -46,9 +46,9 @@ public class HealthBar : MonoBehaviour {
             GameObject unit;
             unit=units[i];
 
-            Vector3 position = new Vector3(unit.transform.position.x-1f, unit.transform.position.y, unit.transform.position.z);
+            Vector3 position = new Vector3( unit.transform.position.x-1f, unit.transform.position.y, unit.transform.position.z );
 
-            InstantiateHealthBar(unit, position);
+            InstantiateHealthBar( unit, position );
         }
     }
 
