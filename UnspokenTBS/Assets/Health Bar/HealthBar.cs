@@ -15,20 +15,21 @@ public class HealthBar : MonoBehaviour {
     // Use this for initialization
     void Start ()
     {
-        Debug.Log( "started again" );
         currentHp = totalHp;
 
         BuildUnits();
-        Debug.Log( "done done done" );
     }
 	
 	// Update is called once per frame
 	void Update ()
     {
-        /* var wantedPos = Camera.main.WorldToScreenPoint( position );
-         transform.position=wantedPos;*/
-         if (currentHp<=0) {
+        if (currentHp<=0) {
             Destroy( gameObject );
+        }
+
+        if (healthSlider != null)
+        {
+            healthSlider.transform.position = new Vector3(gameObject.transform.position.x-1f, gameObject.transform.position.y-0.5f, gameObject.transform.position.z);
         }
     }
 
@@ -40,20 +41,14 @@ public class HealthBar : MonoBehaviour {
 
     private void BuildUnits() {
         units=GameObject.FindGameObjectsWithTag( "Unit" );
-        Debug.Log( "num of units= " + numOfUnits );
         for (int i = numOfUnits; i<units.Length; i++) {
             numOfUnits++;
             GameObject unit;
             unit=units[i];
-            Debug.Log( "i= " + i );
-            Debug.Log("units length= " + units.Length );
 
-            Vector3 position = new Vector3(unit.transform.position.x, unit.transform.position.y+0.75f, unit.transform.position.z);
-
-            Debug.Log( "Player Number "+i+" is named "+units[i].name );
+            Vector3 position = new Vector3(unit.transform.position.x-1f, unit.transform.position.y, unit.transform.position.z);
 
             InstantiateHealthBar(unit, position);
-            Debug.Log( "done done" );
         }
     }
 
@@ -62,7 +57,5 @@ public class HealthBar : MonoBehaviour {
         unit.AddComponent<HealthBar>().healthSlider=gameObjHealthBar;
         Canvas canvas = FindObjectOfType<Canvas>();
         gameObjHealthBar.transform.SetParent( canvas.transform );
-
-        Debug.Log( "Done" );
     }
 }
