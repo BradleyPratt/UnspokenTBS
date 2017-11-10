@@ -391,7 +391,7 @@ MonoBehaviour:
   m_ListAreaState:
     m_SelectedInstanceIDs: 
     m_LastClickedInstanceID: 0
-    m_HadKeyboardFocusLastEvent: 0
+    m_HadKeyboardFocusLastEvent: 1
     m_ExpandedInstanceIDs: c623000018250000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
@@ -445,7 +445,7 @@ MonoBehaviour:
     y: 92
     width: 387
     height: 926
-  m_ScrollPosition: {x: 0, y: 0}
+  m_ScrollPosition: {x: 0, y: 33.95508}
   m_InspectorMode: 0
   m_PreviewResizer:
     m_CachedPref: 160
@@ -480,23 +480,23 @@ MonoBehaviour:
     height: 552
   m_TreeViewState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: 
+    m_SelectedIDs: 18250000
     m_LastClickedID: 0
-    m_ExpandedIDs: c61fffff6c2dffff7439ffff2046fffffc4bfffff662ffff9c66ffffca76ffff7285fffffce7ffffe4fbffff0000000066250000
+    m_ExpandedIDs: 88e1ffffe4fbffff0000000064250000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
-      m_Name: Cube
-      m_OriginalName: Cube
+      m_Name: 
+      m_OriginalName: 
       m_EditFieldRect:
         serializedVersion: 2
         x: 0
         y: 0
         width: 0
         height: 0
-      m_UserData: 9560
+      m_UserData: 0
       m_IsWaitingForDelay: 0
       m_IsRenaming: 0
-      m_OriginalEventType: 0
+      m_OriginalEventType: 11
       m_IsRenamingFilename: 0
       m_ClientGUIView: {fileID: 4}
     m_SearchString: 
@@ -564,11 +564,11 @@ MonoBehaviour:
   m_Rotation:
     m_Target: {x: -0.020693835, y: -0.2385232, z: 0.005083739, w: -0.9709031}
     speed: 2
-    m_Value: {x: -0.020693833, y: -0.23852317, z: 0.0050837384, w: -0.970903}
+    m_Value: {x: -0.020693835, y: -0.2385232, z: 0.005083739, w: -0.9709031}
   m_Size:
-    m_Target: 4.0578837
+    m_Target: 6.110757
     speed: 2
-    m_Value: 4.0578837
+    m_Value: 6.110757
   m_Ortho:
     m_Target: 0
     speed: 2
