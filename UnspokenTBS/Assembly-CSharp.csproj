@@ -52,6 +52,8 @@
      <Compile Include="Assets\Health Bar\TurnManager.cs" />
      <Compile Include="Assets\Main Menu\Game_Start.cs" />
      <Compile Include="Assets\Main Menu\Quit_Game.cs" />
+     <Compile Include="Assets\Switch Turns\TurnManagerTwo.cs" />
+     <Compile Include="Assets\Switch Turns\cube.cs" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>

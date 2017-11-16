@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class TurnManager : MonoBehaviour
+public class TurnManagerTwo : MonoBehaviour
 {
     public int turnStatus = 0;
 
@@ -19,7 +19,7 @@ public class TurnManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.O))   
         {
-            if (Cube.GetComponent<BoxCollider>().enabled == true)   
+            if (Cube.GetComponent<cube>().movement)   
             {
                 Cube.GetComponent<Rigidbody>().isKinematic= true;
                 Cube2.GetComponent<Rigidbody>().isKinematic = false;
