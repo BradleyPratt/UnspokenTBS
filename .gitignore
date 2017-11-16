@@ -73,3 +73,6 @@ Intermediate/*
 
 # Cache files for the editor to use
 DerivedDataCache/*
+*.dwlt
+UnspokenTBS/Library/assetDatabase3
+UnspokenTBS/Library/metadata/00/00000000000000002000000000000000
