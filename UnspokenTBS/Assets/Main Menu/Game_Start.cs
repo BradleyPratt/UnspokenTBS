@@ -16,7 +16,7 @@ public class Game_Start : MonoBehaviour {
     void TaskOnClick()
     {
         Debug.Log("It Works");
-        LoadByIndex(0);
+        LoadByIndex(1);
     }
 
     public void LoadByIndex(int sceneIndex)

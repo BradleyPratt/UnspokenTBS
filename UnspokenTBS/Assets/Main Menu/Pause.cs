@@ -14,7 +14,7 @@ public class Pause : MonoBehaviour {
 		{ 
 			if (instance == null)
 			{
-				instance = GameObject.FindObjectOfType<Pause>()
+                instance = GameObject.FindObjectOfType<Pause>();
 			}
 
 			return Pause.instance;
@@ -40,5 +40,7 @@ public class Pause : MonoBehaviour {
 	public void PauseGame()
 	{
 		paused = !paused;
-	}
+        Debug.Log("it works");
+    }
+
 }
