@@ -1,7 +1,7 @@
 # =============== #
 # Unity generated #
 # =============== #
-[Tt]emp/*
+[Tt]emp/
 [Oo]bj/
 [Bb]uild
 /[Bb]uilds/
@@ -46,20 +46,12 @@ Corridor/Library/ShaderCache/
 Corridor/Library/metadata/
 *.csproj
 *.meta
-UnspokenUnity/Library/assetDatabase3
-UnspokenUnity/Library/CurrentLayout.dwlt
-UnspokenUnity/Library/metadata/00/00000000000000002000000000000000
-UnspokenUnity/Library/metadata/00/00000000000000003000000000000000
-UnspokenUnity/Library/metadata/00/00000000000000004000000000000000
-UnspokenUnity/Library/metadata/00/00000000000000004100000000000000
-UnspokenUnity/Library/metadata/00/00000000000000005000000000000000
-UnspokenUnity/Library/metadata/00/00000000000000005100000000000000
-*.info
-UnspokenUnity/Library/metadata/00/00000000000000009000000000000000
-UnspokenUnity/Library/metadata/00/0000000000000000a000000000000000
-UnspokenUnity/Library/metadata/00/0000000000000000a100000000000000
-UnspokenUnity/Library/metadata/00/0000000000000000b000000000000000
-UnspokenUnity/Library/metadata/00/0000000000000000c000000000000000
+
+UnspokenUnity/[Ll]ibrary/
+UnspokenUnity/[Tt]emp/
+
 *.mdb
 *.bin
 *.log
+*.sln
+*.dll

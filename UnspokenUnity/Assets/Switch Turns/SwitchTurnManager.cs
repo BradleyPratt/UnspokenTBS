@@ -7,6 +7,7 @@ public class SwitchTurnManager : MonoBehaviour
     int units;
     public int currentId = 1;
 
+    //Switches player
     public void switchID()
     {
         units = cube.numOfUnits;
