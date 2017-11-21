@@ -1,4 +1,0 @@
-sceneSetups:
-- path: Assets/Health Bar/End Turn Button and Health.unity
-  isLoaded: 1
-  isActive: 1

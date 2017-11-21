@@ -23,6 +23,8 @@ public class HealthBar : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
     {
+
+        //BuildUnits();
         if (currentHp<=0) {
             Destroy( gameObject );
         }
