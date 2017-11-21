@@ -8,7 +8,7 @@ public class UnitMovement : MonoBehaviour
     bool movingUnit = false;
 
     // Has the unit been selected by the turn counter? i.e. is it this unit's turn
-    bool unitSelected = true;
+    bool unitSelected = false;
 
     // Has the unit moved yet?
     bool hasMoved = false;
@@ -33,10 +33,15 @@ public class UnitMovement : MonoBehaviour
 	[SerializeField]
 	float attackStrength;
 
+    [SerializeField]
+    GameObject moveRangeProjector;
+
+    private GameObject currentProjector;
     // Use this for initialization
     void Start()
     {
-
+        // todo: remove when we have turn manager
+        SetUnitTurn(true);
     }
 
     // Update is called once per frame
@@ -50,7 +55,7 @@ public class UnitMovement : MonoBehaviour
                 Ray ray = rayCamera.ScreenPointToRay(Input.mousePosition);
                 Physics.Raycast(ray.origin, ray.direction, out hit);
                 newPosition = ray.origin + ray.direction * hit.distance;
-                if ((Vector3.Distance(newPosition, transform.position) <= moveRangeLimit) && (hit.collider.CompareTag("Terrain")))
+                if ((Vector3.Distance(newPosition, new Vector3 (transform.position.x, transform.position.y - this.GetComponent<MeshFilter>().mesh.bounds.extents.y, transform.position.z)) <= moveRangeLimit) && (hit.collider.CompareTag("Terrain")))
                 {
                     //transform.position = Vector3.MoveTowards(transform.position, new Vector3 (newPosition.x, newPosition.y+this.GetComponent<MeshFilter>().mesh.bounds.extents.y, newPosition.z), Time.deltaTime);
                     hasMoved = true;
@@ -104,6 +109,9 @@ public class UnitMovement : MonoBehaviour
         if (turnStatus)
         {
             // todo add projecter here to display range arround the unit with a circle
+            currentProjector = Instantiate(moveRangeProjector);
+            currentProjector.GetComponent<Projector>().orthographicSize = moveRangeLimit;
+            currentProjector.transform.position = this.transform.position;
             hasMoved = false;
         }
         unitSelected = turnStatus;
