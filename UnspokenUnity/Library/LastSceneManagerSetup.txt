@@ -1,0 +1,4 @@
+sceneSetups:
+- path: Assets/Switch Turns/Switch Turn.unity
+  isLoaded: 1
+  isActive: 1
