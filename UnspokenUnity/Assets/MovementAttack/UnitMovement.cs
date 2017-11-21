@@ -87,7 +87,14 @@ public class UnitMovement : MonoBehaviour
 
     void FixedUpdate() {
         if ((movingUnit) && !(transform.position == newPosition)){
-            transform.position = Vector3.MoveTowards(transform.position, new Vector3(newPosition.x, newPosition.y + this.GetComponent<MeshFilter>().mesh.bounds.extents.y, newPosition.z), Time.deltaTime);
+            if (!(transform.position == newPosition))
+            {
+                transform.position = Vector3.MoveTowards(transform.position, new Vector3(newPosition.x, newPosition.y + this.GetComponent<MeshFilter>().mesh.bounds.extents.y, newPosition.z), Time.deltaTime);
+            }
+            else
+            {
+                movingUnit = false;
+            }
         }
     }
 
