@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class TurnManagerTwo : MonoBehaviour
+public class OLDTurnManagerTwo : MonoBehaviour
 {
     public int turnStatus = 0;
 
