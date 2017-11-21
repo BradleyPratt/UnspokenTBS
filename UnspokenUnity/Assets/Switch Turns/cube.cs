@@ -15,8 +15,8 @@ public class cube : MonoBehaviour
     void Start()
     {
         moveSpeed = 1f;
-        units = GameObject.FindGameObjectsWithTag("Unit");
-        BuildUnits();
+        /*units = GameObject.FindGameObjectsWithTag("Unit");
+        BuildUnits();*/
     }
 
     // Update is called once per frame
@@ -60,20 +60,3 @@ public class cube : MonoBehaviour
     }
 
 }
-
-/*public class cube : MonoBehaviour {
-
-    public float moveSpeed = 1;
-
-	// Use this for initialization
-	void Start ()
-    {
-        moveSpeed = 1f;
-    }
-	
-	// Update is called once per frame
-	void Update ()
-    {
-        transform.Translate(moveSpeed*Input.GetAxis("Horizontal")*Time.deltaTime,0f, moveSpeed*Input.GetAxis("Vertical") * Time.deltaTime);
-	}
-}*/
