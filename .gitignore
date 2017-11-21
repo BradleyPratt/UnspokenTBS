@@ -45,7 +45,6 @@ ehthumbs.db
 Corridor/Library/ShaderCache/
 Corridor/Library/metadata/
 *.csproj
-*.meta
 
 UnspokenUnity/[Ll]ibrary/
 UnspokenUnity/[Tt]emp/
