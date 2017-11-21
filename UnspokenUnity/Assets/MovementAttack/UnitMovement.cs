@@ -6,7 +6,7 @@ public class UnitMovement : MonoBehaviour
 {
 
     // Has the unit been selected by the turn counter? i.e. is it this unit's turn
-    bool unitSelected = false;
+    bool unitSelected = true;
 
     // Has the unit moved yet?
     bool hasMoved = false;
@@ -27,6 +27,10 @@ public class UnitMovement : MonoBehaviour
     [SerializeField]
     float attackRadius;
 
+	// The attack strength
+	[SerializeField]
+	float attackStrength;
+
     // Use this for initialization
     void Start()
     {
@@ -46,7 +50,7 @@ public class UnitMovement : MonoBehaviour
                 Vector3 newPosition = ray.origin + ray.direction * hit.distance;
                 if ((Vector3.Distance(newPosition, transform.position) <= moveRangeLimit) && (hit.collider.CompareTag("Terrain")))
                 {
-                    transform.position = newPosition;
+                    transform.position = new Vector3 (newPosition.x, newPosition.y+this.GetComponent<MeshFilter>().mesh.bounds.extents.y, newPosition.z);
                     hasMoved = true;
                 }
             }
@@ -70,7 +74,7 @@ public class UnitMovement : MonoBehaviour
                         // check if colliders are units
                         if (tempCollider.CompareTag("Unit"))
                         {
-                            //todo apply damage
+							tempCollider.gameObject.GetComponent<HealthBar>().TakeDamage(attackStrength);
                         }
                     }
                 }
