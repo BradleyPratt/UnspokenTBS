@@ -35,6 +35,8 @@ public class UnitMovement : MonoBehaviour
 
     [SerializeField]
     GameObject moveRangeProjector;
+    [SerializeField]
+    GameObject attackRangeProjector;
 
     private GameObject currentProjector;
     // Use this for initialization
@@ -58,14 +60,14 @@ public class UnitMovement : MonoBehaviour
                 if ((Vector3.Distance(newPosition, new Vector3 (transform.position.x, transform.position.y - this.GetComponent<MeshFilter>().mesh.bounds.extents.y, transform.position.z)) <= moveRangeLimit) && (hit.collider.CompareTag("Terrain")))
                 {
                     //transform.position = Vector3.MoveTowards(transform.position, new Vector3 (newPosition.x, newPosition.y+this.GetComponent<MeshFilter>().mesh.bounds.extents.y, newPosition.z), Time.deltaTime);
-                    hasMoved = true;
                     movingUnit = true;
                 }
             }
         }
         else if (unitSelected && hasMoved)
         {
-            // todo make another projecter which shows attack
+            // todo make attck projector follow cursor.
+            PositionAttackProjector();
             if (Input.GetMouseButtonDown(0))
             {
                 RaycastHit hit;
@@ -91,14 +93,20 @@ public class UnitMovement : MonoBehaviour
     }
 
     void FixedUpdate() {
-        if ((movingUnit) && !(transform.position == newPosition)){
-            if (!(transform.position == newPosition))
+        if ((movingUnit)){
+            if (!(transform.position == new Vector3(newPosition.x, newPosition.y + this.GetComponent<MeshFilter>().mesh.bounds.extents.y, newPosition.z)))
             {
+                Debug.Log("Turducken");
+                Debug.Log(Vector3.Distance(transform.position, new Vector3(newPosition.x, newPosition.y + this.GetComponent<MeshFilter>().mesh.bounds.extents.y, newPosition.z)));
                 transform.position = Vector3.MoveTowards(transform.position, new Vector3(newPosition.x, newPosition.y + this.GetComponent<MeshFilter>().mesh.bounds.extents.y, newPosition.z), Time.deltaTime);
             }
             else
             {
+                Debug.Log("Amaganae");
                 movingUnit = false;
+                hasMoved = true;
+                currentProjector = Instantiate(attackRangeProjector);
+                PositionAttackProjector();
             }
         }
     }
@@ -141,5 +149,20 @@ public class UnitMovement : MonoBehaviour
     public float GetMovementRange()
     {
         return moveRangeLimit;
+    }
+
+    private void PositionAttackProjector()
+    {
+        RaycastHit hit;
+        Ray ray = rayCamera.ScreenPointToRay(Input.mousePosition);
+        Physics.Raycast(ray.origin, ray.direction, out hit);
+        newPosition = ray.origin + ray.direction * hit.distance;
+        Debug.Log("Octagon");
+//        rayCamera.ScreenToWorldPoint(Input.mousePosition);
+        currentProjector.transform.position = new Vector3(newPosition.x, this.transform.position.y, newPosition.z);
+        Debug.Log(new Vector3(rayCamera.ScreenToWorldPoint(Input.mousePosition).x, rayCamera.ScreenToWorldPoint(Input.mousePosition).y, this.transform.position.z));
+        Debug.Log(Input.mousePosition);
+        Debug.Log(rayCamera.ViewportToWorldPoint(Input.mousePosition));
+        Debug.Log(newPosition);
     }
 }
