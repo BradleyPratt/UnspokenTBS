@@ -15,9 +15,10 @@ public class Pause : MonoBehaviour {
 			if (instance == null)
 			{
                 instance = GameObject.FindObjectOfType<Pause>();
-			}
+                Debug.Log("it works");
+            }
 
-			return Pause.instance;
+            return Pause.instance;
 		}
 	}
 
@@ -30,7 +31,7 @@ public class Pause : MonoBehaviour {
 	// Update is called once per frame
 	void Update () 
 	{
-		if (Input.GetKeyDown (KeyCode.P)) 
+		if (Input.GetKeyDown (KeyCode.Escape)) 
 		{
 			PauseGame ();
 		}
@@ -40,7 +41,6 @@ public class Pause : MonoBehaviour {
 	public void PauseGame()
 	{
 		paused = !paused;
-        Debug.Log("it works");
     }
 
 }
