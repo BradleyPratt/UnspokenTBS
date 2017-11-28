@@ -96,15 +96,14 @@ public class UnitMovement : MonoBehaviour
         if ((movingUnit)){
             if (!(transform.position == new Vector3(newPosition.x, newPosition.y + this.GetComponent<MeshFilter>().mesh.bounds.extents.y, newPosition.z)))
             {
-                Debug.Log("Turducken");
                 Debug.Log(Vector3.Distance(transform.position, new Vector3(newPosition.x, newPosition.y + this.GetComponent<MeshFilter>().mesh.bounds.extents.y, newPosition.z)));
                 transform.position = Vector3.MoveTowards(transform.position, new Vector3(newPosition.x, newPosition.y + this.GetComponent<MeshFilter>().mesh.bounds.extents.y, newPosition.z), Time.deltaTime);
             }
             else
             {
-                Debug.Log("Amaganae");
                 movingUnit = false;
                 hasMoved = true;
+				Destroy(currentProjector.gameObject);
                 currentProjector = Instantiate(attackRangeProjector);
                 PositionAttackProjector();
             }
@@ -155,7 +154,9 @@ public class UnitMovement : MonoBehaviour
     {
         RaycastHit hit;
         Ray ray = rayCamera.ScreenPointToRay(Input.mousePosition);
-        Physics.Raycast(ray.origin, ray.direction, out hit);
+		int layer = 8;
+		int layermask = 1 << layer;
+		Physics.Raycast(ray.origin, ray.direction, out hit, Mathf.Infinity, layermask);
         newPosition = ray.origin + ray.direction * hit.distance;
         Debug.Log("Octagon");
 //        rayCamera.ScreenToWorldPoint(Input.mousePosition);
