@@ -23,7 +23,6 @@ public class HealthBar : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
     {
-
         //BuildUnits();
         if (currentHp<=0) {
             Destroy( gameObject );
@@ -38,11 +37,12 @@ public class HealthBar : MonoBehaviour {
     public void TakeDamage(float damage)
     {
         currentHp-=damage;
-        healthSlider.value=currentHp;
+        healthSlider.value = currentHp;
     }
 
     private void BuildUnits() {
         units=GameObject.FindGameObjectsWithTag( "Unit" );
+
         for (int i = numOfUnits; i<units.Length; i++) {
             numOfUnits++;
             GameObject unit;
