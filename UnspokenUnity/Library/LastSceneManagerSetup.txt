@@ -1,8 +1,1 @@
-sceneSetups:
-<<<<<<< HEAD
-- path: Assets/Main Menu/Main Menu Test.unity
-=======
-- path: Assets/Main Menu/Pause Test Scene.unity
->>>>>>> master
-  isLoaded: 1
-  isActive: 1
+sceneSetups: []
