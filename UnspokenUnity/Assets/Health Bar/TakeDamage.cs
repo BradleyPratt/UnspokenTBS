@@ -23,8 +23,13 @@ public class TakeDamage : MonoBehaviour
 
             if (Physics.Raycast( ray, out hit )) {
                 HealthBar healthBar = hit.collider.GetComponent<HealthBar>();
+                WatchTowerHealth towerHealth = hit.collider.GetComponent<WatchTowerHealth>();
                 if (hit.transform.gameObject.tag=="Unit") {
                     healthBar.TakeDamage( damage );
+                }
+                if (hit.transform.gameObject.tag=="WatchTower")
+                {
+                    towerHealth.WatchTowerTakeDamage(50f);
                 }
             }
         }

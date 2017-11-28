@@ -1,8 +1,4 @@
 sceneSetups:
-<<<<<<< HEAD
-- path: Assets/Main Menu/Main Menu Test.unity
-=======
-- path: Assets/Main Menu/Pause Test Scene.unity
->>>>>>> master
+- path: Assets/Health Bar/End Turn Button and Health.unity
   isLoaded: 1
   isActive: 1
