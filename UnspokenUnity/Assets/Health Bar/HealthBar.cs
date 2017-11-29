@@ -24,7 +24,14 @@ public class HealthBar : MonoBehaviour {
 	void Update ()
     {
         //BuildUnits();
+        if (numOfUnits < GameObject.FindGameObjectsWithTag("Unit").Length)
+        {
+            BuildUnits();
+            Debug.Log("Ran buildunits()");
+        }
         if (currentHp<=0) {
+            gameObject.tag = ("Untagged");
+            numOfUnits--;
             Destroy( gameObject );
         }
 

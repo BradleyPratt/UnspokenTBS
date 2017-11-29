@@ -8,7 +8,6 @@ using UnityEngine;
 public class TakeDamage : MonoBehaviour
 {
     public float damage = 1;
-    //HealthBar healthBar;
 
 	// Use this for initialization
 	void Start () {
@@ -17,7 +16,7 @@ public class TakeDamage : MonoBehaviour
 	
 	// Update is called once per frame
 	void Update () {
-        if (Input.GetMouseButtonDown( 0 )) { // if left button pressed...
+        if (Input.GetMouseButtonDown( 0 )) { 
             Ray ray = Camera.main.ScreenPointToRay( Input.mousePosition );
             RaycastHit hit;
 
@@ -33,13 +32,5 @@ public class TakeDamage : MonoBehaviour
                 }
             }
         }
-
-        /*if (GameObject.FindWithTag("Unit"))
-        {
-            if (Input.GetMouseButtonDown(1))
-            {
-                healthBar.TakeDamage(damage);
-            }
-        }*/
     }
 }
