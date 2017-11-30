@@ -4,15 +4,25 @@ using UnityEngine;
 
 public class UnitMovement : MonoBehaviour
 {
-    Vector3 newPosition;
+	enum UnitStatus {
+		selected,
+		moving,
+		moved,
+		idle
+	};
+
+
+	bool test = true;
+	Vector3 newPosition;
     bool movingUnit = false;
+	bool rotatingUnit = false;
 
     // Has the unit been selected by the turn counter? i.e. is it this unit's turn
     bool unitSelected = false;
 
     // Has the unit moved yet?
     bool hasMoved = false;
-
+	float yAngle;
     // Should be set to be the camera used when the player moves units
     [SerializeField]
     Camera rayCamera;
@@ -37,19 +47,20 @@ public class UnitMovement : MonoBehaviour
     GameObject moveRangeProjector;
     [SerializeField]
     GameObject attackRangeProjector;
-
+	Vector3 testingvector;
     private GameObject currentProjector;
     // Use this for initialization
     void Start()
     {
         // todo: remove when we have turn manager
         SetUnitTurn(true);
+		testingvector = transform.position + transform.forward * 8;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (unitSelected && !hasMoved)
+        if (unitSelected && !hasMoved && !movingUnit && !rotatingUnit)
         {
             if (Input.GetMouseButtonDown(0))
             {
@@ -60,8 +71,8 @@ public class UnitMovement : MonoBehaviour
                 if ((Vector3.Distance(newPosition, new Vector3 (transform.position.x, transform.position.y - this.GetComponent<MeshFilter>().mesh.bounds.extents.y, transform.position.z)) <= moveRangeLimit) && (hit.collider.CompareTag("Terrain")))
                 {
                     //transform.position = Vector3.MoveTowards(transform.position, new Vector3 (newPosition.x, newPosition.y+this.GetComponent<MeshFilter>().mesh.bounds.extents.y, newPosition.z), Time.deltaTime);
-                    movingUnit = true;
-                }
+                    rotatingUnit = true;
+				}
             }
         }
         else if (unitSelected && hasMoved)
@@ -87,13 +98,28 @@ public class UnitMovement : MonoBehaviour
 							tempCollider.gameObject.GetComponent<HealthBar>().TakeDamage(attackStrength);
                         }
                     }
+
+					SetUnitTurn(false);
                 }
             }
         }
     }
 
-    void FixedUpdate() {
-        if ((movingUnit)){
+    void FixedUpdate()
+	{
+		Debug.DrawLine(transform.position, newPosition);
+		Debug.DrawLine(transform.position, transform.position + (transform.forward * 8), Color.magenta);
+		Debug.DrawLine(transform.position, testingvector, Color.black);
+
+		if (rotatingUnit) {
+			Vector3 angleTarget = newPosition;
+			angleTarget.x = angleTarget.x - transform.position.x;
+			angleTarget.z = angleTarget.z - transform.position.z;
+			float angle = Mathf.Atan2(angleTarget.z, angleTarget.x) * Mathf.Rad2Deg;
+			transform.rotation = Quaternion.Euler(new Vector3(0, -angle+90, 0));
+			rotatingUnit = false;
+			movingUnit = true;
+		} else if (movingUnit){
             if (!(transform.position == new Vector3(newPosition.x, newPosition.y + this.GetComponent<MeshFilter>().mesh.bounds.extents.y, newPosition.z)))
             {
                 Debug.Log(Vector3.Distance(transform.position, new Vector3(newPosition.x, newPosition.y + this.GetComponent<MeshFilter>().mesh.bounds.extents.y, newPosition.z)));
@@ -149,21 +175,15 @@ public class UnitMovement : MonoBehaviour
     {
         return moveRangeLimit;
     }
-
+	
     private void PositionAttackProjector()
     {
         RaycastHit hit;
         Ray ray = rayCamera.ScreenPointToRay(Input.mousePosition);
-		int layer = 8;
-		int layermask = 1 << layer;
+		int layer = 8; // Layer 8 is the terrain.
+		int layermask = 1 << layer; // Turn the int into the layermask.
 		Physics.Raycast(ray.origin, ray.direction, out hit, Mathf.Infinity, layermask);
         newPosition = ray.origin + ray.direction * hit.distance;
-        Debug.Log("Octagon");
-//        rayCamera.ScreenToWorldPoint(Input.mousePosition);
         currentProjector.transform.position = new Vector3(newPosition.x, this.transform.position.y, newPosition.z);
-        Debug.Log(new Vector3(rayCamera.ScreenToWorldPoint(Input.mousePosition).x, rayCamera.ScreenToWorldPoint(Input.mousePosition).y, this.transform.position.z));
-        Debug.Log(Input.mousePosition);
-        Debug.Log(rayCamera.ViewportToWorldPoint(Input.mousePosition));
-        Debug.Log(newPosition);
     }
 }
