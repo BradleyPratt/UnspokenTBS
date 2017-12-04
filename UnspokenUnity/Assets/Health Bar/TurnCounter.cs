@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class TurnManager : MonoBehaviour
+public class TurnCounter : MonoBehaviour
 {
     public int turnStatus = 0;
     public int turnCount = 1;

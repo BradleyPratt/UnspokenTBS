@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UnitMovement : MonoBehaviour
+public class Unit : MonoBehaviour
 {
 	enum UnitStatus {
 		selected,
@@ -11,6 +11,8 @@ public class UnitMovement : MonoBehaviour
 		idle
 	};
 
+	[SerializeField]
+	private string team;
 
 	bool test = true;
 	Vector3 newPosition;
@@ -47,14 +49,11 @@ public class UnitMovement : MonoBehaviour
     GameObject moveRangeProjector;
     [SerializeField]
     GameObject attackRangeProjector;
-	Vector3 testingvector;
+
     private GameObject currentProjector;
     // Use this for initialization
     void Start()
     {
-        // todo: remove when we have turn manager
-        SetUnitTurn(true);
-		testingvector = transform.position + transform.forward * 8;
     }
 
     // Update is called once per frame
@@ -98,8 +97,9 @@ public class UnitMovement : MonoBehaviour
 							tempCollider.gameObject.GetComponent<HealthBar>().TakeDamage(attackStrength);
                         }
                     }
-
+					Destroy(currentProjector.gameObject);
 					SetUnitTurn(false);
+					GameObject.FindGameObjectWithTag("GameManager").GetComponent<TurnManager>().SwitchUnit();
                 }
             }
         }
@@ -107,9 +107,6 @@ public class UnitMovement : MonoBehaviour
 
     void FixedUpdate()
 	{
-		Debug.DrawLine(transform.position, newPosition);
-		Debug.DrawLine(transform.position, transform.position + (transform.forward * 8), Color.magenta);
-		Debug.DrawLine(transform.position, testingvector, Color.black);
 
 		if (rotatingUnit) {
 			Vector3 angleTarget = newPosition;
@@ -131,6 +128,7 @@ public class UnitMovement : MonoBehaviour
                 hasMoved = true;
 				Destroy(currentProjector.gameObject);
                 currentProjector = Instantiate(attackRangeProjector);
+				currentProjector.GetComponent<Projector>().orthographicSize = attackRadius;
                 PositionAttackProjector();
             }
         }
@@ -140,12 +138,21 @@ public class UnitMovement : MonoBehaviour
     public void SetUnitTurn(bool turnStatus)
     {
         if (turnStatus)
-        {
-            // todo add projecter here to display range arround the unit with a circle
-            currentProjector = Instantiate(moveRangeProjector);
+        { 
+			if (moveRangeLimit <= 0)
+			{
+				currentProjector = Instantiate(attackRangeProjector);
+				currentProjector.GetComponent<Projector>().orthographicSize = attackRadius;
+				PositionAttackProjector();
+				hasMoved = true;
+			} else
+			{
+			currentProjector = Instantiate(moveRangeProjector);
             currentProjector.GetComponent<Projector>().orthographicSize = moveRangeLimit;
             currentProjector.transform.position = this.transform.position;
             hasMoved = false;
+
+			}
         }
         unitSelected = turnStatus;
     }
@@ -186,4 +193,21 @@ public class UnitMovement : MonoBehaviour
         newPosition = ray.origin + ray.direction * hit.distance;
         currentProjector.transform.position = new Vector3(newPosition.x, this.transform.position.y, newPosition.z);
     }
+
+	public string GetTeam()
+	{
+		return team;
+	}
+
+	public bool SetTeam(string newTeam)
+	{
+		if (string.Equals(newTeam, "USA") || string.Equals(newTeam, "USSR"))
+		{
+			team = newTeam;
+			return true;
+		} else
+		{
+			return false;
+		}
+	}
 }
