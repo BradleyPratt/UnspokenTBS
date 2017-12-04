@@ -91,12 +91,16 @@ public class Unit : MonoBehaviour
 
                     foreach (Collider tempCollider in colliderArray)
                     {
-                        // check if colliders are units
-                        if (tempCollider.CompareTag("Unit"))
-                        {
+						// check if colliders are units
+						if (tempCollider.CompareTag("Unit"))
+						{
 							tempCollider.gameObject.GetComponent<HealthBar>().TakeDamage(attackStrength);
-                        }
-                    }
+						}
+						if (tempCollider.CompareTag("WatchTower"))
+						{
+							tempCollider.gameObject.GetComponent<WatchTowerHealth>().WatchTowerTakeDamage(attackStrength);
+						}
+					}
 					Destroy(currentProjector.gameObject);
 					SetUnitTurn(false);
 					GameObject.FindGameObjectWithTag("GameManager").GetComponent<TurnManager>().SwitchUnit();
