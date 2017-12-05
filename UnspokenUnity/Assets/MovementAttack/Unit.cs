@@ -45,7 +45,14 @@ public class Unit : MonoBehaviour
 	[SerializeField]
 	float attackStrength;
 
-    [SerializeField]
+	[SerializeField]
+	float angleOffset = 90;
+	[SerializeField]
+	float heightOffset = 0;
+	[SerializeField]
+	float moveSpeed = 900;
+
+	[SerializeField]
     GameObject moveRangeProjector;
     [SerializeField]
     GameObject attackRangeProjector;
@@ -67,6 +74,7 @@ public class Unit : MonoBehaviour
                 Ray ray = rayCamera.ScreenPointToRay(Input.mousePosition);
                 Physics.Raycast(ray.origin, ray.direction, out hit);
                 newPosition = ray.origin + ray.direction * hit.distance;
+				Debug.Log(newPosition);
                 if ((Vector3.Distance(newPosition, new Vector3 (transform.position.x, transform.position.y - this.GetComponent<MeshFilter>().mesh.bounds.extents.y, transform.position.z)) <= moveRangeLimit) && (hit.collider.CompareTag("Terrain")))
                 {
                     //transform.position = Vector3.MoveTowards(transform.position, new Vector3 (newPosition.x, newPosition.y+this.GetComponent<MeshFilter>().mesh.bounds.extents.y, newPosition.z), Time.deltaTime);
@@ -117,14 +125,15 @@ public class Unit : MonoBehaviour
 			angleTarget.x = angleTarget.x - transform.position.x;
 			angleTarget.z = angleTarget.z - transform.position.z;
 			float angle = Mathf.Atan2(angleTarget.z, angleTarget.x) * Mathf.Rad2Deg;
-			transform.rotation = Quaternion.Euler(new Vector3(0, -angle+90, 0));
+			transform.rotation = Quaternion.Euler(new Vector3(-90, -angle+angleOffset, 0));
 			rotatingUnit = false;
 			movingUnit = true;
+			Debug.Log("Rotated?");
 		} else if (movingUnit){
-            if (!(transform.position == new Vector3(newPosition.x, newPosition.y + this.GetComponent<MeshFilter>().mesh.bounds.extents.y, newPosition.z)))
+            if (!(transform.position == new Vector3(newPosition.x, newPosition.y + this.GetComponent<MeshFilter>().mesh.bounds.extents.y + heightOffset, newPosition.z)))
             {
                 Debug.Log(Vector3.Distance(transform.position, new Vector3(newPosition.x, newPosition.y + this.GetComponent<MeshFilter>().mesh.bounds.extents.y, newPosition.z)));
-                transform.position = Vector3.MoveTowards(transform.position, new Vector3(newPosition.x, newPosition.y + this.GetComponent<MeshFilter>().mesh.bounds.extents.y, newPosition.z), Time.deltaTime);
+                transform.position = Vector3.MoveTowards(transform.position, new Vector3(newPosition.x, newPosition.y + this.GetComponent<MeshFilter>().mesh.bounds.extents.y+ heightOffset, newPosition.z), Time.deltaTime * moveSpeed);
             }
             else
             {
