@@ -4,12 +4,22 @@ using UnityEngine;
 
 public class Pause_Controller : MonoBehaviour
 {
+    public GameObject Pausemenu;
+    public GameObject optionmenu;
+    //bool isPressed = false;
 
     public Transform canvas;
+    Option optionController;
+
+
+    void Start()
+    {
+        optionController = GameObject.Find("Option Controller").GetComponent<Option>();
+    }
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.Escape) && !optionController.optionsOpen)
         {
             Pause();
         }
@@ -28,5 +38,6 @@ public class Pause_Controller : MonoBehaviour
                 Debug.Log("it works");
             }
         }
+
     }
 

@@ -6,7 +6,6 @@ public class Pause_Switch_Scene : MonoBehaviour {
 
     public GameObject mainMenuHolder;
     public GameObject BackToGame;
-
     public void pauseMenu()
     {
         mainMenuHolder.SetActive(false);
