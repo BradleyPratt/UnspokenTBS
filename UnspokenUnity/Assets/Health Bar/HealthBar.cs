@@ -23,10 +23,11 @@ public class HealthBar : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
     {
-
         //BuildUnits();
-        if (currentHp<=0) {
-            Destroy( gameObject );
+        if (numOfUnits < GameObject.FindGameObjectsWithTag("Unit").Length)
+        {
+            BuildUnits();
+            Debug.Log("Ran buildunits()");
         }
 
         if (healthSlider != null)
@@ -38,11 +39,19 @@ public class HealthBar : MonoBehaviour {
     public void TakeDamage(float damage)
     {
         currentHp-=damage;
-        healthSlider.value=currentHp;
-    }
+        healthSlider.value = currentHp;
+		if (currentHp <= 0)
+		{
+			gameObject.tag = ("Untagged");
+			numOfUnits--;
+			GameObject.FindGameObjectWithTag("GameManager").GetComponent<TurnManager>().RemoveUnit(gameObject);
+			Destroy(gameObject);
+		}
+	}
 
     private void BuildUnits() {
         units=GameObject.FindGameObjectsWithTag( "Unit" );
+
         for (int i = numOfUnits; i<units.Length; i++) {
             numOfUnits++;
             GameObject unit;
@@ -59,7 +68,7 @@ public class HealthBar : MonoBehaviour {
         unit.AddComponent<HealthBar>().healthSlider=gameObjHealthBar;
         unit.GetComponent<HealthBar>().healthBar=healthBar;
         gameObjHealthBar.GetComponent<HealthSlider>().slider = gameObjHealthBar;
-        Canvas canvas = FindObjectOfType<Canvas>();
+        Canvas canvas = GameObject.FindGameObjectWithTag("CameraCanvas").GetComponent<Canvas>();
         gameObjHealthBar.transform.SetParent( canvas.transform );
     }
 }

@@ -51,12 +51,17 @@
      <Compile Include="Assets\Health Bar\HealthSlider.cs" />
      <Compile Include="Assets\Health Bar\TakeDamage.cs" />
      <Compile Include="Assets\Health Bar\TurnManager.cs" />
-     <Compile Include="Assets\Main Menu\Game_Start.cs" />
-     <Compile Include="Assets\Main Menu\Pause.cs" />
-     <Compile Include="Assets\Main Menu\Quit_Game.cs" />
+     <Compile Include="Assets\Health Bar\WatchTowerHealth.cs" />
+     <Compile Include="Assets\Main Menu\Scripts\Game_Start.cs" />
+     <Compile Include="Assets\Main Menu\Scripts\Menu_Manager.cs" />
+     <Compile Include="Assets\Main Menu\Scripts\Pause.cs" />
+     <Compile Include="Assets\Main Menu\Scripts\Pause_Controller.cs" />
+     <Compile Include="Assets\Main Menu\Scripts\Pause_Switch_Scene.cs" />
+     <Compile Include="Assets\Main Menu\Scripts\Quit_Game.cs" />
      <Compile Include="Assets\MovementAttack\UnitMovement.cs" />
      <Compile Include="Assets\Switch Turns\SwitchTurnManager.cs" />
      <Compile Include="Assets\Switch Turns\cube.cs" />
+     <Compile Include="Assets\pause.cs" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>
