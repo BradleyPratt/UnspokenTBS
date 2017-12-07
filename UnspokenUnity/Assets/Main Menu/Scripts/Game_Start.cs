@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class Game_Start : MonoBehaviour {
     public Button myButton;
+    public Button myButton1;
 
     void Start()
     {
@@ -21,6 +22,12 @@ public class Game_Start : MonoBehaviour {
 
     public void LoadByIndex(int sceneIndex)
     {
-        SceneManager.LoadScene(sceneIndex);
+        SceneManager.LoadScene("Pause Test Scene");
     }
+
+    public void BacktoMenu(int sceneIndex)
+    {
+        SceneManager.LoadScene("Main Menu Test");
+    }
+
 }
