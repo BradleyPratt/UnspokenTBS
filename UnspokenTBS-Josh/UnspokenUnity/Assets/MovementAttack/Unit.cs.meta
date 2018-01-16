@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 64b252082d7d2394c810186515dbfa81
+timeCreated: 1513036396
+licenseType: Free
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences:
+  - rayCamera: {instanceID: 0}
+  - moveRangeProjector: {fileID: 1083753018069370, guid: 53f8a6cd2ba81284ab9682e6a84038a3,
+      type: 2}
+  - attackRangeProjector: {fileID: 1083753018069370, guid: 8c648d739ca4b1e478b050145ccc8de9,
+      type: 2}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
