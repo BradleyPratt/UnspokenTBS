@@ -3,41 +3,69 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class CameraScript : MonoBehaviour {
-    public float speed = 0.5f;
+    public float speed = 1f;
     float cameraDistanceMax = 20f;
     float cameraDistanceMin = 5f;
     float cameraDistance = 10f;
 
+    GameObject currentUnit;
+    GameObject lastUnit;
+
+    TurnManager turnManager;
+
     // Use this for initialization
     void Start() {
-
+        turnManager = GameObject.Find("GameManager").GetComponent<TurnManager>();
     }
 
     // Update is called once per frame
     void Update() {
-        //Vector3 limit = ;
-        if (Input.GetKey( KeyCode.RightArrow  ) || Input.GetKey( KeyCode.D ) && transform.position.x <= 24000) {
-            transform.position=new Vector3( transform.position.x+speed, transform.position.y, transform.position.z );
+        Debug.Log(currentUnit);
+        Debug.Log(turnManager.currentUnit);
+        currentUnit = turnManager.currentUnit;
+
+        if (Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.W) && transform.position.z <= 3500)
+        {
+            //transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z + speed);
+            transform.position += transform.up * speed;
         }
         if (Input.GetKey( KeyCode.LeftArrow ) || Input.GetKey( KeyCode.A ) && transform.position.x >= -15000) {
-            transform.position=new Vector3( transform.position.x-speed, transform.position.y, transform.position.z );
+            //transform.position=new Vector3( transform.position.x-speed, transform.position.y, transform.position.z );
+            transform.position -= transform.right * speed;
         }
         if (Input.GetKey( KeyCode.DownArrow ) || Input.GetKey( KeyCode.S ) && transform.position.z >= -5000) {
-            transform.position=new Vector3( transform.position.x, transform.position.y, transform.position.z-speed );
+            //transform.position=new Vector3( transform.position.x, transform.position.y, transform.position.z-speed );
+            transform.position -= transform.up * speed;
         }
-        if (Input.GetKey( KeyCode.UpArrow ) || Input.GetKey ( KeyCode.W) && transform.position.z <= 3500) {
-            transform.position=new Vector3( transform.position.x, transform.position.y, transform.position.z+speed );
-        }
-        if (Input.GetAxis("Mouse ScrollWheel")>0 && transform.position.y > 500)
+        if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D) && transform.position.x <= 24000)
         {
+            //transform.position = new Vector3(transform.position.x + speed, transform.position.y, transform.position.z);
+            transform.position += transform.right * speed;
+        }
+        if (Input.GetAxis("Mouse ScrollWheel")>0 && transform.position.y > 500) {
             transform.position = new Vector3(transform.position.x, transform.position.y - speed*2, transform.position.z);
-            Debug.Log("Ran");
         }
-        else if (Input.GetAxis("Mouse ScrollWheel")<0 && transform.position.y < 3500)
-        {
+        else if (Input.GetAxis("Mouse ScrollWheel")<0 && transform.position.y < 5000) {
             transform.position = new Vector3(transform.position.x, transform.position.y + speed*2, transform.position.z);
+        }
+
+        if (Input.GetKey( KeyCode.Q))
+        {
+            transform.Rotate(Vector3.forward, speed * Time.deltaTime);
+        }
+        if (Input.GetKey(KeyCode.E))
+        {
+            transform.Rotate(Vector3.back, speed * Time.deltaTime);
         }
         cameraDistance += Input.GetAxis("Mouse ScrollWheel") * speed;
         cameraDistance = Mathf.Clamp(cameraDistance, cameraDistanceMin, cameraDistanceMax);
+
+        if (currentUnit != null && currentUnit != lastUnit)
+        {
+            Vector3 camPos = new Vector3 (currentUnit.transform.position.x, currentUnit.transform.position.y+1000, currentUnit.transform.position.z);
+            transform.position = camPos;
+        }
+
+        lastUnit = currentUnit;
     }
 }
