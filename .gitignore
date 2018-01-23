@@ -5,7 +5,6 @@
 UnspokenUnity/[Ll]ibrary/*
 UnspokenUnity/[Tt]emp/*
 *.csproj
-UnspokenUnity/[Oo]bj/*
 [Bb]uild
 /[Bb]uilds/
 /[Pp]roject[Ss]ettings/*
@@ -46,9 +45,3 @@ ehthumbs.db
 [Dd]esktop.ini
 Corridor/Library/ShaderCache/
 Corridor/Library/metadata/
-
-*.mdb
-*.bin
-*.log
-*.sln
-*.dll
