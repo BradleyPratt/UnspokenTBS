@@ -45,18 +45,18 @@ public class CameraScript : MonoBehaviour {
         if (Input.GetAxis("Mouse ScrollWheel")>0 && transform.position.y > 500) {
             transform.position = new Vector3(transform.position.x, transform.position.y - speed*2, transform.position.z);
         }
-        else if (Input.GetAxis("Mouse ScrollWheel")<0 && transform.position.y < 5000) {
+        else if (Input.GetAxis("Mouse ScrollWheel")<0 && transform.position.y < 7500) {
             transform.position = new Vector3(transform.position.x, transform.position.y + speed*2, transform.position.z);
         }
 
-        if (Input.GetKey( KeyCode.Q))
+        /*if (Input.GetKey( KeyCode.Q))
         {
             transform.Rotate(Vector3.forward, speed * Time.deltaTime);
         }
         if (Input.GetKey(KeyCode.E))
         {
             transform.Rotate(Vector3.back, speed * Time.deltaTime);
-        }
+        }*/
         cameraDistance += Input.GetAxis("Mouse ScrollWheel") * speed;
         cameraDistance = Mathf.Clamp(cameraDistance, cameraDistanceMin, cameraDistanceMax);
 
