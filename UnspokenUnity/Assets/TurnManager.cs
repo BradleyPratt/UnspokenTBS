@@ -9,7 +9,7 @@ public class TurnManager : MonoBehaviour {
 	private List<GameObject> unitsUSSR = new List<GameObject>();
 
 	// Unit which is currently active.
-	private GameObject currentUnit;
+	public GameObject currentUnit;
 
 	// The position of the next unit on each team.
 	private int indexUSA = 1, indexUSSR = 0;
