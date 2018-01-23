@@ -4,6 +4,7 @@
 
 UnspokenUnity/[Ll]ibrary/*
 UnspokenUnity/[Tt]emp/*
+UnspokenUnity/obj/Debug/*
 *.csproj
 [Bb]uild
 /[Bb]uilds/
@@ -43,5 +44,8 @@ Icon?
 ehthumbs.db
 [Tt]humbs.db
 [Dd]esktop.ini
+
+
 Corridor/Library/ShaderCache/
 Corridor/Library/metadata/
+*.cache
