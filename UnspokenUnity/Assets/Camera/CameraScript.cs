@@ -62,7 +62,7 @@ public class CameraScript : MonoBehaviour {
 
         if (currentUnit != null && currentUnit != lastUnit)
         {
-            Vector3 camPos = new Vector3 (currentUnit.transform.position.x, currentUnit.transform.position.y+1000, currentUnit.transform.position.z);
+            Vector3 camPos = new Vector3 (currentUnit.transform.position.x, currentUnit.transform.position.y+3000, currentUnit.transform.position.z);
             transform.position = camPos;
         }
 
