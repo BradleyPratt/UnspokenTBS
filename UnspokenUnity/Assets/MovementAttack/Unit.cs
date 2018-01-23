@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class Unit : MonoBehaviour
 {
-	// Todo: switch from using the various booleans to the enum.
-	// Current state of the unit. Enum for clearer code.
 	enum UnitStatus {
 		selected,
 		moving,
@@ -16,6 +14,7 @@ public class Unit : MonoBehaviour
 	[SerializeField]
 	private string team;
 
+	bool test = true;
 	Vector3 newPosition;
     bool movingUnit = false;
 	bool rotatingUnit = false;
@@ -26,16 +25,15 @@ public class Unit : MonoBehaviour
     // Has the unit moved yet?
     bool hasMoved = false;
 	float yAngle;
-
     // Should be set to be the camera used when the player moves units
     [SerializeField]
     Camera rayCamera;
 
-    // The max distance the unit can move per turn. Set to 0 for no movement.
+    // The max distance the unit can move per turn. Set to 0 for no movement
     [SerializeField]
     float moveRangeLimit;
 
-    // The min (x) and max (y) attack ranges for the unit
+    // The min and max attack ranges for the unit
     [SerializeField]
     Vector2 attackRange;
 
@@ -47,26 +45,19 @@ public class Unit : MonoBehaviour
 	[SerializeField]
 	float attackStrength;
 
-	// If the unit rotates to the wrong angle, alter this by the difference.
 	[SerializeField]
 	float angleOffset = 90;
-
-	// How far is the unit off by in the Y-axis after moving.
 	[SerializeField]
 	float heightOffset = 0;
-	// How fast the unit moves.
 	[SerializeField]
 	float moveSpeed = 900;
 
-	// The shader for the projectors is from the Unity Asset Store, and made by Game Native (https://assetstore.unity.com/packages/tools/particles-effects/ground-target-system-57567).
 	[SerializeField]
     GameObject moveRangeProjector;
     [SerializeField]
     GameObject attackRangeProjector;
 
-	// The projecter that currently exists and is displayed on screen.
     private GameObject currentProjector;
-
     // Use this for initialization
     void Start()
     {
@@ -83,6 +74,7 @@ public class Unit : MonoBehaviour
                 Ray ray = rayCamera.ScreenPointToRay(Input.mousePosition);
                 Physics.Raycast(ray.origin, ray.direction, out hit);
                 newPosition = ray.origin + ray.direction * hit.distance;
+				Debug.Log(newPosition);
                 if ((Vector3.Distance(newPosition, new Vector3 (transform.position.x, transform.position.y - this.GetComponent<MeshFilter>().mesh.bounds.extents.y, transform.position.z)) <= moveRangeLimit) && (hit.collider.CompareTag("Terrain")))
                 {
                     //transform.position = Vector3.MoveTowards(transform.position, new Vector3 (newPosition.x, newPosition.y+this.GetComponent<MeshFilter>().mesh.bounds.extents.y, newPosition.z), Time.deltaTime);
@@ -100,8 +92,7 @@ public class Unit : MonoBehaviour
                 Ray ray = rayCamera.ScreenPointToRay(Input.mousePosition);
                 Physics.Raycast(ray.origin, ray.direction, out hit);
                 Vector3 target = ray.origin + ray.direction * hit.distance;
-
-				if ((attackRange.x <= Vector3.Distance(target, transform.position)) && (Vector3.Distance(target, transform.position) <= attackRange.y))
+                if ((attackRange.x <= Vector3.Distance(target, transform.position)) && (Vector3.Distance(target, transform.position) <= attackRange.y))
                 {
                     // Create array of colliders in attack range
                     Collider[] colliderArray = Physics.OverlapSphere(target, attackRadius);
@@ -137,10 +128,11 @@ public class Unit : MonoBehaviour
 			transform.rotation = Quaternion.Euler(new Vector3(-90, -angle+angleOffset, 0));
 			rotatingUnit = false;
 			movingUnit = true;
+			Debug.Log("Rotated?");
 		} else if (movingUnit){
             if (!(transform.position == new Vector3(newPosition.x, newPosition.y + this.GetComponent<MeshFilter>().mesh.bounds.extents.y + heightOffset, newPosition.z)))
             {
-                //Debug.Log(Vector3.Distance(transform.position, new Vector3(newPosition.x, newPosition.y + this.GetComponent<MeshFilter>().mesh.bounds.extents.y, newPosition.z)));
+                Debug.Log(Vector3.Distance(transform.position, new Vector3(newPosition.x, newPosition.y + this.GetComponent<MeshFilter>().mesh.bounds.extents.y, newPosition.z)));
                 transform.position = Vector3.MoveTowards(transform.position, new Vector3(newPosition.x, newPosition.y + this.GetComponent<MeshFilter>().mesh.bounds.extents.y+ heightOffset, newPosition.z), Time.deltaTime * moveSpeed);
             }
             else
