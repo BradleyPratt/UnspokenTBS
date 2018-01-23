@@ -4,6 +4,7 @@
 
 UnspokenUnity/[Ll]ibrary/*
 UnspokenUnity/[Tt]emp/*
+UnspokenUnity/obj/Debug/*
 *.csproj
 [Bb]uild
 /[Bb]uilds/
