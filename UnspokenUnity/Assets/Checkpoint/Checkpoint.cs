@@ -3,15 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Checkpoint : MonoBehaviour {
-
-	// Use this for initialization
-	void Start () {
-		
-	}
+    public float radius = 200;
 	
 	// Update is called once per frame
 	void Update () {
-        Colliding(transform.position, 200);
+        Colliding(transform.position, radius);
     }
 
     void Colliding(Vector3 center, float radius)
@@ -49,6 +45,6 @@ public class Checkpoint : MonoBehaviour {
     void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.black;
-        Gizmos.DrawSphere(transform.position, 200);
+        Gizmos.DrawSphere(transform.position, radius);
     }
 }
