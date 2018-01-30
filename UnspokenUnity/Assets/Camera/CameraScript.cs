@@ -26,21 +26,17 @@ public class CameraScript : MonoBehaviour {
 
         if (Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.W) && transform.position.z <= 3500)
         {
-            //transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z + speed);
-            transform.position += transform.up * speed;
+            transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z + speed);// * speed;
         }
         if (Input.GetKey( KeyCode.LeftArrow ) || Input.GetKey( KeyCode.A ) && transform.position.x >= -15000) {
-            //transform.position=new Vector3( transform.position.x-speed, transform.position.y, transform.position.z );
-            transform.position -= transform.right * speed;
+            transform.position = new Vector3(transform.position.x - speed, transform.position.y, transform.position.z);
         }
         if (Input.GetKey( KeyCode.DownArrow ) || Input.GetKey( KeyCode.S ) && transform.position.z >= -5000) {
-            //transform.position=new Vector3( transform.position.x, transform.position.y, transform.position.z-speed );
-            transform.position -= transform.up * speed;
+            transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z - speed);
         }
         if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D) && transform.position.x <= 24000)
         {
-            //transform.position = new Vector3(transform.position.x + speed, transform.position.y, transform.position.z);
-            transform.position += transform.right * speed;
+            transform.position = new Vector3(transform.position.x + speed, transform.position.y, transform.position.z);
         }
         if (Input.GetAxis("Mouse ScrollWheel")>0 && transform.position.y > 500) {
             transform.position = new Vector3(transform.position.x, transform.position.y - speed*2, transform.position.z);
@@ -49,14 +45,15 @@ public class CameraScript : MonoBehaviour {
             transform.position = new Vector3(transform.position.x, transform.position.y + speed*2, transform.position.z);
         }
 
-        /*if (Input.GetKey( KeyCode.Q))
+        if (Input.GetKey( KeyCode.Q))
         {
-            transform.Rotate(Vector3.forward, speed * Time.deltaTime);
+            transform.Rotate(new Vector3(0, -transform.position.y, -transform.position.z), speed);
         }
         if (Input.GetKey(KeyCode.E))
         {
-            transform.Rotate(Vector3.back, speed * Time.deltaTime);
-        }*/
+            transform.Rotate(new Vector3(0, transform.position.y, transform.position.z), speed);
+        }
+
         cameraDistance += Input.GetAxis("Mouse ScrollWheel") * speed;
         cameraDistance = Mathf.Clamp(cameraDistance, cameraDistanceMin, cameraDistanceMax);
 
