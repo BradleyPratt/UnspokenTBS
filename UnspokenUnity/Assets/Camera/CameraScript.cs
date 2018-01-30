@@ -21,8 +21,8 @@ public class CameraScript : MonoBehaviour {
     // Update is called once per frame
     void Update() {
         Debug.Log(currentUnit);
-        Debug.Log(turnManager.currentUnit);
-        currentUnit = turnManager.currentUnit;
+        Debug.Log(turnManager.GetCurrentUnit());
+        currentUnit = turnManager.GetCurrentUnit();
 
         if (Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.W) && transform.position.z <= 3500)
         {

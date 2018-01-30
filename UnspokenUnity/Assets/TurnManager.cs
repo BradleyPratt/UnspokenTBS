@@ -9,13 +9,14 @@ public class TurnManager : MonoBehaviour {
 	private List<GameObject> unitsUSSR = new List<GameObject>();
 
 	// Unit which is currently active.
-	public GameObject currentUnit;
+	private GameObject currentUnit;
 
-	// The position of the next unit on each team.
-	private int indexUSA = 1, indexUSSR = 0;
+	// The current active team. USA or USSR
+	private string currentTeam = "USA";
 
 	// Use this for initialization
-	void Start () {
+	void Start ()
+	{
 
 		// Find all units and add them to their team's list.
 		GameObject[] tempUnits = GameObject.FindGameObjectsWithTag("Unit");
@@ -45,50 +46,66 @@ public class TurnManager : MonoBehaviour {
 			}
 		}
 
-		// Set the first unit to have it's turn.
-		currentUnit = unitsUSA[0];
-		currentUnit.GetComponent<Unit>().SetUnitTurn(true);
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		
+
 	}
 
-	// Switch to the next unit in
-	public void SwitchUnit()
+	public void EndTurn()
 	{
-		// Remember, if the current unit is on one team, the next should be from the opposing team.
-		if (string.Equals(currentUnit.GetComponent<Unit>().GetTeam(), "USA"))
+		if (currentUnit != null) {
+			currentUnit.GetComponent<Unit>().SetUnitTurn(false);
+		}
+		if (currentTeam == "USA")
 		{
-			// if the next unit would be in a position in the list which doesn't exist, loop back to the start.
-			if (indexUSSR < unitsUSSR.Count)
+			currentTeam = "USSR";
+			foreach (GameObject unit in unitsUSSR)
 			{
-				currentUnit = unitsUSSR[indexUSSR];
-				indexUSSR++;
-			} else
+				unit.GetComponent<Unit>().ResetUnitTurn();
+			}
+		} else
+		{
+			currentTeam = "USA";
+			foreach (GameObject unit in unitsUSA)
 			{
-				indexUSSR = 0;
-				currentUnit = unitsUSSR[indexUSSR];
-				indexUSSR++;
+				unit.GetComponent<Unit>().ResetUnitTurn();
 			}
 		}
-		else if (string.Equals(currentUnit.GetComponent<Unit>().GetTeam(), "USSR"))
+
+	}
+
+	public void AutoEndTurn()
+	{
+		bool finished = true;
+
+		if (currentTeam == "USA")
 		{
-			if (indexUSA < unitsUSA.Count)
+			foreach (GameObject unit in unitsUSA)
 			{
-				currentUnit = unitsUSA[indexUSA];
-				indexUSA++;
+				if (!unit.GetComponent<Unit>().HasFinishedTurn())
+				{
+					finished = false;
+					break;
+				}
 			}
-			else
+		} else
+		{
+			foreach (GameObject unit in unitsUSSR)
 			{
-				indexUSA = 0;
-				currentUnit = unitsUSA[indexUSA];
-				indexUSA++;
+				if (!unit.GetComponent<Unit>().HasFinishedTurn())
+				{
+					finished = false;
+					break;
+				}
 			}
 		}
-		// Tell the new currentUnit to have it's turn now.
-		currentUnit.GetComponent<Unit>().SetUnitTurn(true);
+
+		if (finished)
+		{
+			EndTurn();
+		}
 	}
 
 	// Remove a unit from the turn manager.
@@ -101,6 +118,34 @@ public class TurnManager : MonoBehaviour {
 		else if (string.Equals(deadUnit.GetComponent<Unit>().GetTeam(), "USSR"))
 		{
 			unitsUSSR.Remove(deadUnit);
+		}
+	}
+
+	public void SetCurrentUnit(GameObject unit)
+	{
+		if ((unit.GetComponent<Unit>().GetTeam() == currentTeam) && !(unit.GetComponent<Unit>().HasFinishedTurn()) && (currentUnit != unit)) {
+			currentUnit = unit;
+			currentUnit.GetComponent<Unit>().SetUnitTurn(true);
+		}
+	}
+
+	public GameObject GetCurrentUnit()
+	{
+		return currentUnit;
+	}
+
+	// Returns the number of units remaining on the specified team, or -1 if a non-existant team is specified.
+	public int UnitsRemaining(string team)
+	{
+		if (team == "USA")
+		{
+			return unitsUSA.Count;
+		} else if (team == "USSR")
+		{
+			return unitsUSSR.Count;
+		} else
+		{
+			return -1;
 		}
 	}
 }

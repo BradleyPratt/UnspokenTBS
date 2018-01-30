@@ -6,13 +6,13 @@ public class Unit : MonoBehaviour
 {
 	// Todo: switch from using the various booleans to the enum.
 	// Current state of the unit. Enum for clearer code.
-	enum UnitStatus {
-		selected,
-		moving,
+	enum UnitTurnStatus {
+		idle,
 		moved,
-		idle
+		attacked
 	};
 
+	private UnitTurnStatus unitTurnStatus = UnitTurnStatus.idle;
 	[SerializeField]
 	private string team;
 
@@ -120,7 +120,7 @@ public class Unit : MonoBehaviour
 					}
 					Destroy(currentProjector.gameObject);
 					SetUnitTurn(false);
-					GameObject.FindGameObjectWithTag("GameManager").GetComponent<TurnManager>().SwitchUnit();
+					//GameObject.FindGameObjectWithTag("GameManager").GetComponent<TurnManager>().SwitchUnit();
                 }
             }
         }
@@ -230,5 +230,20 @@ public class Unit : MonoBehaviour
 		{
 			return false;
 		}
+	}
+
+	private void OnMouseDown()
+	{
+		GameObject.FindGameObjectWithTag("GameManager").GetComponent<TurnManager>().SetCurrentUnit(this.gameObject);
+	}
+
+	public bool HasFinishedTurn()
+	{
+		return (unitTurnStatus == UnitTurnStatus.attacked);
+	}
+
+	public void ResetUnitTurn()
+	{
+		unitTurnStatus = UnitTurnStatus.idle;
 	}
 }
