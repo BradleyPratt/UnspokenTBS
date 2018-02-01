@@ -57,7 +57,7 @@ public class CameraScript : MonoBehaviour {
         cameraDistance += Input.GetAxis("Mouse ScrollWheel") * speed;
         cameraDistance = Mathf.Clamp(cameraDistance, cameraDistanceMin, cameraDistanceMax);
 
-        if (currentUnit != null && currentUnit != lastUnit)
+        if (false)//(currentUnit != null && currentUnit != lastUnit)
         {
             Vector3 camPos = new Vector3 (currentUnit.transform.position.x, currentUnit.transform.position.y+3000, currentUnit.transform.position.z);
             transform.position = camPos;
