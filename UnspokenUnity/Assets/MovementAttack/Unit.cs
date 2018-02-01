@@ -16,6 +16,7 @@ public class Unit : MonoBehaviour
 
 	private UnitTurnStatus unitTurnStatus = UnitTurnStatus.idle;
 	private bool unitSelected = false;
+	private bool lockInput = false;
 
 	[SerializeField]
 	private string team = "USA";
@@ -53,12 +54,10 @@ public class Unit : MonoBehaviour
 
 	private Vector3 newPosition;
 	private float yAngle;
-
+	private Vector3 heightOffsetV;
 	// Use this for initialization
 	void Start()
 	{
-		/*
-		 * 
 						MeshFilter[] meshFilters = this.GetComponentsInChildren<MeshFilter>();
 						CombineInstance[] combine = new CombineInstance[meshFilters.Length];
 						int i = 0;
@@ -72,14 +71,13 @@ public class Unit : MonoBehaviour
 						combinedMesh.CombineMeshes(combine);
 
 						Debug.Log(combinedMesh.bounds.extents.y);
-		 *
-		 */
+		heightOffsetV = new Vector3(0, combinedMesh.bounds.extents.y + heightOffset, 0);
 	}
 
 	// Update is called once per frame
 	void Update()
 	{
-		if (unitSelected && (Time.timeScale != 0))
+		if (!lockInput && unitSelected && (Time.timeScale != 0))
 		{
 			if (unitTurnStatus == UnitTurnStatus.idle)
 			{
@@ -90,10 +88,11 @@ public class Unit : MonoBehaviour
 
 					RaycastHit hit;
 					Ray ray = rayCamera.ScreenPointToRay(Input.mousePosition);
-					Physics.Raycast(ray.origin, ray.direction, out hit, Mathf.Infinity, layermask);
+					Physics.Raycast(ray.origin, ray.direction, hitInfo: out hit, maxDistance: Mathf.Infinity, layerMask: layermask);
 					newPosition = ray.origin + ray.direction * hit.distance;
 					//todo add offset
-					if (Vector3.Distance(newPosition, new Vector3(transform.position.x, transform.position.y, transform.position.z)) <= moveRangeLimit)
+					Debug.Log(newPosition);
+					if (Vector3.Distance(newPosition, transform.position - heightOffsetV) <= moveRangeLimit)
 					{
 						unitTurnStatus = UnitTurnStatus.rotating;
 					}
@@ -114,13 +113,16 @@ public class Unit : MonoBehaviour
 
 						foreach (Collider collider in colliderArray)
 						{
-							if (collider.CompareTag("Unit"))
+							if (collider.gameObject != this.gameObject)
 							{
-								collider.gameObject.GetComponent<HealthBar>().TakeDamage(attackStrength);
-							}
-							if (collider.CompareTag("WatchTower"))
-							{
-								collider.gameObject.GetComponent<WatchTowerHealth>().WatchTowerTakeDamage(attackStrength);
+								if (collider.CompareTag("Unit"))
+								{
+									collider.gameObject.GetComponent<HealthBar>().TakeDamage(attackStrength);
+								}
+								if (collider.CompareTag("WatchTower"))
+								{
+									collider.gameObject.GetComponent<WatchTowerHealth>().WatchTowerTakeDamage(attackStrength);
+								}
 							}
 						}
 
@@ -128,6 +130,11 @@ public class Unit : MonoBehaviour
 						unitTurnStatus = UnitTurnStatus.attacked;
 					}
 				}
+			}
+		} else if (lockInput) {
+			if (Input.GetMouseButtonUp(0))
+			{
+				lockInput = false;
 			}
 		}
 
@@ -144,19 +151,40 @@ public class Unit : MonoBehaviour
 		}
 		else if (unitTurnStatus == UnitTurnStatus.moving)
 		{
-			if (!(transform.position == new Vector3(newPosition.x, newPosition.y + this.GetComponent<MeshFilter>().mesh.bounds.extents.y + heightOffset, newPosition.z)))
+			if (!(transform.position == newPosition + heightOffsetV))
 			{
-				transform.position = Vector3.MoveTowards(transform.position, new Vector3(newPosition.x, newPosition.y + this.GetComponent<MeshFilter>().mesh.bounds.extents.y + heightOffset, newPosition.z), Time.deltaTime * moveSpeed);
+				transform.position = Vector3.MoveTowards(transform.position, newPosition+ heightOffsetV, Time.deltaTime * moveSpeed);
 			}
 			else
 			{
 				unitTurnStatus = UnitTurnStatus.moved;
-				Destroy(currentProjector.gameObject);
-				currentProjector = Instantiate(attackRangeProjector);
-				currentProjector.GetComponent<Projector>().orthographicSize = attackRadius;
-				PositionAttackProjector();
+				CreateAttackProjector();
 			}
 		}
+	}
+
+	private void CreateMoveProjector()
+	{
+		if (currentProjector != null)
+		{
+			Destroy(currentProjector.gameObject);
+		}
+
+		currentProjector = Instantiate(moveRangeProjector);
+		currentProjector.GetComponent<Projector>().orthographicSize = moveRangeLimit;
+		currentProjector.transform.position = this.transform.position;
+	}
+
+	private void CreateAttackProjector()
+	{
+		if (currentProjector != null)
+		{
+			Destroy(currentProjector.gameObject);
+		}
+
+		currentProjector = Instantiate(attackRangeProjector);
+		currentProjector.GetComponent<Projector>().orthographicSize = attackRadius;
+		PositionAttackProjector();
 	}
 
 	private void PositionAttackProjector()
@@ -173,6 +201,19 @@ public class Unit : MonoBehaviour
 	// Tell this unit if it's selected
 	public void SetSelected(bool selectedStatus)
 	{
+		if (selectedStatus)
+		{
+			if (unitTurnStatus == UnitTurnStatus.idle)
+			{
+				CreateMoveProjector();
+			} else if (unitTurnStatus == UnitTurnStatus.moved)
+			{
+				CreateAttackProjector();
+			}
+		} else if (currentProjector != null) {
+			Destroy(currentProjector.gameObject);
+		}
+		lockInput = selectedStatus;
 		unitSelected = selectedStatus;
 	}
 
