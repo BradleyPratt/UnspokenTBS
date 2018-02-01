@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TurnManager : MonoBehaviour {
+public class TurnManager : MonoBehaviour
+{
 
 	// A list each containing all units (and watchtowers) on each side.
 	private List<GameObject> unitsUSA = new List<GameObject>();
@@ -14,8 +15,11 @@ public class TurnManager : MonoBehaviour {
 	// The current active team. USA or USSR
 	private string currentTeam = "USA";
 
+	// Number of current turn.
+	private int turnCounter = 1;
+
 	// Use this for initialization
-	void Start ()
+	void Start()
 	{
 
 		// Find all units and add them to their team's list.
@@ -47,15 +51,17 @@ public class TurnManager : MonoBehaviour {
 		}
 
 	}
-	
+
 	// Update is called once per frame
-	void Update () {
+	void Update()
+	{
 
 	}
 
 	public void EndTurn()
 	{
-		if (currentUnit != null) {
+		if (currentUnit != null)
+		{
 			currentUnit.GetComponent<Unit>().SetSelected(false);
 		}
 		if (currentTeam == "USA")
@@ -65,7 +71,8 @@ public class TurnManager : MonoBehaviour {
 			{
 				unit.GetComponent<Unit>().ResetUnitTurn();
 			}
-		} else
+		}
+		else
 		{
 			currentTeam = "USA";
 			foreach (GameObject unit in unitsUSA)
@@ -73,7 +80,7 @@ public class TurnManager : MonoBehaviour {
 				unit.GetComponent<Unit>().ResetUnitTurn();
 			}
 		}
-
+		turnCounter++;
 	}
 
 	public void AutoEndTurn()
@@ -90,7 +97,8 @@ public class TurnManager : MonoBehaviour {
 					break;
 				}
 			}
-		} else
+		}
+		else
 		{
 			foreach (GameObject unit in unitsUSSR)
 			{
@@ -123,7 +131,8 @@ public class TurnManager : MonoBehaviour {
 
 	public void SetCurrentUnit(GameObject unit)
 	{
-		if ((unit.GetComponent<Unit>().GetTeam() == currentTeam) && !(unit.GetComponent<Unit>().HasFinishedTurn()) && (currentUnit != unit)) {
+		if ((unit.GetComponent<Unit>().GetTeam() == currentTeam) && !(unit.GetComponent<Unit>().HasFinishedTurn()) && (currentUnit != unit))
+		{
 			if (currentUnit != null)
 			{
 				currentUnit.GetComponent<Unit>().SetSelected(false);
@@ -144,12 +153,19 @@ public class TurnManager : MonoBehaviour {
 		if (team == "USA")
 		{
 			return unitsUSA.Count;
-		} else if (team == "USSR")
+		}
+		else if (team == "USSR")
 		{
 			return unitsUSSR.Count;
-		} else
+		}
+		else
 		{
 			return -1;
 		}
+	}
+
+	public int GetTurnCount()
+	{
+		return turnCounter;
 	}
 }
