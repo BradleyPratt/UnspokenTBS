@@ -158,7 +158,10 @@ public class Unit : MonoBehaviour
 			else
 			{
 				unitTurnStatus = UnitTurnStatus.moved;
-				CreateAttackProjector();
+				if (unitSelected)
+				{
+					CreateAttackProjector();
+				}
 			}
 		}
 	}
