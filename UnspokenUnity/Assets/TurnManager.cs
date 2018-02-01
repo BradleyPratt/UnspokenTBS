@@ -168,4 +168,9 @@ public class TurnManager : MonoBehaviour
 	{
 		return turnCounter;
 	}
+
+	public string GetActiveTeam()
+	{
+		return currentTeam;
+	}
 }
