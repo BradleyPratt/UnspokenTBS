@@ -13,23 +13,24 @@ public class Checkpoint : MonoBehaviour {
     void Colliding(Vector3 center, float radius)
     {
         Collider[] hitColliders = Physics.OverlapSphere(center, radius);
-        int i = 0;
         int j = 0;
         int k = 0;
-        while (i < hitColliders.Length)
-        {
-            if(hitColliders[i].tag == "Unit" && hitColliders[i].name.Contains("USA"))
-            {
-                j++;
-            }
-            if (hitColliders[i].tag == "Unit" && hitColliders[i].name.Contains("USSR"))
-            {
-                k++;
-            }
-            i++;
-        }
 
-        if(j == 0 && k == 0 || j == k)
+		foreach (Collider hitCollider in hitColliders)
+		{
+			if (hitCollider.GetComponent<Unit>() != null)
+			{
+				if (hitCollider.GetComponent<Unit>().GetTeam() == "USA")
+				{
+					j++;
+				} else if (hitCollider.GetComponent<Unit>().GetTeam() == "USSR")
+				{
+					k++;
+				}
+			}
+		}
+
+        if ((j == 0 && k == 0) || j == k)
         {
             Debug.Log("Zone is neutral");
         }
