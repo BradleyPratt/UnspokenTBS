@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class TurnManager : MonoBehaviour
 {
@@ -81,6 +82,8 @@ public class TurnManager : MonoBehaviour
 			}
 		}
 		turnCounter++;
+
+		UpdateTeamIndicator();
 	}
 
 	public void AutoEndTurn()
@@ -172,5 +175,10 @@ public class TurnManager : MonoBehaviour
 	public string GetActiveTeam()
 	{
 		return currentTeam;
+	}
+
+	public void UpdateTeamIndicator()
+	{
+		GameObject.FindGameObjectWithTag("TeamIndicator").GetComponent<Text>().text = string.Concat("Current Team: ", currentTeam);
 	}
 }
