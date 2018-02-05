@@ -50,11 +50,17 @@ public class Unit : MonoBehaviour
 	[SerializeField]
 	GameObject attackRangeProjector;
 
+	[SerializeField]
+	Material redProjectorMaterial;
+	[SerializeField]
+	Material greenProjectorMaterial;
+
 	private GameObject currentProjector;
 
 	private Vector3 newPosition;
 	private float yAngle;
 	private Vector3 heightOffsetV;
+	private Vector3 lengthOffsetV;
 	// Use this for initialization
 	void Start()
 	{
@@ -70,8 +76,10 @@ public class Unit : MonoBehaviour
 						Mesh combinedMesh = new Mesh();
 						combinedMesh.CombineMeshes(combine);
 
-						Debug.Log(combinedMesh.bounds.extents.y);
+		Debug.Log(combinedMesh.bounds.extents.z);
+		Debug.Log(combinedMesh.bounds.extents.x);
 		heightOffsetV = new Vector3(0, combinedMesh.bounds.extents.y + heightOffset, 0);
+		lengthOffsetV = new Vector3(combinedMesh.bounds.extents.x, 0, 0);
 	}
 
 	// Update is called once per frame
@@ -92,6 +100,13 @@ public class Unit : MonoBehaviour
 					newPosition = ray.origin + ray.direction * hit.distance;
 					//todo add offset
 					Debug.Log(newPosition);
+
+//					Vector3 direction = transform.position - newPosition;
+//					Debug.DrawLine(transform.position, -direction, Color.red, 60000);
+//					RaycastHit obstacleFinder;
+//					Physics.Raycast(transform.position, Vector3.) {
+//
+//					}
 					if (Vector3.Distance(newPosition, transform.position - heightOffsetV) <= moveRangeLimit)
 					{
 						unitTurnStatus = UnitTurnStatus.rotating;
@@ -199,6 +214,13 @@ public class Unit : MonoBehaviour
 		Physics.Raycast(ray.origin, ray.direction, out hit, Mathf.Infinity, layermask);
 		newPosition = ray.origin + ray.direction * hit.distance;
 		currentProjector.transform.position = new Vector3(newPosition.x, this.transform.position.y, newPosition.z);
+		if ((attackRange.x <= Vector3.Distance(currentProjector.transform.position, transform.position)) && (Vector3.Distance(currentProjector.transform.position, transform.position) <= attackRange.y))
+		{
+			currentProjector.GetComponent<Projector>().material = greenProjectorMaterial;
+		} else
+		{
+			currentProjector.GetComponent<Projector>().material = redProjectorMaterial;
+		}
 	}
 
 	// Tell this unit if it's selected
