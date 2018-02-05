@@ -13,14 +13,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_PixelRect:
     serializedVersion: 2
-    x: 8
-    y: 51
-    width: 1842
+    x: 0
+    y: 43
+    width: 1920
     height: 997
   m_ShowMode: 4
   m_Title: 
   m_RootView: {fileID: 6}
-  m_MinSize: {x: 950, y: 300}
+  m_MinSize: {x: 950, y: 392}
   m_MaxSize: {x: 10000, y: 10000}
 --- !u!114 &2
 MonoBehaviour:
@@ -40,16 +40,12 @@ MonoBehaviour:
     serializedVersion: 2
     x: 0
     y: 30
-    width: 1842
+    width: 1920
     height: 947
-  m_MinSize: {x: 683, y: 342}
-  m_MaxSize: {x: 12008, y: 8042}
+  m_MinSize: {x: 679, y: 342}
+  m_MaxSize: {x: 12004, y: 8042}
   vertical: 0
-<<<<<<< HEAD
-  controlID: 125
-=======
-  controlID: 51
->>>>>>> JoshBugFixes
+  controlID: 127
 --- !u!114 &3
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -64,12 +60,12 @@ MonoBehaviour:
   m_Children: []
   m_Position:
     serializedVersion: 2
-    x: 1469
+    x: 1531
     y: 0
-    width: 373
+    width: 389
     height: 947
-  m_MinSize: {x: 277, y: 71}
-  m_MaxSize: {x: 4002, y: 4021}
+  m_MinSize: {x: 275, y: 50}
+  m_MaxSize: {x: 4000, y: 4000}
   m_ActualView: {fileID: 14}
   m_Panes:
   - {fileID: 14}
@@ -91,14 +87,10 @@ MonoBehaviour:
     serializedVersion: 2
     x: 0
     y: 0
-<<<<<<< HEAD
     width: 378
-=======
-    width: 364
->>>>>>> JoshBugFixes
     height: 573
-  m_MinSize: {x: 202, y: 221}
-  m_MaxSize: {x: 4002, y: 4021}
+  m_MinSize: {x: 200, y: 200}
+  m_MaxSize: {x: 4000, y: 4000}
   m_ActualView: {fileID: 15}
   m_Panes:
   - {fileID: 15}
@@ -120,10 +112,10 @@ MonoBehaviour:
     serializedVersion: 2
     x: 0
     y: 573
-    width: 1469
+    width: 1531
     height: 374
-  m_MinSize: {x: 102, y: 121}
-  m_MaxSize: {x: 4002, y: 4021}
+  m_MinSize: {x: 100, y: 100}
+  m_MaxSize: {x: 4000, y: 4000}
   m_ActualView: {fileID: 18}
   m_Panes:
   - {fileID: 13}
@@ -149,7 +141,7 @@ MonoBehaviour:
     serializedVersion: 2
     x: 0
     y: 0
-    width: 1842
+    width: 1920
     height: 997
   m_MinSize: {x: 950, y: 300}
   m_MaxSize: {x: 10000, y: 10000}
@@ -169,7 +161,7 @@ MonoBehaviour:
     serializedVersion: 2
     x: 0
     y: 0
-    width: 1842
+    width: 1920
     height: 30
   m_MinSize: {x: 0, y: 0}
   m_MaxSize: {x: 0, y: 0}
@@ -190,7 +182,7 @@ MonoBehaviour:
     serializedVersion: 2
     x: 0
     y: 977
-    width: 1842
+    width: 1920
     height: 20
   m_MinSize: {x: 0, y: 0}
   m_MaxSize: {x: 0, y: 0}
@@ -212,16 +204,12 @@ MonoBehaviour:
     serializedVersion: 2
     x: 0
     y: 0
-    width: 1469
+    width: 1531
     height: 947
-  m_MinSize: {x: 406, y: 342}
-  m_MaxSize: {x: 8006, y: 8042}
+  m_MinSize: {x: 404, y: 342}
+  m_MaxSize: {x: 8004, y: 8042}
   vertical: 1
-<<<<<<< HEAD
   controlID: 78
-=======
-  controlID: 52
->>>>>>> JoshBugFixes
 --- !u!114 &10
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -240,12 +228,12 @@ MonoBehaviour:
     serializedVersion: 2
     x: 0
     y: 0
-    width: 1469
+    width: 1531
     height: 573
-  m_MinSize: {x: 406, y: 221}
-  m_MaxSize: {x: 8006, y: 4021}
+  m_MinSize: {x: 404, y: 221}
+  m_MaxSize: {x: 8004, y: 4021}
   vertical: 0
-  controlID: 53
+  controlID: 11
 --- !u!114 &11
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -260,15 +248,9 @@ MonoBehaviour:
   m_Children: []
   m_Position:
     serializedVersion: 2
-<<<<<<< HEAD
     x: 378
     y: 0
     width: 1153
-=======
-    x: 364
-    y: 0
-    width: 1105
->>>>>>> JoshBugFixes
     height: 573
   m_MinSize: {x: 204, y: 221}
   m_MaxSize: {x: 4004, y: 4021}
@@ -327,9 +309,9 @@ MonoBehaviour:
   m_DepthBufferBits: 0
   m_Pos:
     serializedVersion: 2
-    x: 8
-    y: 673
-    width: 1467
+    x: 0
+    y: 665
+    width: 1529
     height: 353
   m_SearchFilter:
     m_NameFilter: 
@@ -348,23 +330,13 @@ MonoBehaviour:
   m_LastFolders:
   - Assets
   m_LastFoldersGridSize: -1
-<<<<<<< HEAD
-  m_LastProjectPath: D:\Documents\GitHub\UnspokenTBS\UnspokenUnity
+  m_LastProjectPath: C:\Users\brad2\Documents\GitHub\UnspokenTBS\UnspokenUnity
   m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: e4290000
-    m_LastClickedID: 10724
-    m_ExpandedIDs: 00000000e4290000e62a0000c02b000000ca9a3bffffff7f
-=======
-  m_LastProjectPath: C:\Users\MortalArrow\Documents\GitHub\UnspokenTBS\UnspokenUnity
-  m_IsLocked: 0
-  m_FolderTreeState:
-    scrollPos: {x: 0, y: 16}
-    m_SelectedIDs: da240000
-    m_LastClickedID: 9434
-    m_ExpandedIDs: 00000000da240000ae27000000ca9a3bffffff7f
->>>>>>> JoshBugFixes
+    m_SelectedIDs: e0240000
+    m_LastClickedID: 9440
+    m_ExpandedIDs: 00000000e0240000b02500001a2600007c27000000ca9a3bffffff7f
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -392,11 +364,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-<<<<<<< HEAD
-    m_ExpandedIDs: 00000000e4290000c02b0000
-=======
-    m_ExpandedIDs: 00000000da240000ae270000
->>>>>>> JoshBugFixes
+    m_ExpandedIDs: 00000000e0240000b02500001a2600007c270000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -421,15 +389,10 @@ MonoBehaviour:
       m_Icon: {fileID: 0}
       m_ResourceFile: 
   m_ListAreaState:
-<<<<<<< HEAD
-    m_SelectedInstanceIDs: 1a2c0000
-    m_LastClickedInstanceID: 11290
-=======
-    m_SelectedInstanceIDs: 38010000
-    m_LastClickedInstanceID: 312
->>>>>>> JoshBugFixes
-    m_HadKeyboardFocusLastEvent: 1
-    m_ExpandedInstanceIDs: 3e290000
+    m_SelectedInstanceIDs: 
+    m_LastClickedInstanceID: 0
+    m_HadKeyboardFocusLastEvent: 0
+    m_ExpandedInstanceIDs: 3e2900007e26000012260000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -478,9 +441,9 @@ MonoBehaviour:
   m_DepthBufferBits: 0
   m_Pos:
     serializedVersion: 2
-    x: 1479
-    y: 100
-    width: 371
+    x: 1533
+    y: 92
+    width: 387
     height: 926
   m_ScrollPosition: {x: 0, y: 0}
   m_InspectorMode: 0
@@ -511,41 +474,29 @@ MonoBehaviour:
   m_DepthBufferBits: 0
   m_Pos:
     serializedVersion: 2
-<<<<<<< HEAD
     x: 0
     y: 92
     width: 376
     height: 552
   m_TreeViewState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: 1a2c0000
-    m_LastClickedID: 11290
-    m_ExpandedIDs: c6d5ffff00000000
-=======
-    x: 8
-    y: 100
-    width: 362
-    height: 552
-  m_TreeViewState:
-    scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: d8ebffff
-    m_LastClickedID: -5160
-    m_ExpandedIDs: dcfbffff0000000060280000
->>>>>>> JoshBugFixes
+    m_SelectedIDs: 26280000
+    m_LastClickedID: 10278
+    m_ExpandedIDs: e4fbffff00000000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
-      m_Name: GameObject
-      m_OriginalName: GameObject
+      m_Name: 
+      m_OriginalName: 
       m_EditFieldRect:
         serializedVersion: 2
         x: 0
         y: 0
         width: 0
         height: 0
-      m_UserData: 11304
+      m_UserData: 0
       m_IsWaitingForDelay: 0
       m_IsRenaming: 0
-      m_OriginalEventType: 0
+      m_OriginalEventType: 11
       m_IsRenamingFilename: 0
       m_ClientGUIView: {fileID: 4}
     m_SearchString: 
@@ -576,34 +527,19 @@ MonoBehaviour:
   m_DepthBufferBits: 32
   m_Pos:
     serializedVersion: 2
-<<<<<<< HEAD
     x: 380
     y: 92
     width: 1149
     height: 552
   m_SceneLighting: 1
-  lastFramingTime: 24159.73241708167
-=======
-    x: 374
-    y: 100
-    width: 1101
-    height: 552
-  m_SceneLighting: 1
-  lastFramingTime: 899.1524825311267
->>>>>>> JoshBugFixes
+  lastFramingTime: 671.9032585073547
   m_2DMode: 0
   m_isRotationLocked: 0
   m_AudioPlay: 0
   m_Position:
-<<<<<<< HEAD
-    m_Target: {x: -5.318605, y: 40.00001, z: 31.030842}
+    m_Target: {x: 155.31047, y: -73.99984, z: 34.3833}
     speed: 2
-    m_Value: {x: -5.318605, y: 40.00001, z: 31.030842}
-=======
-    m_Target: {x: -18.28, y: 3.85, z: -21.65}
-    speed: 2
-    m_Value: {x: -18.28, y: 3.85, z: -21.65}
->>>>>>> JoshBugFixes
+    m_Value: {x: 155.31047, y: -73.99984, z: 34.3833}
   m_RenderMode: 0
   m_ValidateTrueMetals: 0
   m_SceneViewState:
@@ -626,23 +562,13 @@ MonoBehaviour:
       speed: 2
       m_Value: 0
   m_Rotation:
-<<<<<<< HEAD
-    m_Target: {x: -0.0070864563, y: 0.9694076, z: -0.24372983, w: -0.028184656}
+    m_Target: {x: -0.112646684, y: -0.6514753, z: 0.09867196, w: -0.74374354}
     speed: 2
-    m_Value: {x: -0.0070864563, y: 0.9694076, z: -0.24372983, w: -0.028184656}
+    m_Value: {x: -0.112646684, y: -0.6514753, z: 0.09867196, w: -0.74374354}
   m_Size:
-    m_Target: 159.09683
+    m_Target: 262.662
     speed: 2
-    m_Value: 159.09683
-=======
-    m_Target: {x: 0.019177767, y: 0.029090991, z: 0.0005585013, w: -0.9993927}
-    speed: 2
-    m_Value: {x: 0.019177767, y: 0.029090991, z: 0.0005585013, w: -0.9993927}
-  m_Size:
-    m_Target: 37.914116
-    speed: 2
-    m_Value: 37.914116
->>>>>>> JoshBugFixes
+    m_Value: 262.662
   m_Ortho:
     m_Target: 0
     speed: 2
@@ -675,15 +601,9 @@ MonoBehaviour:
   m_DepthBufferBits: 32
   m_Pos:
     serializedVersion: 2
-<<<<<<< HEAD
     x: 380
     y: 92
     width: 1149
-=======
-    x: 374
-    y: 100
-    width: 1101
->>>>>>> JoshBugFixes
     height: 552
   m_MaximizeOnPlay: 0
   m_Gizmos: 0
@@ -693,13 +613,8 @@ MonoBehaviour:
   m_ZoomArea:
     m_HRangeLocked: 0
     m_VRangeLocked: 0
-<<<<<<< HEAD
     m_HBaseRangeMin: -574.5
     m_HBaseRangeMax: 574.5
-=======
-    m_HBaseRangeMin: -550.5
-    m_HBaseRangeMax: 550.5
->>>>>>> JoshBugFixes
     m_VBaseRangeMin: -267.5
     m_VBaseRangeMax: 267.5
     m_HAllowExceedBaseRangeMin: 1
@@ -718,42 +633,25 @@ MonoBehaviour:
       serializedVersion: 2
       x: 0
       y: 17
-<<<<<<< HEAD
       width: 1149
       height: 535
     m_Scale: {x: 1, y: 1}
     m_Translation: {x: 574.5, y: 267.5}
-=======
-      width: 1101
-      height: 535
-    m_Scale: {x: 1, y: 1}
-    m_Translation: {x: 550.5, y: 267.5}
->>>>>>> JoshBugFixes
     m_MarginLeft: 0
     m_MarginRight: 0
     m_MarginTop: 0
     m_MarginBottom: 0
     m_LastShownAreaInsideMargins:
       serializedVersion: 2
-<<<<<<< HEAD
       x: -574.5
       y: -267.5
       width: 1149
-=======
-      x: -550.5
-      y: -267.5
-      width: 1101
->>>>>>> JoshBugFixes
       height: 535
     m_MinimalGUI: 1
   m_defaultScale: 1
   m_TargetTexture: {fileID: 0}
   m_CurrentColorSpace: 0
-<<<<<<< HEAD
   m_LastWindowPixelSize: {x: 1149, y: 552}
-=======
-  m_LastWindowPixelSize: {x: 1101, y: 552}
->>>>>>> JoshBugFixes
   m_ClearInEditMode: 1
   m_NoCameraWarning: 1
   m_LowResolutionForAspectRatios: 01000000000100000100
@@ -779,7 +677,7 @@ MonoBehaviour:
   m_DepthBufferBits: 0
   m_Pos:
     serializedVersion: 2
-    x: 8
-    y: 673
-    width: 1467
+    x: 0
+    y: 665
+    width: 1529
     height: 353
