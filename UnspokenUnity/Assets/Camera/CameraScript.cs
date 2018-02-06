@@ -19,6 +19,7 @@ public class CameraScript : MonoBehaviour {
 
     GameObject boundary;
 
+    Vector3 focus;
     Vector3 boundaryRightPos;
     Vector3 boundaryLeftPos;
     Vector3 boundaryTopPos;
@@ -85,13 +86,17 @@ public class CameraScript : MonoBehaviour {
             transform.position -= transform.forward*zoomSpeed;
         }
 
+        Vector3 target = new Vector3(transform.position.x + transform.forward.x*10, transform.position.y - 30f, transform.position.z + transform.forward.z*10);
+
         if (Input.GetKey( KeyCode.Q))
         {
-            transform.eulerAngles -= new Vector3(0, speed, 0);
+            focus = new Vector3(transform.position.x + transform.forward.x*100, transform.position.y + transform.forward.y*100, transform.position.z + transform.forward.z*100);
+            transform.RotateAround(focus, Vector3.up, speed);
         }
         if (Input.GetKey(KeyCode.E))
         {
-            transform.eulerAngles += new Vector3(0, speed, 0);
+            focus = new Vector3(transform.position.x + transform.forward.x * 100, transform.position.y + transform.forward.y * 100, transform.position.z + transform.forward.z * 100);
+            transform.RotateAround(focus, -Vector3.up, speed);
         }
 
         cameraDistance += Input.GetAxis("Mouse ScrollWheel") * speed;

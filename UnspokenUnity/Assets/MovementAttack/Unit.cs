@@ -76,8 +76,8 @@ public class Unit : MonoBehaviour
 						Mesh combinedMesh = new Mesh();
 						combinedMesh.CombineMeshes(combine);
 
-		Debug.Log(combinedMesh.bounds.extents.z);
-		Debug.Log(combinedMesh.bounds.extents.x);
+		//Debug.Log(combinedMesh.bounds.extents.z);
+		//Debug.Log(combinedMesh.bounds.extents.x);
 		heightOffsetV = new Vector3(0, combinedMesh.bounds.extents.y + heightOffset, 0);
 		lengthOffsetV = new Vector3(combinedMesh.bounds.extents.x, 0, 0);
 	}
