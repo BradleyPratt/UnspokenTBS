@@ -5,6 +5,9 @@ using UnityEngine.UI;
 
 public class TurnManager : MonoBehaviour
 {
+    // Invasion of Josh's code to add class objects that will be used by the money system
+    GameObject gameManager;
+    Money money;
 
 	// A list each containing all units (and watchtowers) on each side.
 	private List<GameObject> unitsUSA = new List<GameObject>();
@@ -22,9 +25,12 @@ public class TurnManager : MonoBehaviour
 	// Use this for initialization
 	void Start()
 	{
+        // Finding the class' in GameObjects within the world
+        GameObject gameManager = GameObject.Find("GameManager");
+        money = gameManager.GetComponent<Money>();
 
-		// Find all units and add them to their team's list.
-		GameObject[] tempUnits = GameObject.FindGameObjectsWithTag("Unit");
+        // Find all units and add them to their team's list.
+        GameObject[] tempUnits = GameObject.FindGameObjectsWithTag("Unit");
 		foreach (GameObject tempUnit in tempUnits)
 		{
 			if (string.Equals(tempUnit.GetComponent<Unit>().GetTeam(), "USA"))
@@ -50,7 +56,6 @@ public class TurnManager : MonoBehaviour
 				unitsUSSR.Add(tempWatchTower);
 			}
 		}
-
 	}
 
 	// Update is called once per frame
@@ -84,6 +89,7 @@ public class TurnManager : MonoBehaviour
 		}
 		turnCounter++;
 
+        RunCheckpoints();
 		UpdateTeamIndicator();
 	}
 
@@ -182,4 +188,22 @@ public class TurnManager : MonoBehaviour
 	{
 		GameObject.FindGameObjectWithTag("TeamIndicator").GetComponent<Text>().text = string.Concat("Current Team: ", currentTeam);
 	}
+
+    // Finds checkpoints and adds money accordingly, using the EndTurn function
+    void RunCheckpoints()
+    {
+        GameObject[] checkpoints = GameObject.FindGameObjectsWithTag("Checkpoint");
+        foreach (GameObject checkpoint in checkpoints)
+        {
+            string owner = checkpoint.GetComponent<Checkpoint>().GetCheckpointOwner();
+            if (owner == "USA")
+            {
+                money.SetUSMoney(100);
+            }
+            if (owner == "USSR")
+            {
+                money.SetUSSRMoney(100);
+            }
+        }
+    }
 }
