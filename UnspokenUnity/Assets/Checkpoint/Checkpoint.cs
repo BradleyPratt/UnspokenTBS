@@ -5,6 +5,8 @@ using UnityEngine;
 public class Checkpoint : MonoBehaviour {
     public float radius = 200;
 
+    float counter;
+
     bool neutralCheckpointBuilt = false;
     bool redCheckpointBuilt = false;
     bool blueCheckpointBuilt = false;
@@ -12,13 +14,6 @@ public class Checkpoint : MonoBehaviour {
     public GameObject checkpointRed;
     public GameObject checkpointBlue;
     public GameObject checkpointNeutral;
-
-    void Start()
-    {
-        /*checkpointNeutral = (GameObject)Resources.Load("Assets/Resources/Checkpoint/ControlPointNeutral");
-        checkpointRed = (GameObject)Resources.Load("Assets/Resources/Checkpoint/ControlPointUSSR");
-        checkpointBlue = (GameObject)Resources.Load("Assets/Resources/Checkpoint/ControlPointUS");*/
-    }
 
     // Update is called once per frame
     void Update () {
@@ -47,7 +42,6 @@ public class Checkpoint : MonoBehaviour {
 
         if ((j == 0 && k == 0) || j == k)
         {
-            Debug.Log("Zone is neutral");
             if (!neutralCheckpointBuilt) {
                 foreach (Transform child in transform)
                 {
@@ -61,7 +55,6 @@ public class Checkpoint : MonoBehaviour {
         }
         else if (j > k)
         {
-            Debug.Log("The zone belongs to the US");
             if (!blueCheckpointBuilt) {
                 foreach (Transform child in transform)
                 {
@@ -74,7 +67,6 @@ public class Checkpoint : MonoBehaviour {
             neutralCheckpointBuilt = false;
         }
         else {
-            Debug.Log("The zone belongs to the USSR");
             if (!redCheckpointBuilt) {
                 foreach (Transform child in transform)
                 {
@@ -86,6 +78,15 @@ public class Checkpoint : MonoBehaviour {
             blueCheckpointBuilt = false;
             neutralCheckpointBuilt = false;
         }
+    }
+
+    public string GetCheckpointOwner()
+    {
+        if (redCheckpointBuilt) {
+            return "USSR";
+        } else if (blueCheckpointBuilt) {
+            return "USA";
+        } else return "Neutral";
     }
 
     void OnDrawGizmosSelected()
