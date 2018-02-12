@@ -97,19 +97,23 @@ public class Unit : MonoBehaviour
 					RaycastHit hit;
 					Ray ray = rayCamera.ScreenPointToRay(Input.mousePosition);
 					Physics.Raycast(ray.origin, ray.direction, hitInfo: out hit, maxDistance: Mathf.Infinity, layerMask: layermask);
-					newPosition = ray.origin + ray.direction * hit.distance;
-					//todo add offset
-					Debug.Log(newPosition);
 
-//					Vector3 direction = transform.position - newPosition;
-//					Debug.DrawLine(transform.position, -direction, Color.red, 60000);
-//					RaycastHit obstacleFinder;
-//					Physics.Raycast(transform.position, Vector3.) {
-//
-//					}
-					if (Vector3.Distance(newPosition, transform.position - heightOffsetV) <= moveRangeLimit)
+					if (hit.collider.gameObject.tag == "Terrain")
 					{
-						unitTurnStatus = UnitTurnStatus.rotating;
+						newPosition = ray.origin + ray.direction * hit.distance;
+						//todo add offset
+						Debug.Log(newPosition);
+
+	//					Vector3 direction = transform.position - newPosition;
+	//					Debug.DrawLine(transform.position, -direction, Color.red, 60000);
+	//					RaycastHit obstacleFinder;
+	//					Physics.Raycast(transform.position, Vector3.) {
+	//
+	//					}
+						if (Vector3.Distance(newPosition, transform.position - heightOffsetV) <= moveRangeLimit)
+						{
+							unitTurnStatus = UnitTurnStatus.rotating;
+						}
 					}
 				}
 			} else if (unitTurnStatus == UnitTurnStatus.moved)
