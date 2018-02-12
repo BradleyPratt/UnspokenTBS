@@ -64,6 +64,7 @@ public class TurnManager : MonoBehaviour
 		if (currentUnit != null)
 		{
 			currentUnit.GetComponent<Unit>().SetSelected(false);
+			currentUnit = null;
 		}
 		if (currentTeam == "USA")
 		{
