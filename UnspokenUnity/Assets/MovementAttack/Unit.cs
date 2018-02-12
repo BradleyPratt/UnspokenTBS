@@ -104,12 +104,19 @@ public class Unit : MonoBehaviour
 						//todo add offset
 						Debug.Log(newPosition);
 
-	//					Vector3 direction = transform.position - newPosition;
-	//					Debug.DrawLine(transform.position, -direction, Color.red, 60000);
-	//					RaycastHit obstacleFinder;
-	//					Physics.Raycast(transform.position, Vector3.) {
-	//
-	//					}
+
+						Vector3 direction = (newPosition + heightOffsetV) - transform.position;
+						Vector3 direction2 = (newPosition) - transform.position;
+						RaycastHit obstacleFinder;
+						Physics.Raycast(transform.position, direction2, out obstacleFinder, Vector3.Distance(transform.position, newPosition));
+
+						if (obstacleFinder.collider != null)
+						{
+							float temp = newPosition.y;
+							newPosition = (transform.position) + (Vector3.Normalize(direction2) * (obstacleFinder.distance -lengthOffsetV.x));
+							newPosition.y = temp;
+						}
+
 						if (Vector3.Distance(newPosition, transform.position - heightOffsetV) <= moveRangeLimit)
 						{
 							unitTurnStatus = UnitTurnStatus.rotating;
