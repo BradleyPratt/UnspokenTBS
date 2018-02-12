@@ -4,9 +4,19 @@ using UnityEngine;
 
 public class Checkpoint : MonoBehaviour {
     public float radius = 200;
-	
-	// Update is called once per frame
-	void Update () {
+
+    float counter;
+
+    bool neutralCheckpointBuilt = false;
+    bool redCheckpointBuilt = false;
+    bool blueCheckpointBuilt = false;
+
+    public GameObject checkpointRed;
+    public GameObject checkpointBlue;
+    public GameObject checkpointNeutral;
+
+    // Update is called once per frame
+    void Update () {
         Colliding(transform.position, radius);
     }
 
@@ -32,15 +42,51 @@ public class Checkpoint : MonoBehaviour {
 
         if ((j == 0 && k == 0) || j == k)
         {
-            Debug.Log("Zone is neutral");
+            if (!neutralCheckpointBuilt) {
+                foreach (Transform child in transform)
+                {
+                    GameObject.Destroy(child.gameObject);
+                }
+                Instantiate(checkpointNeutral, transform);
+            }
+            neutralCheckpointBuilt = true;
+            redCheckpointBuilt = false;
+            blueCheckpointBuilt = false;
         }
         else if (j > k)
         {
-            Debug.Log("The zone belongs to the US");
+            if (!blueCheckpointBuilt) {
+                foreach (Transform child in transform)
+                {
+                    GameObject.Destroy(child.gameObject);
+                }
+                Instantiate(checkpointBlue, transform);
+            }
+            blueCheckpointBuilt = true;
+            redCheckpointBuilt = false;
+            neutralCheckpointBuilt = false;
         }
         else {
-            Debug.Log("The zone belongs to the USSR");
+            if (!redCheckpointBuilt) {
+                foreach (Transform child in transform)
+                {
+                    GameObject.Destroy(child.gameObject);
+                }
+                Instantiate(checkpointRed, transform);
+            }
+            redCheckpointBuilt = true;
+            blueCheckpointBuilt = false;
+            neutralCheckpointBuilt = false;
         }
+    }
+
+    public string GetCheckpointOwner()
+    {
+        if (redCheckpointBuilt) {
+            return "USSR";
+        } else if (blueCheckpointBuilt) {
+            return "USA";
+        } else return "Neutral";
     }
 
     void OnDrawGizmosSelected()
