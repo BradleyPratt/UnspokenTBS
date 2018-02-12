@@ -5,14 +5,23 @@ using UnityEngine;
 public class Checkpoint : MonoBehaviour {
     public float radius = 200;
 
-    bool redCheckpointBuilt;
-    bool blueCheckpointBuilt;
+    bool neutralCheckpointBuilt = false;
+    bool redCheckpointBuilt = false;
+    bool blueCheckpointBuilt = false;
 
     public GameObject checkpointRed;
     public GameObject checkpointBlue;
-	
-	// Update is called once per frame
-	void Update () {
+    public GameObject checkpointNeutral;
+
+    void Start()
+    {
+        /*checkpointNeutral = (GameObject)Resources.Load("Assets/Resources/Checkpoint/ControlPointNeutral");
+        checkpointRed = (GameObject)Resources.Load("Assets/Resources/Checkpoint/ControlPointUSSR");
+        checkpointBlue = (GameObject)Resources.Load("Assets/Resources/Checkpoint/ControlPointUS");*/
+    }
+
+    // Update is called once per frame
+    void Update () {
         Colliding(transform.position, radius);
     }
 
@@ -39,10 +48,14 @@ public class Checkpoint : MonoBehaviour {
         if ((j == 0 && k == 0) || j == k)
         {
             Debug.Log("Zone is neutral");
-            foreach (Transform child in transform)
-            {
-                GameObject.Destroy(child.gameObject);
+            if (!neutralCheckpointBuilt) {
+                foreach (Transform child in transform)
+                {
+                    GameObject.Destroy(child.gameObject);
+                }
+                Instantiate(checkpointNeutral, transform);
             }
+            neutralCheckpointBuilt = true;
             redCheckpointBuilt = false;
             blueCheckpointBuilt = false;
         }
@@ -58,6 +71,7 @@ public class Checkpoint : MonoBehaviour {
             }
             blueCheckpointBuilt = true;
             redCheckpointBuilt = false;
+            neutralCheckpointBuilt = false;
         }
         else {
             Debug.Log("The zone belongs to the USSR");
@@ -70,6 +84,7 @@ public class Checkpoint : MonoBehaviour {
             }
             redCheckpointBuilt = true;
             blueCheckpointBuilt = false;
+            neutralCheckpointBuilt = false;
         }
     }
 
