@@ -192,10 +192,10 @@ public class TurnManager : MonoBehaviour
         {
             string owner = checkpoint.GetComponent<Checkpoint>().GetCheckpointOwner();
 			Debug.Log(owner);
-            if (owner == "USA" && currentTeam == "USA")
+            if (owner == "USA" && currentTeam == "USSR")
             {
                 gameObject.GetComponent<Money>().SetUSMoney(100);
-            } else if (owner == "USSR" && currentTeam == "USSR")
+            } else if (owner == "USSR" && currentTeam == "USA")
             {
                 gameObject.GetComponent<Money>().SetUSSRMoney(100);
             }
