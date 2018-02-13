@@ -96,15 +96,15 @@ public class CameraScript : MonoBehaviour {
 
         Vector3 target = new Vector3(transform.position.x + transform.forward.x*10, transform.position.y - 30f, transform.position.z + transform.forward.z*10);
 
-        if (Input.GetKey( KeyCode.Q))
-        {
-            focus = new Vector3(transform.position.x + transform.forward.x*100, transform.position.y + transform.forward.y*100, transform.position.z + transform.forward.z*100);
-            transform.RotateAround(focus, Vector3.up, speed);
-        }
-        if (Input.GetKey(KeyCode.E))
+        if (Input.GetKey(KeyCode.Q))
         {
             focus = new Vector3(transform.position.x + transform.forward.x * 100, transform.position.y + transform.forward.y * 100, transform.position.z + transform.forward.z * 100);
             transform.RotateAround(focus, -Vector3.up, speed);
+        }
+        if (Input.GetKey( KeyCode.E))
+        {
+            focus = new Vector3(transform.position.x + transform.forward.x*100, transform.position.y + transform.forward.y*100, transform.position.z + transform.forward.z*100);
+            transform.RotateAround(focus, Vector3.up, speed);
         }
 
         cameraDistance += Input.GetAxis("Mouse ScrollWheel") * speed;
