@@ -5,9 +5,6 @@ using UnityEngine.UI;
 
 public class TurnManager : MonoBehaviour
 {
-    // Invasion of Josh's code to add class objects that will be used by the money system
-    GameObject gameManager;
-    Money money;
 
 	// A list each containing all units (and watchtowers) on each side.
 	private List<GameObject> unitsUSA = new List<GameObject>();
@@ -25,9 +22,6 @@ public class TurnManager : MonoBehaviour
 	// Use this for initialization
 	void Start()
 	{
-        // Finding the class' in GameObjects within the world
-        GameObject gameManager = GameObject.Find("GameManager");
-        money = gameManager.GetComponent<Money>();
 
         // Find all units and add them to their team's list.
         GameObject[] tempUnits = GameObject.FindGameObjectsWithTag("Unit");
@@ -66,6 +60,7 @@ public class TurnManager : MonoBehaviour
 
 	public void EndTurn()
 	{
+		Debug.Log("TurnEnded");
 		if (currentUnit != null)
 		{
 			currentUnit.GetComponent<Unit>().SetSelected(false);
@@ -190,19 +185,19 @@ public class TurnManager : MonoBehaviour
 	}
 
     // Finds checkpoints and adds money accordingly, using the EndTurn function
-    void RunCheckpoints()
+    private void RunCheckpoints()
     {
         GameObject[] checkpoints = GameObject.FindGameObjectsWithTag("Checkpoint");
         foreach (GameObject checkpoint in checkpoints)
         {
             string owner = checkpoint.GetComponent<Checkpoint>().GetCheckpointOwner();
-            if (owner == "USA")
+			Debug.Log(owner);
+            if (owner == "USA" && currentTeam == "USSR")
             {
-                money.SetUSMoney(100);
-            }
-            if (owner == "USSR")
+                gameObject.GetComponent<Money>().SetUSMoney(100);
+            } else if (owner == "USSR" && currentTeam == "USA")
             {
-                money.SetUSSRMoney(100);
+                gameObject.GetComponent<Money>().SetUSSRMoney(100);
             }
         }
     }

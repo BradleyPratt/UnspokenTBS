@@ -45,7 +45,7 @@ public class HealthBar : MonoBehaviour {
 			gameObject.tag = ("Untagged");
 			numOfUnits--;
 			GameObject.FindGameObjectWithTag("GameManager").GetComponent<TurnManager>().RemoveUnit(gameObject);
-			Destroy(gameObject);
+			gameObject.GetComponent<Unit>().UnitKilled();
 		}
 	}
 
