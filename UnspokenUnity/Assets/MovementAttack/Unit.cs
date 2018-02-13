@@ -106,18 +106,15 @@ public class Unit : MonoBehaviour
 					{
 						newPosition = ray.origin + ray.direction * hit.distance;
 						//todo add offset
-						Debug.Log(newPosition);
 
-
-						Vector3 direction = (newPosition + heightOffsetV) - transform.position;
-						Vector3 direction2 = (newPosition) - transform.position;
+						Vector3 direction = (newPosition) - transform.position;
 						RaycastHit obstacleFinder;
-						Physics.Raycast(transform.position, direction2, out obstacleFinder, Vector3.Distance(transform.position, newPosition));
+						Physics.Raycast(transform.position, direction, out obstacleFinder, Vector3.Distance(transform.position, newPosition));
 
 						if (obstacleFinder.collider != null)
 						{
 							float temp = newPosition.y;
-							newPosition = (transform.position) + (Vector3.Normalize(direction2) * (obstacleFinder.distance -lengthOffsetV.x));
+							newPosition = (transform.position) + (Vector3.Normalize(direction) * (obstacleFinder.distance -lengthOffsetV.x));
 							newPosition.y = temp;
 						}
 
