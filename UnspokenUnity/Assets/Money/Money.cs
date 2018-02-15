@@ -17,6 +17,8 @@ public class Money : MonoBehaviour {
 	void Start () {
         turnManager = GameObject.Find("GameManager").GetComponent<TurnManager>();
         moneyText = GameObject.Find("MoneyText").GetComponent<Text>();
+
+		UpdateMoneyUI();
 	}
 	
 	// Update is called once per frame
