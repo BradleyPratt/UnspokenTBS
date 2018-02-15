@@ -85,6 +85,7 @@ public class TurnManager : MonoBehaviour
 		turnCounter++;
 
         RunCheckpoints();
+		gameObject.GetComponent<Money>().UpdateMoneyUI();
 		UpdateTeamIndicator();
 	}
 

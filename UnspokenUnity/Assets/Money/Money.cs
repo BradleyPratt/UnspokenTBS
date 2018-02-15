@@ -21,27 +21,21 @@ public class Money : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        activeTeam = turnManager.GetActiveTeam();
 
-        if (activeTeam == "USA")
-        {
-            moneyText.text = USMoney.ToString();
-        } else
-        {
-            moneyText.text = USSRMoney.ToString();
-        }
     }
 
     public float SetUSMoney(float amount)
     {
         USMoney = USMoney + amount;
+		UpdateMoneyUI();
         return USMoney;
     }
 
     public float SetUSSRMoney(float amount)
     {
         USSRMoney = USSRMoney + amount;
-        return USSRMoney;
+		UpdateMoneyUI();
+		return USSRMoney;
     }
 
     public float GetUSMoney()
@@ -53,4 +47,16 @@ public class Money : MonoBehaviour {
     {
         return USSRMoney;
     }
+
+	public void UpdateMoneyUI()
+	{
+		if (activeTeam == "USA")
+		{
+			moneyText.text = USMoney.ToString();
+		}
+		else
+		{
+			moneyText.text = USSRMoney.ToString();
+		}
+	}
 }
