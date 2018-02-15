@@ -11,7 +11,8 @@ public class Unit : MonoBehaviour
 		rotating,
 		moving,
 		moved,
-		attacked
+		attacked,
+		dying
 	};
 
 	private UnitTurnStatus unitTurnStatus = UnitTurnStatus.idle;
@@ -61,6 +62,9 @@ public class Unit : MonoBehaviour
 	private float yAngle;
 	private Vector3 heightOffsetV;
 	private Vector3 lengthOffsetV;
+
+	private float animTimer = 0.0f;
+
 	// Use this for initialization
 	void Start()
 	{
@@ -76,8 +80,8 @@ public class Unit : MonoBehaviour
 						Mesh combinedMesh = new Mesh();
 						combinedMesh.CombineMeshes(combine);
 
-		Debug.Log(combinedMesh.bounds.extents.z);
-		Debug.Log(combinedMesh.bounds.extents.x);
+		//Debug.Log(combinedMesh.bounds.extents.z);
+		//Debug.Log(combinedMesh.bounds.extents.x);
 		heightOffsetV = new Vector3(0, combinedMesh.bounds.extents.y + heightOffset, 0);
 		lengthOffsetV = new Vector3(combinedMesh.bounds.extents.x, 0, 0);
 	}
@@ -97,19 +101,27 @@ public class Unit : MonoBehaviour
 					RaycastHit hit;
 					Ray ray = rayCamera.ScreenPointToRay(Input.mousePosition);
 					Physics.Raycast(ray.origin, ray.direction, hitInfo: out hit, maxDistance: Mathf.Infinity, layerMask: layermask);
-					newPosition = ray.origin + ray.direction * hit.distance;
-					//todo add offset
-					Debug.Log(newPosition);
 
-//					Vector3 direction = transform.position - newPosition;
-//					Debug.DrawLine(transform.position, -direction, Color.red, 60000);
-//					RaycastHit obstacleFinder;
-//					Physics.Raycast(transform.position, Vector3.) {
-//
-//					}
-					if (Vector3.Distance(newPosition, transform.position - heightOffsetV) <= moveRangeLimit)
+					if (hit.collider.gameObject.tag == "Terrain")
 					{
-						unitTurnStatus = UnitTurnStatus.rotating;
+						newPosition = ray.origin + ray.direction * hit.distance;
+						//todo add offset
+
+						Vector3 direction = (newPosition) - transform.position;
+						RaycastHit obstacleFinder;
+						Physics.Raycast(transform.position, direction, out obstacleFinder, Vector3.Distance(transform.position, newPosition));
+
+						if (obstacleFinder.collider != null)
+						{
+							float temp = newPosition.y;
+							newPosition = (transform.position) + (Vector3.Normalize(direction) * (obstacleFinder.distance -lengthOffsetV.x));
+							newPosition.y = temp;
+						}
+
+						if (Vector3.Distance(newPosition, transform.position - heightOffsetV) <= moveRangeLimit)
+						{
+							unitTurnStatus = UnitTurnStatus.rotating;
+						}
 					}
 				}
 			} else if (unitTurnStatus == UnitTurnStatus.moved)
@@ -178,6 +190,12 @@ public class Unit : MonoBehaviour
 					CreateAttackProjector();
 				}
 			}
+		} else if (unitTurnStatus == UnitTurnStatus.dying)
+		{
+			if (animTimer > 1.0f) {
+				Destroy(this.gameObject);
+			}
+			animTimer += Time.deltaTime;
 		}
 	}
 
@@ -298,5 +316,15 @@ public class Unit : MonoBehaviour
 	public void ResetUnitTurn()
 	{
 		unitTurnStatus = UnitTurnStatus.idle;
+	}
+
+	public void UnitKilled()
+	{
+		animTimer = 0.0f;
+		unitTurnStatus = UnitTurnStatus.dying;
+		foreach (MeshRenderer meshRenderer in this.GetComponentsInChildren<MeshRenderer>())
+		{
+			meshRenderer.material.color = Color.red;
+		}
 	}
 }

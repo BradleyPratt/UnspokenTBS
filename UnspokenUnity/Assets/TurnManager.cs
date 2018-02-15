@@ -23,8 +23,8 @@ public class TurnManager : MonoBehaviour
 	void Start()
 	{
 
-		// Find all units and add them to their team's list.
-		GameObject[] tempUnits = GameObject.FindGameObjectsWithTag("Unit");
+        // Find all units and add them to their team's list.
+        GameObject[] tempUnits = GameObject.FindGameObjectsWithTag("Unit");
 		foreach (GameObject tempUnit in tempUnits)
 		{
 			if (string.Equals(tempUnit.GetComponent<Unit>().GetTeam(), "USA"))
@@ -50,7 +50,6 @@ public class TurnManager : MonoBehaviour
 				unitsUSSR.Add(tempWatchTower);
 			}
 		}
-
 	}
 
 	// Update is called once per frame
@@ -61,9 +60,11 @@ public class TurnManager : MonoBehaviour
 
 	public void EndTurn()
 	{
+		Debug.Log("TurnEnded");
 		if (currentUnit != null)
 		{
 			currentUnit.GetComponent<Unit>().SetSelected(false);
+			currentUnit = null;
 		}
 		if (currentTeam == "USA")
 		{
@@ -83,6 +84,7 @@ public class TurnManager : MonoBehaviour
 		}
 		turnCounter++;
 
+        RunCheckpoints();
 		UpdateTeamIndicator();
 	}
 
@@ -181,4 +183,22 @@ public class TurnManager : MonoBehaviour
 	{
 		GameObject.FindGameObjectWithTag("TeamIndicator").GetComponent<Text>().text = string.Concat("Current Team: ", currentTeam);
 	}
+
+    // Finds checkpoints and adds money accordingly, using the EndTurn function
+    private void RunCheckpoints()
+    {
+        GameObject[] checkpoints = GameObject.FindGameObjectsWithTag("Checkpoint");
+        foreach (GameObject checkpoint in checkpoints)
+        {
+            string owner = checkpoint.GetComponent<Checkpoint>().GetCheckpointOwner();
+			Debug.Log(owner);
+            if (owner == "USA" && currentTeam == "USSR")
+            {
+                gameObject.GetComponent<Money>().SetUSMoney(100);
+            } else if (owner == "USSR" && currentTeam == "USA")
+            {
+                gameObject.GetComponent<Money>().SetUSSRMoney(100);
+            }
+        }
+    }
 }
