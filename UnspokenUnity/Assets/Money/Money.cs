@@ -8,8 +8,8 @@ public class Money : MonoBehaviour {
 
     string activeTeam;
 
-    float USMoney = 0;
-    float USSRMoney = 0;
+    float USMoney = 800;
+    float USSRMoney = 800;
 
     Text moneyText;
 
@@ -24,18 +24,28 @@ public class Money : MonoBehaviour {
 
     }
 
-    public float SetUSMoney(float amount)
+	// true if money adjusted correctly, otherwise false.
+    public bool SetUSMoney(float amount)
     {
-        USMoney = USMoney + amount;
-		UpdateMoneyUI();
-        return USMoney;
+		if ((USMoney + amount) >= 0)
+		{
+			USMoney = USMoney + amount;
+			UpdateMoneyUI();
+			return true;
+		}
+        return false;
     }
 
-    public float SetUSSRMoney(float amount)
-    {
-        USSRMoney = USSRMoney + amount;
-		UpdateMoneyUI();
-		return USSRMoney;
+	// true if money adjusted correctly, otherwise false.
+	public bool SetUSSRMoney(float amount)
+	{
+		if ((USSRMoney + amount) >= 0)
+		{
+			USSRMoney = USSRMoney + amount;
+			UpdateMoneyUI();
+			return true;
+		}
+		return false;
     }
 
     public float GetUSMoney()
