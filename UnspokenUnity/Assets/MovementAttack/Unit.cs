@@ -32,6 +32,9 @@ public class Unit : MonoBehaviour
 	float moveSpeed = 10;
 
 	[SerializeField]
+	float rotationSpeed = 10;
+
+	[SerializeField]
 	Vector2 attackRange = new Vector2(50, 150);
 
 	[SerializeField]
@@ -190,9 +193,9 @@ public class Unit : MonoBehaviour
 			{
 				if (angleProg < angle)
 				{
-					angleProg += Time.deltaTime * 4;
+					angleProg += Time.deltaTime * rotationSpeed;
 
-					angleDelta = Time.deltaTime*4;
+					angleDelta = Time.deltaTime * rotationSpeed;
 				} else
 				{
 					transform.rotation = Quaternion.Euler(new Vector3(-90, -angle + angleOffset, 0));
