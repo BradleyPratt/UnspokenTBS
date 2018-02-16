@@ -84,8 +84,6 @@ public class Unit : MonoBehaviour
 						Mesh combinedMesh = new Mesh();
 						combinedMesh.CombineMeshes(combine);
 
-		//Debug.Log(combinedMesh.bounds.extents.z);
-		//Debug.Log(combinedMesh.bounds.extents.x);
 		heightOffsetV = new Vector3(0, combinedMesh.bounds.extents.y + heightOffset, 0);
 		lengthOffsetV = new Vector3(combinedMesh.bounds.extents.x, 0, 0);
 	}
@@ -124,6 +122,7 @@ public class Unit : MonoBehaviour
 
 						if (Vector3.Distance(newPosition, transform.position - heightOffsetV) <= moveRangeLimit)
 						{
+							angleProg = 0;
 							unitTurnStatus = UnitTurnStatus.rotating;
 						}
 					}
@@ -182,8 +181,8 @@ public class Unit : MonoBehaviour
 			{
 				if (angleProg > angle)
 				{
-					angleProg -= Time.deltaTime*4;
-				angleDelta = -Time.deltaTime*4;
+					angleDelta = -Time.deltaTime * rotationSpeed;
+					angleProg += angleDelta;
 				} else
 				{
 					transform.rotation = Quaternion.Euler(new Vector3(-90, -angle + angleOffset, 0));
@@ -193,9 +192,8 @@ public class Unit : MonoBehaviour
 			{
 				if (angleProg < angle)
 				{
-					angleProg += Time.deltaTime * rotationSpeed;
-
 					angleDelta = Time.deltaTime * rotationSpeed;
+					angleProg += angleDelta;
 				} else
 				{
 					transform.rotation = Quaternion.Euler(new Vector3(-90, -angle + angleOffset, 0));
