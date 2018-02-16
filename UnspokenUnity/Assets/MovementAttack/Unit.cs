@@ -64,6 +64,7 @@ public class Unit : MonoBehaviour
 	private Vector3 lengthOffsetV;
 
 	private float animTimer = 0.0f;
+	private float angleProg = 0.0f;
 
 	// Use this for initialization
 	void Start()
@@ -172,9 +173,33 @@ public class Unit : MonoBehaviour
 			angleTarget.x = angleTarget.x - transform.position.x;
 			angleTarget.z = angleTarget.z - transform.position.z;
 			float angle = Mathf.Atan2(angleTarget.z, angleTarget.x) * Mathf.Rad2Deg;
-			transform.rotation = Quaternion.Euler(new Vector3(-90, -angle + angleOffset, 0));
+			Debug.Log(angle);
+			float angleDelta = 0;
+			if (angle < 0)
+			{
+				if (angleProg > angle)
+				{
+					angleProg -= Time.deltaTime*4;
+				angleDelta = -Time.deltaTime*4;
+				} else
+				{
+					transform.rotation = Quaternion.Euler(new Vector3(-90, -angle + angleOffset, 0));
+					unitTurnStatus = UnitTurnStatus.moving;
+				}
+			} else
+			{
+				if (angleProg < angle)
+				{
+					angleProg += Time.deltaTime * 4;
 
-			unitTurnStatus = UnitTurnStatus.moving;
+					angleDelta = Time.deltaTime*4;
+				} else
+				{
+					transform.rotation = Quaternion.Euler(new Vector3(-90, -angle + angleOffset, 0));
+					unitTurnStatus = UnitTurnStatus.moving;
+				}
+			}
+			transform.rotation = Quaternion.Euler(new Vector3(transform.rotation.eulerAngles.x, -angleDelta + transform.rotation.eulerAngles.y, transform.rotation.eulerAngles.z));
 		}
 		else if (unitTurnStatus == UnitTurnStatus.moving)
 		{
