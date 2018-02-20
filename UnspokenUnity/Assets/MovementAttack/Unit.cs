@@ -62,7 +62,7 @@ public class Unit : MonoBehaviour
 	private GameObject currentProjector;
 
 	private Vector3 newPosition;
-	private float angle;
+	private float finalAngle;
 	private Vector3 heightOffsetV;
 	private Vector3 lengthOffsetV;
 
@@ -86,6 +86,14 @@ public class Unit : MonoBehaviour
 
 		heightOffsetV = new Vector3(0, combinedMesh.bounds.extents.y + heightOffset, 0);
 		lengthOffsetV = new Vector3(combinedMesh.bounds.extents.x, 0, 0);
+
+
+		int layer = 8; // Layer 8 is the terrain.
+		int layermask = 1 << layer; // Turn the int into the layermask.
+
+		RaycastHit hit;
+		Physics.Raycast(transform.position, new Vector3(0, -1, 0), hitInfo: out hit, maxDistance: Mathf.Infinity, layerMask: layermask);
+		transform.position = hit.point + heightOffsetV;
 	}
 
 	// Update is called once per frame
@@ -175,29 +183,38 @@ public class Unit : MonoBehaviour
 			Vector3 angleTarget = newPosition;
 			angleTarget.x = angleTarget.x - transform.position.x;
 			angleTarget.z = angleTarget.z - transform.position.z;
-			angle = Mathf.Atan2(angleTarget.z, angleTarget.x) * Mathf.Rad2Deg;
+			finalAngle = Mathf.Atan2(angleTarget.z, angleTarget.x) * Mathf.Rad2Deg;
+			float angle = finalAngle;
+			float test;
+			if ((270 > Mathf.Abs(transform.rotation.eulerAngles.y)) && (Mathf.Abs(transform.rotation.eulerAngles.y) > 90))
+			{
+				test = -1;
+			} else
+			{
+				test = 1;
+			}
 			Debug.Log(angle);
 			float angleDelta = 0;
 			if (angle < 0)
 			{
 				if (angleProg > angle)
 				{
-					angleDelta = -Time.deltaTime * rotationSpeed;
+					angleDelta = -Time.deltaTime * rotationSpeed * test;
 					angleProg += angleDelta;
 				} else
 				{
-					transform.rotation = Quaternion.Euler(new Vector3(-90, -angle + angleOffset, 0));
+					transform.rotation = Quaternion.Euler(new Vector3(-90, -finalAngle + angleOffset, 0));
 					unitTurnStatus = UnitTurnStatus.moving;
 				}
 			} else
 			{
 				if (angleProg < angle)
 				{
-					angleDelta = Time.deltaTime * rotationSpeed;
+					angleDelta = Time.deltaTime * rotationSpeed * test;
 					angleProg += angleDelta;
 				} else
 				{
-					transform.rotation = Quaternion.Euler(new Vector3(-90, -angle + angleOffset, 0));
+					transform.rotation = Quaternion.Euler(new Vector3(-90, -finalAngle + angleOffset, 0));
 					unitTurnStatus = UnitTurnStatus.moving;
 				}
 			}
@@ -350,7 +367,7 @@ public class Unit : MonoBehaviour
 			transform.position = newPosition + heightOffsetV;
 		} else if (unitTurnStatus == UnitTurnStatus.rotating)
 		{
-			transform.rotation = Quaternion.Euler(new Vector3(-90, -angle + angleOffset, 0));
+			transform.rotation = Quaternion.Euler(new Vector3(-90, -finalAngle + angleOffset, 0));
 			transform.position = newPosition + heightOffsetV;
 		}
 		unitTurnStatus = UnitTurnStatus.idle;
