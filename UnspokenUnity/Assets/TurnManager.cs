@@ -30,10 +30,12 @@ public class TurnManager : MonoBehaviour
 			if (string.Equals(tempUnit.GetComponent<Unit>().GetTeam(), "USA"))
 			{
 				unitsUSA.Add(tempUnit);
+				tempUnit.GetComponentInChildren<MiniMapUnitIcon>().SetColor(Color.blue);
 			}
 			else if (string.Equals(tempUnit.GetComponent<Unit>().GetTeam(), "USSR"))
 			{
 				unitsUSSR.Add(tempUnit);
+				tempUnit.GetComponentInChildren<MiniMapUnitIcon>().SetColor(Color.red);
 			}
 		}
 
@@ -72,6 +74,11 @@ public class TurnManager : MonoBehaviour
 			foreach (GameObject unit in unitsUSSR)
 			{
 				unit.GetComponent<Unit>().ResetUnitTurn();
+				unit.GetComponentInChildren<MiniMapUnitIcon>().SetColor(Color.blue);
+			}
+			foreach (GameObject unit in unitsUSA)
+			{
+				unit.GetComponentInChildren<MiniMapUnitIcon>().SetColor(Color.red);
 			}
 		}
 		else
@@ -80,6 +87,11 @@ public class TurnManager : MonoBehaviour
 			foreach (GameObject unit in unitsUSA)
 			{
 				unit.GetComponent<Unit>().ResetUnitTurn();
+				unit.GetComponentInChildren<MiniMapUnitIcon>().SetColor(Color.red);
+			}
+			foreach (GameObject unit in unitsUSSR)
+			{
+				unit.GetComponentInChildren<MiniMapUnitIcon>().SetColor(Color.red);
 			}
 		}
 		turnCounter++;
