@@ -158,6 +158,7 @@ public class Unit : MonoBehaviour
 
 						Destroy(currentProjector.gameObject);
 						unitTurnStatus = UnitTurnStatus.attacked;
+						this.GetComponentInChildren<MiniMapUnitIcon>().SetColor(Color.gray);
 					}
 				}
 			}
