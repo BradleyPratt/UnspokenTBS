@@ -62,7 +62,7 @@ public class Unit : MonoBehaviour
 	private GameObject currentProjector;
 
 	private Vector3 newPosition;
-	private float yAngle;
+	private float angle;
 	private Vector3 heightOffsetV;
 	private Vector3 lengthOffsetV;
 
@@ -175,7 +175,7 @@ public class Unit : MonoBehaviour
 			Vector3 angleTarget = newPosition;
 			angleTarget.x = angleTarget.x - transform.position.x;
 			angleTarget.z = angleTarget.z - transform.position.z;
-			float angle = Mathf.Atan2(angleTarget.z, angleTarget.x) * Mathf.Rad2Deg;
+			angle = Mathf.Atan2(angleTarget.z, angleTarget.x) * Mathf.Rad2Deg;
 			Debug.Log(angle);
 			float angleDelta = 0;
 			if (angle < 0)
@@ -342,6 +342,17 @@ public class Unit : MonoBehaviour
 
 	public void ResetUnitTurn()
 	{
+		if (unitTurnStatus == UnitTurnStatus.dying)
+		{
+			Destroy(this.gameObject);
+		} else if (unitTurnStatus == UnitTurnStatus.moving)
+		{
+			transform.position = newPosition + heightOffsetV;
+		} else if (unitTurnStatus == UnitTurnStatus.rotating)
+		{
+			transform.rotation = Quaternion.Euler(new Vector3(-90, -angle + angleOffset, 0));
+			transform.position = newPosition + heightOffsetV;
+		}
 		unitTurnStatus = UnitTurnStatus.idle;
 	}
 
