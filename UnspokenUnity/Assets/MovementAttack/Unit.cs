@@ -23,7 +23,7 @@ public class Unit : MonoBehaviour
 	private string team = "USA";
 
 	[SerializeField]
-	private Camera rayCamera = Camera.main;
+	private Camera rayCamera;
 
 	[SerializeField]
 	private float moveRangeLimit = 50;
@@ -72,6 +72,7 @@ public class Unit : MonoBehaviour
 	// Use this for initialization
 	void Start()
 	{
+		rayCamera = Camera.main;
 						MeshFilter[] meshFilters = this.GetComponentsInChildren<MeshFilter>();
 						CombineInstance[] combine = new CombineInstance[meshFilters.Length];
 						int i = 0;
