@@ -23,7 +23,7 @@ public class Unit : MonoBehaviour
 	private string team = "USA";
 
 	[SerializeField]
-	private Camera rayCamera;
+	private Camera rayCamera = Camera.main;
 
 	[SerializeField]
 	private float moveRangeLimit = 50;
