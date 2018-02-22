@@ -44,6 +44,9 @@ public class Unit : MonoBehaviour
 	float attackStrength = 20;
 
 	[SerializeField]
+	float rewardMoney = 0;
+
+	[SerializeField]
 	float angleOffset = 90;
 
 	[SerializeField]
@@ -72,7 +75,7 @@ public class Unit : MonoBehaviour
 	// Use this for initialization
 	void Start()
 	{
-		rayCamera = Camera.main;
+		//rayCamera = Camera.main;
 						MeshFilter[] meshFilters = this.GetComponentsInChildren<MeshFilter>();
 						CombineInstance[] combine = new CombineInstance[meshFilters.Length];
 						int i = 0;
@@ -95,6 +98,7 @@ public class Unit : MonoBehaviour
 		RaycastHit hit;
 		Physics.Raycast(transform.position, new Vector3(0, -1, 0), hitInfo: out hit, maxDistance: Mathf.Infinity, layerMask: layermask);
 		transform.position = hit.point + heightOffsetV;
+		
 	}
 
 	// Update is called once per frame
@@ -187,39 +191,40 @@ public class Unit : MonoBehaviour
 			finalAngle = Mathf.Atan2(angleTarget.z, angleTarget.x) * Mathf.Rad2Deg;
 			float angle = finalAngle;
 			float test;
-			if ((270 > Mathf.Abs(transform.rotation.eulerAngles.y)) && (Mathf.Abs(transform.rotation.eulerAngles.y) > 90))
+			if (transform.rotation.eulerAngles.y >=0)
 			{
 				test = -1;
 			} else
 			{
 				test = 1;
 			}
-			Debug.Log(angle);
-			float angleDelta = 0;
-			if (angle < 0)
-			{
-				if (angleProg > angle)
-				{
-					angleDelta = -Time.deltaTime * rotationSpeed * test;
-					angleProg += angleDelta;
-				} else
-				{
+			Debug.Log(test);
+			//
+			//float angleDelta = 0;
+			//if (angle < 0)
+			//{
+			//	if (angleProg > angle)
+			//	{
+			//		angleDelta = -Time.deltaTime * rotationSpeed;// * test;
+			//		angleProg += angleDelta;
+			//	} else
+			//	{
+			//		transform.rotation = Quaternion.Euler(new Vector3(-90, -finalAngle + angleOffset, 0));
+			//		unitTurnStatus = UnitTurnStatus.moving;
+			//	}
+			//} else
+			//{
+			//	if (angleProg < angle)
+			//	{
+			//		angleDelta = Time.deltaTime * rotationSpeed;// * test;
+			///		angleProg += angleDelta;
+			//	} else
+			//	{
 					transform.rotation = Quaternion.Euler(new Vector3(-90, -finalAngle + angleOffset, 0));
 					unitTurnStatus = UnitTurnStatus.moving;
-				}
-			} else
-			{
-				if (angleProg < angle)
-				{
-					angleDelta = Time.deltaTime * rotationSpeed * test;
-					angleProg += angleDelta;
-				} else
-				{
-					transform.rotation = Quaternion.Euler(new Vector3(-90, -finalAngle + angleOffset, 0));
-					unitTurnStatus = UnitTurnStatus.moving;
-				}
-			}
-			transform.rotation = Quaternion.Euler(new Vector3(transform.rotation.eulerAngles.x, -angleDelta + transform.rotation.eulerAngles.y, transform.rotation.eulerAngles.z));
+			//	}
+			//}
+			//transform.rotation = Quaternion.Euler(new Vector3(transform.rotation.eulerAngles.x, -angleDelta + transform.rotation.eulerAngles.y, transform.rotation.eulerAngles.z));
 		}
 		else if (unitTurnStatus == UnitTurnStatus.moving)
 		{
@@ -239,6 +244,11 @@ public class Unit : MonoBehaviour
 		{
 			if (animTimer > 1.0f) {
 				Destroy(this.gameObject);
+				System.Random rand = new System.Random();
+				if (!(GameObject.FindGameObjectWithTag("GameManager").GetComponent<TurnManager>().GetActiveTeam() == team))
+				{
+					GameObject.FindGameObjectWithTag("GameManger").GetComponent<Money>().SetMoney((rewardMoney - 5) + rand.Next(0, 10), team);
+				}
 			}
 			animTimer += Time.deltaTime;
 		}
