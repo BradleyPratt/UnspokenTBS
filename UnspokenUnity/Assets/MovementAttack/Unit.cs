@@ -23,13 +23,16 @@ public class Unit : MonoBehaviour
 	private string team = "USA";
 
 	[SerializeField]
-	private Camera rayCamera;
+	private Camera rayCamera = Camera.main;
 
 	[SerializeField]
 	private float moveRangeLimit = 50;
 
 	[SerializeField]
 	float moveSpeed = 10;
+
+	[SerializeField]
+	float rotationSpeed = 10;
 
 	[SerializeField]
 	Vector2 attackRange = new Vector2(50, 150);
@@ -59,11 +62,12 @@ public class Unit : MonoBehaviour
 	private GameObject currentProjector;
 
 	private Vector3 newPosition;
-	private float yAngle;
+	private float finalAngle;
 	private Vector3 heightOffsetV;
 	private Vector3 lengthOffsetV;
 
 	private float animTimer = 0.0f;
+	private float angleProg = 0.0f;
 
 	// Use this for initialization
 	void Start()
@@ -80,10 +84,16 @@ public class Unit : MonoBehaviour
 						Mesh combinedMesh = new Mesh();
 						combinedMesh.CombineMeshes(combine);
 
-		//Debug.Log(combinedMesh.bounds.extents.z);
-		//Debug.Log(combinedMesh.bounds.extents.x);
 		heightOffsetV = new Vector3(0, combinedMesh.bounds.extents.y + heightOffset, 0);
 		lengthOffsetV = new Vector3(combinedMesh.bounds.extents.x, 0, 0);
+
+
+		int layer = 8; // Layer 8 is the terrain.
+		int layermask = 1 << layer; // Turn the int into the layermask.
+
+		RaycastHit hit;
+		Physics.Raycast(transform.position, new Vector3(0, -1, 0), hitInfo: out hit, maxDistance: Mathf.Infinity, layerMask: layermask);
+		transform.position = hit.point + heightOffsetV;
 	}
 
 	// Update is called once per frame
@@ -120,6 +130,7 @@ public class Unit : MonoBehaviour
 
 						if (Vector3.Distance(newPosition, transform.position - heightOffsetV) <= moveRangeLimit)
 						{
+							angleProg = 0;
 							unitTurnStatus = UnitTurnStatus.rotating;
 						}
 					}
@@ -172,10 +183,42 @@ public class Unit : MonoBehaviour
 			Vector3 angleTarget = newPosition;
 			angleTarget.x = angleTarget.x - transform.position.x;
 			angleTarget.z = angleTarget.z - transform.position.z;
-			float angle = Mathf.Atan2(angleTarget.z, angleTarget.x) * Mathf.Rad2Deg;
-			transform.rotation = Quaternion.Euler(new Vector3(-90, -angle + angleOffset, 0));
-
-			unitTurnStatus = UnitTurnStatus.moving;
+			finalAngle = Mathf.Atan2(angleTarget.z, angleTarget.x) * Mathf.Rad2Deg;
+			float angle = finalAngle;
+			float test;
+			if ((270 > Mathf.Abs(transform.rotation.eulerAngles.y)) && (Mathf.Abs(transform.rotation.eulerAngles.y) > 90))
+			{
+				test = -1;
+			} else
+			{
+				test = 1;
+			}
+			Debug.Log(angle);
+			float angleDelta = 0;
+			if (angle < 0)
+			{
+				if (angleProg > angle)
+				{
+					angleDelta = -Time.deltaTime * rotationSpeed * test;
+					angleProg += angleDelta;
+				} else
+				{
+					transform.rotation = Quaternion.Euler(new Vector3(-90, -finalAngle + angleOffset, 0));
+					unitTurnStatus = UnitTurnStatus.moving;
+				}
+			} else
+			{
+				if (angleProg < angle)
+				{
+					angleDelta = Time.deltaTime * rotationSpeed * test;
+					angleProg += angleDelta;
+				} else
+				{
+					transform.rotation = Quaternion.Euler(new Vector3(-90, -finalAngle + angleOffset, 0));
+					unitTurnStatus = UnitTurnStatus.moving;
+				}
+			}
+			transform.rotation = Quaternion.Euler(new Vector3(transform.rotation.eulerAngles.x, -angleDelta + transform.rotation.eulerAngles.y, transform.rotation.eulerAngles.z));
 		}
 		else if (unitTurnStatus == UnitTurnStatus.moving)
 		{
@@ -316,6 +359,17 @@ public class Unit : MonoBehaviour
 
 	public void ResetUnitTurn()
 	{
+		if (unitTurnStatus == UnitTurnStatus.dying)
+		{
+			Destroy(this.gameObject);
+		} else if (unitTurnStatus == UnitTurnStatus.moving)
+		{
+			transform.position = newPosition + heightOffsetV;
+		} else if (unitTurnStatus == UnitTurnStatus.rotating)
+		{
+			transform.rotation = Quaternion.Euler(new Vector3(-90, -finalAngle + angleOffset, 0));
+			transform.position = newPosition + heightOffsetV;
+		}
 		unitTurnStatus = UnitTurnStatus.idle;
 	}
 
