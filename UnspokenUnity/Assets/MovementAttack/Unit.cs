@@ -71,7 +71,7 @@ public class Unit : MonoBehaviour
 
 	private float animTimer = 0.0f;
 	private float angleProg = 0.0f;
-
+	private float test = 0.0f;
 	// Use this for initialization
 	void Start()
 	{
@@ -136,6 +136,19 @@ public class Unit : MonoBehaviour
 						if (Vector3.Distance(newPosition, transform.position - heightOffsetV) <= moveRangeLimit)
 						{
 							angleProg = 0;
+							Vector3 angleTarget = newPosition;
+							angleTarget.x = angleTarget.x - transform.position.x;
+							angleTarget.z = angleTarget.z - transform.position.z;
+							finalAngle = Mathf.Atan2(angleTarget.z, angleTarget.x) * Mathf.Rad2Deg;
+							if ((transform.rotation.eulerAngles.y % 360 > 90) && (transform.rotation.eulerAngles.y % 360 < 270))
+							{
+								test = -1;
+							}
+							else
+							{
+								test = 1;
+							}
+							//finalAngle *= test;
 							unitTurnStatus = UnitTurnStatus.rotating;
 						}
 					}
@@ -185,46 +198,39 @@ public class Unit : MonoBehaviour
 
 		if (unitTurnStatus == UnitTurnStatus.rotating)
 		{
-			Vector3 angleTarget = newPosition;
-			angleTarget.x = angleTarget.x - transform.position.x;
-			angleTarget.z = angleTarget.z - transform.position.z;
-			finalAngle = Mathf.Atan2(angleTarget.z, angleTarget.x) * Mathf.Rad2Deg;
 			float angle = finalAngle;
-			float test;
-			if (transform.rotation.eulerAngles.y >=0)
-			{
-				test = -1;
-			} else
-			{
-				test = 1;
-			}
+			angle *= test;
+			Debug.Log(transform.rotation.eulerAngles.y % 360);
+			Debug.Log(angleProg);
+			Debug.Log("Here");
+			Debug.Log(angle);
 			Debug.Log(test);
-			//
-			//float angleDelta = 0;
-			//if (angle < 0)
-			//{
-			//	if (angleProg > angle)
-			//	{
-			//		angleDelta = -Time.deltaTime * rotationSpeed;// * test;
-			//		angleProg += angleDelta;
-			//	} else
-			//	{
-			//		transform.rotation = Quaternion.Euler(new Vector3(-90, -finalAngle + angleOffset, 0));
-			//		unitTurnStatus = UnitTurnStatus.moving;
-			//	}
-			//} else
-			//{
-			//	if (angleProg < angle)
-			//	{
-			//		angleDelta = Time.deltaTime * rotationSpeed;// * test;
-			///		angleProg += angleDelta;
-			//	} else
-			//	{
+			
+			float angleDelta = 0;
+			if (angle < 0)
+			{
+				if (angleProg > angle)
+				{
+					angleDelta = -Time.deltaTime * rotationSpeed;// * test;
+					angleProg += angleDelta;
+				} else
+				{
 					transform.rotation = Quaternion.Euler(new Vector3(-90, -finalAngle + angleOffset, 0));
 					unitTurnStatus = UnitTurnStatus.moving;
-			//	}
-			//}
-			//transform.rotation = Quaternion.Euler(new Vector3(transform.rotation.eulerAngles.x, -angleDelta + transform.rotation.eulerAngles.y, transform.rotation.eulerAngles.z));
+				}
+			} else
+			{
+				if (angleProg < angle)
+				{
+					angleDelta = Time.deltaTime * rotationSpeed;// * test;
+					angleProg += angleDelta;
+				} else
+				{
+					transform.rotation = Quaternion.Euler(new Vector3(-90, -finalAngle + angleOffset, 0));
+					unitTurnStatus = UnitTurnStatus.moving;
+				}
+			}
+			transform.rotation = Quaternion.Euler(new Vector3(transform.rotation.eulerAngles.x, -angleDelta + transform.rotation.eulerAngles.y, transform.rotation.eulerAngles.z));
 		}
 		else if (unitTurnStatus == UnitTurnStatus.moving)
 		{
