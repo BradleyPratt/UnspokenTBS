@@ -15,6 +15,7 @@ public class Unit : MonoBehaviour
 		dying
 	};
 
+	private float absAngle;
 	private UnitTurnStatus unitTurnStatus = UnitTurnStatus.idle;
 	private bool unitSelected = false;
 	private bool lockInput = false;
@@ -149,6 +150,9 @@ public class Unit : MonoBehaviour
 								test = 1;
 							}
 							//finalAngle *= test;
+							absAngle = (transform.rotation.eulerAngles.y % 360) - (finalAngle % 360);
+							Debug.Log("abs");
+							Debug.Log(absAngle);
 							unitTurnStatus = UnitTurnStatus.rotating;
 						}
 					}
@@ -209,7 +213,7 @@ public class Unit : MonoBehaviour
 			float angleDelta = 0;
 			if (angle < 0)
 			{
-				if (angleProg > angle)
+				if (Mathf.Abs(angleProg) < absAngle)
 				{
 					angleDelta = -Time.deltaTime * rotationSpeed;// * test;
 					angleProg += angleDelta;
@@ -220,7 +224,7 @@ public class Unit : MonoBehaviour
 				}
 			} else
 			{
-				if (angleProg < angle)
+				if (Mathf.Abs(angleProg) < Mathf.Abs(absAngle))
 				{
 					angleDelta = Time.deltaTime * rotationSpeed;// * test;
 					angleProg += angleDelta;
