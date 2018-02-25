@@ -149,10 +149,8 @@ public class Unit : MonoBehaviour
 							{
 								test = 1;
 							}
-							//finalAngle *= test;
+
 							absAngle = (transform.rotation.eulerAngles.y % 360) - (finalAngle % 360);
-							Debug.Log("abs");
-							Debug.Log(absAngle);
 							unitTurnStatus = UnitTurnStatus.rotating;
 						}
 					}
@@ -204,18 +202,13 @@ public class Unit : MonoBehaviour
 		{
 			float angle = finalAngle;
 			angle *= test;
-			Debug.Log(transform.rotation.eulerAngles.y % 360);
-			Debug.Log(angleProg);
-			Debug.Log("Here");
-			Debug.Log(angle);
-			Debug.Log(test);
 			
 			float angleDelta = 0;
 			if (angle < 0)
 			{
 				if (Mathf.Abs(angleProg) < absAngle)
 				{
-					angleDelta = -Time.deltaTime * rotationSpeed;// * test;
+					angleDelta = -Time.deltaTime * rotationSpeed;
 					angleProg += angleDelta;
 				} else
 				{
@@ -226,7 +219,7 @@ public class Unit : MonoBehaviour
 			{
 				if (Mathf.Abs(angleProg) < Mathf.Abs(absAngle))
 				{
-					angleDelta = Time.deltaTime * rotationSpeed;// * test;
+					angleDelta = Time.deltaTime * rotationSpeed;
 					angleProg += angleDelta;
 				} else
 				{
