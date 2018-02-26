@@ -216,9 +216,9 @@ public class Unit : MonoBehaviour
 		}
 		else if (unitTurnStatus == UnitTurnStatus.moving)
 		{
+			transform.position = Vector3.MoveTowards(transform.position, newPosition+ heightOffsetV, Time.deltaTime * moveSpeed);
 			if (!(transform.position == newPosition + heightOffsetV))
 			{
-				transform.position = Vector3.MoveTowards(transform.position, newPosition+ heightOffsetV, Time.deltaTime * moveSpeed);
 				int layer = 8; // Layer 8 is the terrain.
 				int layermask = 1 << layer; // Turn the int into the layermask.
 
