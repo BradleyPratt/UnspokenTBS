@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class Money : MonoBehaviour {
     TurnManager turnManager;
 
-    string activeTeam = "USA";
+    string activeTeam;
 
     float USMoney = 800;
     float USSRMoney = 800;
@@ -25,19 +25,6 @@ public class Money : MonoBehaviour {
 	void Update () {
 
     }
-
-	public bool SetMoney(float amount, string team)
-	{
-		if (team == "USA")
-		{
-			return SetUSMoney(amount);
-		} else if (team == "USSR")
-		{
-			return SetUSSRMoney(amount);
-		} else {
-			return false;
-		}
-	}
 
 	// true if money adjusted correctly, otherwise false.
     public bool SetUSMoney(float amount)
@@ -75,7 +62,6 @@ public class Money : MonoBehaviour {
 
 	public void UpdateMoneyUI()
 	{
-        activeTeam = turnManager.GetActiveTeam();
 		if (activeTeam == "USA")
 		{
 			moneyText.text = USMoney.ToString();
