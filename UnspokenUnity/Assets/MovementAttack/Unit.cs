@@ -72,11 +72,13 @@ public class Unit : MonoBehaviour
 
 	private float animTimer = 0.0f;
 	private float angleProg = 0.0f;
-	private float test = 0.0f;
+	private float angleAdjustment = 0.0f;
+	private float angleChange;
+
 	// Use this for initialization
 	void Start()
 	{
-		//rayCamera = Camera.main;
+		rayCamera = Camera.main;
 						MeshFilter[] meshFilters = this.GetComponentsInChildren<MeshFilter>();
 						CombineInstance[] combine = new CombineInstance[meshFilters.Length];
 						int i = 0;
@@ -141,22 +143,19 @@ public class Unit : MonoBehaviour
 							angleTarget.x = angleTarget.x - transform.position.x;
 							angleTarget.z = angleTarget.z - transform.position.z;
 							finalAngle = Mathf.Atan2(angleTarget.z, angleTarget.x) * Mathf.Rad2Deg;
-							if ((transform.rotation.eulerAngles.y % 360 > 90) && (transform.rotation.eulerAngles.y % 360 < 270))
+							angleChange = PositiveMod((PositiveMod(transform.rotation.eulerAngles.y, 360)) - (PositiveMod(finalAngle, 360)), 360);
+							if(angleChange > 180)
 							{
-								test = -1;
+								angleChange -= 360;
 							}
-							else
-							{
-								test = 1;
-							}
-
-							absAngle = (transform.rotation.eulerAngles.y % 360) - (finalAngle % 360);
 							unitTurnStatus = UnitTurnStatus.rotating;
 						}
 					}
 				}
 			} else if (unitTurnStatus == UnitTurnStatus.moved)
 			{
+
+
 				PositionAttackProjector();
 				if (Input.GetMouseButtonDown(0))
 				{
@@ -200,40 +199,32 @@ public class Unit : MonoBehaviour
 
 		if (unitTurnStatus == UnitTurnStatus.rotating)
 		{
-			float angle = finalAngle;
-			angle *= test;
-			
-			float angleDelta = 0;
-			if (angle < 0)
+			if (angleProg < Mathf.Abs(angleChange))
 			{
-				if (Mathf.Abs(angleProg) < absAngle)
+				float angleDelta = Time.deltaTime * rotationSpeed;
+				angleProg += angleDelta;
+				if (angleChange > 0)
 				{
-					angleDelta = -Time.deltaTime * rotationSpeed;
-					angleProg += angleDelta;
-				} else
-				{
-					transform.rotation = Quaternion.Euler(new Vector3(-90, -finalAngle + angleOffset, 0));
-					unitTurnStatus = UnitTurnStatus.moving;
+					angleDelta = -angleDelta;
 				}
+				transform.rotation = Quaternion.Euler(new Vector3(transform.rotation.eulerAngles.x, -angleDelta + transform.rotation.eulerAngles.y, transform.rotation.eulerAngles.z));
 			} else
 			{
-				if (Mathf.Abs(angleProg) < Mathf.Abs(absAngle))
-				{
-					angleDelta = Time.deltaTime * rotationSpeed;
-					angleProg += angleDelta;
-				} else
-				{
-					transform.rotation = Quaternion.Euler(new Vector3(-90, -finalAngle + angleOffset, 0));
-					unitTurnStatus = UnitTurnStatus.moving;
-				}
+				transform.rotation = Quaternion.Euler(new Vector3(-90, -finalAngle + angleOffset, 0));
+				unitTurnStatus = UnitTurnStatus.moving;
 			}
-			transform.rotation = Quaternion.Euler(new Vector3(transform.rotation.eulerAngles.x, -angleDelta + transform.rotation.eulerAngles.y, transform.rotation.eulerAngles.z));
 		}
 		else if (unitTurnStatus == UnitTurnStatus.moving)
 		{
 			if (!(transform.position == newPosition + heightOffsetV))
 			{
 				transform.position = Vector3.MoveTowards(transform.position, newPosition+ heightOffsetV, Time.deltaTime * moveSpeed);
+				int layer = 8; // Layer 8 is the terrain.
+				int layermask = 1 << layer; // Turn the int into the layermask.
+
+				RaycastHit hit;
+				Physics.Raycast(transform.position, new Vector3(0, -1, 0), hitInfo: out hit, maxDistance: Mathf.Infinity, layerMask: layermask);
+				transform.position = hit.point + heightOffsetV;
 			}
 			else
 			{
@@ -297,6 +288,13 @@ public class Unit : MonoBehaviour
 		{
 			currentProjector.GetComponent<Projector>().material = redProjectorMaterial;
 		}
+
+
+		Vector3 angleTarget = newPosition;
+		angleTarget.x = angleTarget.x - transform.position.x;
+		angleTarget.z = angleTarget.z - transform.position.z;
+		finalAngle = Mathf.Atan2(angleTarget.z, angleTarget.x) * Mathf.Rad2Deg;
+		transform.rotation = Quaternion.Euler(new Vector3(-90, -finalAngle + angleOffset, 0));
 	}
 
 	// Tell this unit if it's selected
@@ -395,5 +393,11 @@ public class Unit : MonoBehaviour
 		{
 			meshRenderer.material.color = Color.red;
 		}
+	}
+
+	private float PositiveMod(float number, float divisor)
+	{
+		// Get the standard C# % value, then add the divisor again to make sure it's +ve, then apply % again to make sure it's in the right range if the first result was positive.
+		return ((number % divisor) + divisor) % divisor;
 	}
 }
