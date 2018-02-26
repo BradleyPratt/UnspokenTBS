@@ -66,6 +66,7 @@ public class Unit : MonoBehaviour
 	private GameObject currentProjector;
 
 	private Vector3 newPosition;
+	private Vector3 movePosition;
 	private float finalAngle;
 	private Vector3 heightOffsetV;
 	private Vector3 lengthOffsetV;
@@ -74,6 +75,7 @@ public class Unit : MonoBehaviour
 	private float angleProg = 0.0f;
 	private float angleAdjustment = 0.0f;
 	private float angleChange;
+	private bool unitHit;
 
 	// Use this for initialization
 	void Start()
@@ -175,17 +177,23 @@ public class Unit : MonoBehaviour
 								if (collider.CompareTag("Unit"))
 								{
 									collider.gameObject.GetComponent<HealthBar>().TakeDamage(attackStrength);
+									collider.gameObject.GetComponent<Unit>().UnitHit();
 								}
 								if (collider.CompareTag("WatchTower"))
 								{
 									collider.gameObject.GetComponent<WatchTowerHealth>().WatchTowerTakeDamage(attackStrength);
+									collider.gameObject.GetComponent<Unit>().UnitHit();
 								}
 							}
 						}
 
 						Destroy(currentProjector.gameObject);
 						unitTurnStatus = UnitTurnStatus.attacked;
-						this.GetComponentInChildren<MiniMapUnitIcon>().SetColor(Color.gray);
+						foreach (MeshRenderer meshRenderer in this.GetComponentsInChildren<MeshRenderer>())
+						{
+							meshRenderer.material.color = Color.gray;
+						}
+						//this.GetComponentInChildren<MiniMapUnitIcon>().SetColor(Color.gray);
 					}
 				}
 			}
@@ -211,12 +219,16 @@ public class Unit : MonoBehaviour
 			} else
 			{
 				transform.rotation = Quaternion.Euler(new Vector3(-90, -finalAngle + angleOffset, 0));
+
+				movePosition = transform.position;
 				unitTurnStatus = UnitTurnStatus.moving;
 			}
 		}
 		else if (unitTurnStatus == UnitTurnStatus.moving)
 		{
+			transform.position = movePosition;
 			transform.position = Vector3.MoveTowards(transform.position, newPosition+ heightOffsetV, Time.deltaTime * moveSpeed);
+			movePosition = transform.position;
 			if (!(transform.position == newPosition + heightOffsetV))
 			{
 				int layer = 8; // Layer 8 is the terrain.
@@ -245,6 +257,13 @@ public class Unit : MonoBehaviour
 				}
 			}
 			animTimer += Time.deltaTime;
+		}
+
+		if (unitHit)
+		{
+			System.Random rand = new System.Random();
+			Vector3 adjustment = new Vector3(rand.Next(-5, 5)*(float)0.03, 0, rand.Next(-5, 5) * (float)0.03);
+			transform.position+=adjustment;
 		}
 	}
 
@@ -381,6 +400,12 @@ public class Unit : MonoBehaviour
 		{
 			transform.rotation = Quaternion.Euler(new Vector3(-90, -finalAngle + angleOffset, 0));
 			transform.position = newPosition + heightOffsetV;
+		} else if (unitTurnStatus == UnitTurnStatus.attacked)
+		{
+			foreach (MeshRenderer meshRenderer in this.GetComponentsInChildren<MeshRenderer>())
+			{
+				meshRenderer.material.color = Color.white;
+			}
 		}
 		unitTurnStatus = UnitTurnStatus.idle;
 	}
@@ -393,6 +418,35 @@ public class Unit : MonoBehaviour
 		{
 			meshRenderer.material.color = Color.red;
 		}
+	}
+
+	IEnumerator ShakeUnit()
+	{
+		foreach (MeshRenderer meshRenderer in this.GetComponentsInChildren<MeshRenderer>())
+		{
+			meshRenderer.material.color = Color.red;
+		}
+		Vector3 oldPosition = transform.position;
+		unitHit = true;
+		float targetTime = 0.0f;
+		while (targetTime < 1)
+		{
+			targetTime += Time.deltaTime;
+			Debug.Log(targetTime);
+			yield return null;
+		}
+		unitHit = false;
+		transform.position = oldPosition;
+
+		foreach (MeshRenderer meshRenderer in this.GetComponentsInChildren<MeshRenderer>())
+		{
+			meshRenderer.material.color = Color.white;
+		}
+	}
+
+	public void UnitHit()
+	{
+		StartCoroutine("ShakeUnit");
 	}
 
 	private float PositiveMod(float number, float divisor)
