@@ -73,12 +73,25 @@ public class TurnManager : MonoBehaviour
 			currentTeam = "USSR";
 			foreach (GameObject unit in unitsUSSR)
 			{
-				unit.GetComponentInChildren<MiniMapUnitIcon>().SetColor(Color.blue);
+				if (unit == null)
+				{
+					RemoveUnit(unit);
+				} else
+				{
+					unit.GetComponentInChildren<MiniMapUnitIcon>().SetColor(Color.blue);
+				}
 			}
 			foreach (GameObject unit in unitsUSA)
 			{
+				if (unit == null)
+				{
+					RemoveUnit(unit);
+				}
+				else
+				{
 				unit.GetComponent<Unit>().ResetUnitTurn();
 				unit.GetComponentInChildren<MiniMapUnitIcon>().SetColor(Color.red);
+				}
 			}
 		}
 		else
@@ -86,12 +99,26 @@ public class TurnManager : MonoBehaviour
 			currentTeam = "USA";
 			foreach (GameObject unit in unitsUSA)
 			{
-				unit.GetComponentInChildren<MiniMapUnitIcon>().SetColor(Color.red);
+				if (unit == null)
+				{
+					RemoveUnit(unit);
+				}
+				else
+				{
+				unit.GetComponentInChildren<MiniMapUnitIcon>().SetColor(Color.blue);
+				}
 			}
 			foreach (GameObject unit in unitsUSSR)
 			{
+				if (unit == null)
+				{
+					RemoveUnit(unit);
+				}
+				else
+				{
 				unit.GetComponent<Unit>().ResetUnitTurn();
 				unit.GetComponentInChildren<MiniMapUnitIcon>().SetColor(Color.red);
+				}
 			}
 		}
 		turnCounter++;
