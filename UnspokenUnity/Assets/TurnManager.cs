@@ -161,20 +161,25 @@ public class TurnManager : MonoBehaviour
 		}
 	}
 
-	// Remove a unit from the turn manager.
-	public void RemoveUnit(GameObject deadUnit)
-	{
-		if (string.Equals(deadUnit.GetComponent<Unit>().GetTeam(), "USA"))
-		{
-			unitsUSA.Remove(deadUnit);
-		}
-		else if (string.Equals(deadUnit.GetComponent<Unit>().GetTeam(), "USSR"))
-		{
-			unitsUSSR.Remove(deadUnit);
-		}
-	}
+    // Remove a unit from the turn manager.
+    public void RemoveUnit(GameObject deadUnit) {
+        if (string.Equals(deadUnit.GetComponent<Unit>().GetTeam(), "USA")) {
+            unitsUSA.Remove(deadUnit);
+        } else if (string.Equals(deadUnit.GetComponent<Unit>().GetTeam(), "USSR")) {
+            unitsUSSR.Remove(deadUnit);
+        }
+    }  
+    
+    // add a unit to the turn manager.
+    public void AddUnit(GameObject newUnit) {
+        if (string.Equals(newUnit.GetComponent<Unit>().GetTeam(), "USA")) {
+            unitsUSA.Add(newUnit);
+        } else if (string.Equals(newUnit.GetComponent<Unit>().GetTeam(), "USSR")) {
+            unitsUSSR.Add(newUnit);
+        }
+    }
 
-	public void SetCurrentUnit(GameObject unit)
+    public void SetCurrentUnit(GameObject unit)
 	{
 		if ((unit.GetComponent<Unit>().GetTeam() == currentTeam) && !(unit.GetComponent<Unit>().HasFinishedTurn()) && (currentUnit != unit))
 		{
