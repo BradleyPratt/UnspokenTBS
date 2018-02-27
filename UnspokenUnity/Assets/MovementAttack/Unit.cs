@@ -308,12 +308,21 @@ public class Unit : MonoBehaviour
 			currentProjector.GetComponent<Projector>().material = redProjectorMaterial;
 		}
 
-
 		Vector3 angleTarget = newPosition;
 		angleTarget.x = angleTarget.x - transform.position.x;
 		angleTarget.z = angleTarget.z - transform.position.z;
 		finalAngle = Mathf.Atan2(angleTarget.z, angleTarget.x) * Mathf.Rad2Deg;
-		transform.rotation = Quaternion.Euler(new Vector3(-90, -finalAngle + angleOffset, 0));
+
+		Transform turret = transform.Find("Turret");
+
+		if (turret != null)
+		{
+			transform.Find("Turret").rotation = Quaternion.Euler(new Vector3(-90, -finalAngle + angleOffset, 0));
+		} else
+		{
+			Debug.Log("Cannot turn turret; turning full tank.");
+			transform.rotation = Quaternion.Euler(new Vector3(-90, -finalAngle + angleOffset, 0));
+		}
 	}
 
 	// Tell this unit if it's selected
