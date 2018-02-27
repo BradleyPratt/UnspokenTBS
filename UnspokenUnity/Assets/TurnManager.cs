@@ -126,6 +126,8 @@ public class TurnManager : MonoBehaviour
         RunCheckpoints();
 		gameObject.GetComponent<Money>().UpdateMoneyUI();
 		UpdateTeamIndicator();
+
+        Camera.main.GetComponent<CameraScript>().RunEndTurnSwitch(currentTeam, true);
 	}
 
 	public void AutoEndTurn()

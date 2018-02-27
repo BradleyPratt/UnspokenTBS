@@ -3,8 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class CameraScript : MonoBehaviour {
-    public float speed = 2f;
+    public float rotateSpeed = 2f;
     public float zoomSpeed = 4f;
+    public float speed = 2f;
+
+    float maxSpeed;
+    float minSpeed;
 
     float cameraDistanceMax = 20f;
     float cameraDistanceMin = 5f;
@@ -27,17 +31,29 @@ public class CameraScript : MonoBehaviour {
     Vector3 boundaryForwardPos;
     Vector3 boundaryBackPos;
 
+    Vector3 spawnPointUS;
+    Vector3 spawnPointUSSR;
+
     TurnManager turnManager;
 
-    Resolution res;
+    bool cameraMovement = false;
+    Vector3 cameraTarget;
+
+    float lerpTime = 1f;
+    float currentLerpTime;
+
+    //Resolution res;
 
     // Use this for initialization
     void Start() {
-        res = Screen.currentResolution;
+        /*res = Screen.currentResolution;
         if (res.refreshRate == 60)
             QualitySettings.vSyncCount = 1;
         if (res.refreshRate == 120)
-            QualitySettings.vSyncCount = 2;
+            QualitySettings.vSyncCount = 2;*/
+
+        spawnPointUS = new Vector3(-300, 50, -170);
+        spawnPointUSSR = new Vector3(300, 50, -100);
 
         boundary = GameObject.Find("Boundary");
         turnManager = GameObject.Find("GameManager").GetComponent<TurnManager>();
@@ -52,62 +68,113 @@ public class CameraScript : MonoBehaviour {
         boundaryTopPos = boundary.transform.position - boundaryOffsetY;
         boundaryBackPos = boundary.transform.position + boundaryOffsetZ;
         boundaryForwardPos = boundary.transform.position - boundaryOffsetZ;
+
+        maxSpeed = speed * 2;
+        minSpeed = speed;
+
+
     }
 
     // Update is called once per frame
     void Update() {
-        if (transform.position.z > boundaryForwardPos.z)
-        {
-            transform.position = new Vector3(transform.position.x, transform.position.y, boundaryForwardPos.z);
-        }
-        if (transform.position.z < boundaryBackPos.z)
-        {
-            transform.position = new Vector3(transform.position.x, transform.position.y, boundaryBackPos.z);
+        if (canMove) {
+            if (transform.position.z > boundaryForwardPos.z) {
+                transform.position = new Vector3(transform.position.x, transform.position.y, boundaryForwardPos.z);
+            }
+            if (transform.position.z < boundaryBackPos.z) {
+                transform.position = new Vector3(transform.position.x, transform.position.y, boundaryBackPos.z);
+            }
+
+            if (transform.position.x < boundaryLeftPos.x) {
+                transform.position = new Vector3(boundaryLeftPos.x, transform.position.y, transform.position.z);
+            }
+            if (transform.position.x > boundaryRightPos.x) {
+                transform.position = new Vector3(boundaryRightPos.x, transform.position.y, transform.position.z);
+            }
+
+            if (Input.GetKey(KeyCode.LeftShift)) {
+                if (speed <= maxSpeed) {
+                    speed = maxSpeed;
+                }
+            } else {
+                speed = minSpeed;
+            }
+
+            if (Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.W)) {
+                transform.position += new Vector3(transform.forward.x * speed, 0, transform.forward.z * speed);
+            }
+            if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A)) {
+                transform.position += new Vector3(-transform.right.x * speed, 0, -transform.right.z * speed);
+            }
+            if (Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.S)) {
+                transform.position += new Vector3(-transform.forward.x * speed, 0, -transform.forward.z * speed);
+            }
+            if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D)) {
+                transform.position += new Vector3(transform.right.x * speed, 0, transform.right.z * speed);
+            }
+
+            if (Input.GetAxis("Mouse ScrollWheel") > 0 && transform.position.y > boundaryBottomPos.y) {
+                transform.position += transform.forward * zoomSpeed;
+            } else if (Input.GetAxis("Mouse ScrollWheel") < 0 && transform.position.y < boundaryTopPos.y) {
+                transform.position -= transform.forward * zoomSpeed;
+            }
+
+            Vector3 target = new Vector3(transform.position.x + transform.forward.x * 10, transform.position.y - 30f, transform.position.z + transform.forward.z * 10);
+
+            if (Input.GetKey(KeyCode.Q)) {
+                focus = new Vector3(transform.position.x + transform.forward.x * 100, transform.position.y + transform.forward.y * 100, transform.position.z + transform.forward.z * 100);
+                transform.RotateAround(focus, -Vector3.up, rotateSpeed);
+            }
+            if (Input.GetKey(KeyCode.E)) {
+                focus = new Vector3(transform.position.x + transform.forward.x * 100, transform.position.y + transform.forward.y * 100, transform.position.z + transform.forward.z * 100);
+                transform.RotateAround(focus, Vector3.up, rotateSpeed);
+            }
         }
 
-        if (transform.position.x < boundaryLeftPos.x)
-        {
-            transform.position = new Vector3(boundaryLeftPos.x, transform.position.y, transform.position.z);
-        }
-        if (transform.position.x > boundaryRightPos.x)
-        {
-            transform.position = new Vector3(boundaryRightPos.x, transform.position.y, transform.position.z);
+        currentLerpTime += Time.deltaTime * 0.25f;
+        if (currentLerpTime > lerpTime) {
+            currentLerpTime = lerpTime;
         }
 
-        if (Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.W)) {
-            transform.position = new Vector3(transform.position.x + transform.forward.x, transform.position.y, transform.position.z + transform.forward.z);
+        if (cameraMovement) {
+            canMove = false;
+            float perc = currentLerpTime / lerpTime;
+            transform.position = Vector3.Lerp(transform.position, cameraTarget, perc);
+            if (cameraTarget == transform.position) {
+                cameraMovement = false;
+            }
+        } else {
+            currentLerpTime = 0f;
+            canMove = true;
         }
-        if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A)) {
-            transform.position = new Vector3(transform.position.x - transform.right.x, transform.position.y, transform.position.z - transform.right.z);
-        }
-        if (Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.S)) {
-            transform.position = new Vector3(transform.position.x - transform.forward.x, transform.position.y, transform.position.z - transform.forward.z);
-        }
-        if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D)) {
-            transform.position = new Vector3(transform.position.x + transform.right.x, transform.position.y, transform.position.z + transform.right.z);
-        }
+    }
 
-        if (Input.GetAxis("Mouse ScrollWheel")>0 && transform.position.y > boundaryBottomPos.y) {
-            transform.position += transform.forward*zoomSpeed;
-        }
-        else if (Input.GetAxis("Mouse ScrollWheel")<0 && transform.position.y < boundaryTopPos.y) {
-            transform.position -= transform.forward*zoomSpeed;
-        }
+    public void RunEndTurnSwitch(string team, bool moving) {
+        cameraMovement = moving;
+        GameObject[] nearTanks = GameObject.FindGameObjectsWithTag("Unit");
 
-        Vector3 target = new Vector3(transform.position.x + transform.forward.x*10, transform.position.y - 30f, transform.position.z + transform.forward.z*10);
-
-        if (Input.GetKey(KeyCode.Q))
-        {
-            focus = new Vector3(transform.position.x + transform.forward.x * 100, transform.position.y + transform.forward.y * 100, transform.position.z + transform.forward.z * 100);
-            transform.RotateAround(focus, -Vector3.up, speed);
+        if (team == "USA") {
+            GameObject USTank = null;
+            for(int i = 0; i < nearTanks.Length; i++) {
+                if (nearTanks[i].GetComponent<Unit>().GetTeam() == "USA") {
+                    USTank = nearTanks[i];
+                } else {
+                    Debug.Log("No USA tanks, why this");
+                }
+            }
+            Vector3 USTankPos = USTank.transform.position;
+            cameraTarget = new Vector3(USTankPos.x, USTankPos.y+50, USTankPos.z -30);
+        } else {
+            GameObject USSRTank = null;
+            for (int i = 0; i < nearTanks.Length; i++) {
+                if (nearTanks[i].GetComponent<Unit>().GetTeam() == "USSR") {
+                    USSRTank = nearTanks[i];
+                } else {
+                    Debug.Log("No USSR tanks, why this");
+                }
+            }
+            Vector3 USSRTankPos = USSRTank.transform.position;
+            cameraTarget = new Vector3(USSRTankPos.x, USSRTankPos.y + 50, USSRTankPos.z - 30);
         }
-        if (Input.GetKey( KeyCode.E))
-        {
-            focus = new Vector3(transform.position.x + transform.forward.x*100, transform.position.y + transform.forward.y*100, transform.position.z + transform.forward.z*100);
-            transform.RotateAround(focus, Vector3.up, speed);
-        }
-
-        cameraDistance += Input.GetAxis("Mouse ScrollWheel") * speed;
-        cameraDistance = Mathf.Clamp(cameraDistance, cameraDistanceMin, cameraDistanceMax);
     }
 }
