@@ -231,12 +231,12 @@ public class Unit : MonoBehaviour
 			movePosition = transform.position;
 			if (!(transform.position == newPosition + heightOffsetV))
 			{
-				int layer = 8; // Layer 8 is the terrain.
-				int layermask = 1 << layer; // Turn the int into the layermask.
+				//int layer = 8; // Layer 8 is the terrain.
+				//int layermask = 1 << layer; // Turn the int into the layermask.
 
-				RaycastHit hit;
-				Physics.Raycast(transform.position, new Vector3(0, -1, 0), hitInfo: out hit, maxDistance: Mathf.Infinity, layerMask: layermask);
-				transform.position = hit.point + heightOffsetV;
+				//RaycastHit hit;
+				//Physics.Raycast(transform.position, new Vector3(0, -1, 0), hitInfo: out hit, maxDistance: Mathf.Infinity, layerMask: layermask);
+				//transform.position = hit.point + heightOffsetV;
 			}
 			else
 			{
