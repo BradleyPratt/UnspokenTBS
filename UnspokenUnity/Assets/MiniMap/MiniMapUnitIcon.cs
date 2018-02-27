@@ -3,10 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class MiniMapUnitIcon : MonoBehaviour {
-
-	[SerializeField]
-	Material red, blue, grey;
-
+	
 	// Use this for initialization
 	void Start () {
 		// Make object become independant, apply scaling, then re-attach to parent.
