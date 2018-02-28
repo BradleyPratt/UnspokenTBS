@@ -5,7 +5,9 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class SpawnTank : MonoBehaviour {
-    Button button;
+    Button smallButton;
+    Button mediumButton;
+    Button largeButton;
 
     TurnManager turnManager;
     Money money;
@@ -18,16 +20,29 @@ public class SpawnTank : MonoBehaviour {
     GameObject mediumTankUSSR;
     GameObject smallTankUSSR;
 
+    GameObject tempTank;
+    GameObject spawningTank;
+
     Vector3 midPoint;
     Vector3 spawnPointUS;
     Vector3 spawnPointUSSR;
+    Vector3 spawnLocation;
+
+    bool isUS = true;
+    bool spawning = false;
+    bool spawnLocationFound = false;
 
     // Use this for initialization
     void Awake () {
         GetTanks();
 
-        button = GetComponent<Button>();
-        button.onClick.AddListener(TaskOnClick);
+        smallButton = GameObject.Find("SmallSpawnButton").GetComponent<Button>();
+        mediumButton = GameObject.Find("MediumSpawnButton").GetComponent<Button>();
+        largeButton = GameObject.Find("LargeSpawnButton").GetComponent<Button>();
+
+        smallButton.onClick.AddListener(SmallTaskOnClick);
+        mediumButton.onClick.AddListener(MediumTaskOnClick);
+        largeButton.onClick.AddListener(LargeTaskOnClick);
 
         //midPoint = new Vector3(-10, 16, -112);
         Vector3 checkPointMid = GameObject.Find("CheckpointMid").transform.position;
@@ -51,11 +66,10 @@ public class SpawnTank : MonoBehaviour {
         smallTankUSSR = (GameObject)Resources.Load("SmallTankUSSRPrefab");
         mediumTankUSSR = (GameObject)Resources.Load("MediumTankUSSRPrefab");
         largeTankUSSR = (GameObject)Resources.Load("LargeTankUSSRPrefab");
+        spawningTank = (GameObject)Resources.Load("SpawningTank");
     }
 
-    private void TaskOnClick()
-    {
-        bool isUS;
+    private void SmallTaskOnClick() {
         float USMoney = money.GetUSMoney();
         float USSRMoney = money.GetUSSRMoney();
 
@@ -65,44 +79,90 @@ public class SpawnTank : MonoBehaviour {
             isUS = false;
         }
 
-        if (button.name == "LargeSpawnButton") {
-            Debug.Log("Large Button Presssed");
-            if (isUS && USMoney-800 >= 0) {
-                money.SetUSMoney(-800);
-                GameObject newTank = GameObject.Instantiate(largeTankUS, spawnPointUS, largeTankUS.transform.rotation);
-                turnManager.GetComponent<TurnManager>().AddUnit(newTank);
-            } else if (!isUS && USSRMoney - 800 >= 0) {
-                money.SetUSSRMoney(-800);
-                GameObject newTank = GameObject.Instantiate(largeTankUSSR, spawnPointUSSR, largeTankUSSR.transform.rotation);
-                turnManager.GetComponent<TurnManager>().AddUnit(newTank);
-            }
-
-        } else if (button.name == "MediumSpawnButton") {
-            Debug.Log("Medium Button Presssed");
-            if (isUS && USMoney - 400 >= 0) {
-                money.SetUSMoney(-400);
-                GameObject newTank = GameObject.Instantiate(mediumTankUS, spawnPointUS, mediumTankUS.transform.rotation);
-                turnManager.GetComponent<TurnManager>().AddUnit(newTank);
-            } else if (!isUS && USSRMoney - 400 >= 0) {
-                money.SetUSSRMoney(-400);
-                GameObject newTank = GameObject.Instantiate(mediumTankUSSR, spawnPointUSSR, mediumTankUSSR.transform.rotation);
-                turnManager.GetComponent<TurnManager>().AddUnit(newTank);
-            }
-        }
-        else if (button.name == "SmallSpawnButton") {
+        if (smallButton.name == "SmallSpawnButton") {
             Debug.Log("Small Button Presssed");
             if (isUS && USMoney - 200 >= 0) {
                 money.SetUSMoney(-200);
-                GameObject newTank = GameObject.Instantiate(smallTankUS, spawnPointUS, smallTankUS.transform.rotation);
-                turnManager.GetComponent<TurnManager>().AddUnit(newTank);
-            } else if(!isUS && USSRMoney - 200 >= 0) {
+                PlaceTank(smallTankUS);
+            } else if (!isUS && USSRMoney - 200 >= 0) {
                 money.SetUSSRMoney(-200);
-                GameObject newTank = GameObject.Instantiate(smallTankUSSR, spawnPointUSSR, smallTankUSSR.transform.rotation);
-                turnManager.GetComponent<TurnManager>().AddUnit(newTank);
+                PlaceTank(smallTankUSSR);
             }
         }
-        else {
-            Debug.Log("Button doesnt have correct name");
+    }
+
+    private void MediumTaskOnClick() {
+        float USMoney = money.GetUSMoney();
+        float USSRMoney = money.GetUSSRMoney();
+
+        if (turnManager.GetActiveTeam() == "USA") {
+            isUS = true;
+        } else {
+            isUS = false;
         }
+
+        if (mediumButton.name == "MediumSpawnButton") {
+            Debug.Log("Medium Button Presssed");
+            if (isUS && USMoney - 400 >= 0) {
+                money.SetUSMoney(-400);
+                PlaceTank(mediumTankUS);
+            } else if (!isUS && USSRMoney - 400 >= 0) {
+                money.SetUSSRMoney(-400);
+                PlaceTank(mediumTankUSSR);
+            }
+        }
+    }
+
+    private void LargeTaskOnClick() {
+        if (!spawning) {
+            float USMoney = money.GetUSMoney();
+            float USSRMoney = money.GetUSSRMoney();
+
+            if (turnManager.GetActiveTeam() == "USA") {
+                isUS = true;
+            } else {
+                isUS = false;
+            }
+
+            Debug.Log("Large Button Presssed");
+            if (isUS && USMoney - 800 >= 0) {
+                money.SetUSMoney(-800);
+                PlaceTank(largeTankUS);
+            } else if (!isUS && USSRMoney - 800 >= 0) {
+                money.SetUSSRMoney(-800);
+                PlaceTank(largeTankUSSR);
+
+            }
+        }
+
+    }
+
+    void Update() {
+        
+    }
+
+    void PlaceTank(GameObject tank) {
+        tempTank = tank;
+        spawning = true;
+        turnManager.SetTankSpawning(spawning);
+
+        spawningTank = GameObject.Instantiate(tank.transform.gameObject, new Vector3(), tank.transform.rotation);
+        spawningTank.name = "SpawningTank";
+        spawningTank.tag = "SpawningTank";
+        Destroy(spawningTank.GetComponent<Unit>());
+        spawningTank.AddComponent<SpawningTank>();
+    }
+
+    public void SpawnTankAtPos(Vector3 pos) {
+        spawnLocation = pos;
+        spawnLocationFound = true;
+
+        spawning = false;
+        turnManager.SetTankSpawning(spawning);
+
+        Destroy(spawningTank.gameObject);
+
+        GameObject.Instantiate(tempTank, pos, tempTank.transform.rotation);
+        turnManager.GetComponent<TurnManager>().AddUnit(tempTank);
     }
 }
