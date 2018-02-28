@@ -11,6 +11,7 @@ public class SpawningTank : MonoBehaviour {
 
     string currentTeam;
 
+    bool far = false;
 
     // Use this for initialization
     void Start () {
@@ -47,14 +48,21 @@ public class SpawningTank : MonoBehaviour {
 
         float distance = Vector3.Distance(nearestTank.transform.position, transform.position);
         if (distance > 50) {
+            far = true;
+
             foreach (Renderer rend in GetComponentsInChildren<Renderer>()) {
                 rend.material.color = Color.red;
             }
+        } else {
+            foreach (Renderer rend in GetComponentsInChildren<Renderer>()) {
+                rend.material.color = Color.white;
+            }
+            far = false;
         }
 
         if (Physics.Raycast(ray, out hit)) {
             Vector3 lastPos = movePos;
-            if (hit.collider.tag != "Unit" && hit.collider.tag != "SpawningTank" && hit.point.y > 10 && distance < 50) {
+            if (hit.collider.tag != "Unit" && hit.collider.tag != "SpawningTank" && hit.point.y > 10) {
                 movePos = hit.point;
                 lastPos = movePos;
             } else {
@@ -65,8 +73,12 @@ public class SpawningTank : MonoBehaviour {
         Vector3 activePos = new Vector3(movePos.x, movePos.y + 2, movePos.z);
         transform.position = activePos;
 
-        if(Input.GetMouseButton(0)) {
+        if(Input.GetMouseButton(0) && !far) {
             spawnTank.SpawnTankAtPos(activePos);
+        } 
+
+        if (Input.GetMouseButton(1)) {
+            spawnTank.CancelSpawn();
         }
     }
 }

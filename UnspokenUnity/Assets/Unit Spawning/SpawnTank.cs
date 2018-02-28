@@ -82,10 +82,8 @@ public class SpawnTank : MonoBehaviour {
         if (smallButton.name == "SmallSpawnButton") {
             Debug.Log("Small Button Presssed");
             if (isUS && USMoney - 200 >= 0) {
-                money.SetUSMoney(-200);
                 PlaceTank(smallTankUS);
             } else if (!isUS && USSRMoney - 200 >= 0) {
-                money.SetUSSRMoney(-200);
                 PlaceTank(smallTankUSSR);
             }
         }
@@ -104,10 +102,8 @@ public class SpawnTank : MonoBehaviour {
         if (mediumButton.name == "MediumSpawnButton") {
             Debug.Log("Medium Button Presssed");
             if (isUS && USMoney - 400 >= 0) {
-                money.SetUSMoney(-400);
                 PlaceTank(mediumTankUS);
             } else if (!isUS && USSRMoney - 400 >= 0) {
-                money.SetUSSRMoney(-400);
                 PlaceTank(mediumTankUSSR);
             }
         }
@@ -126,10 +122,8 @@ public class SpawnTank : MonoBehaviour {
 
             Debug.Log("Large Button Presssed");
             if (isUS && USMoney - 800 >= 0) {
-                money.SetUSMoney(-800);
                 PlaceTank(largeTankUS);
             } else if (!isUS && USSRMoney - 800 >= 0) {
-                money.SetUSSRMoney(-800);
                 PlaceTank(largeTankUSSR);
 
             }
@@ -146,14 +140,39 @@ public class SpawnTank : MonoBehaviour {
         spawning = true;
         turnManager.SetTankSpawning(spawning);
 
-        spawningTank = GameObject.Instantiate(tank.transform.gameObject, new Vector3(), tank.transform.rotation);
+        GameObject[] tanks = GameObject.FindGameObjectsWithTag("Unit");
+        GameObject USTank = null;
+        GameObject USSRTank = null;
+
+
+        if (isUS) {
+            foreach (GameObject t in tanks) {
+                if (t.GetComponent<Unit>().GetTeam() == "USA") {
+                    USTank = t;
+                }
+            }
+            Debug.Log(USTank.name);
+            spawningTank = GameObject.Instantiate(tank.transform.gameObject, USTank.transform.position, tank.transform.rotation);
+        } else {
+            foreach (GameObject t in tanks) {
+                if (t.GetComponent<Unit>().GetTeam() == "USSR") {
+                    USSRTank = t;
+                }
+            }
+            spawningTank = GameObject.Instantiate(tank.transform.gameObject, USSRTank.transform.position, tank.transform.rotation);
+        }
+
         spawningTank.name = "SpawningTank";
         spawningTank.tag = "SpawningTank";
         Destroy(spawningTank.GetComponent<Unit>());
+        Destroy(spawningTank.GetComponent<HealthBar>());
         spawningTank.AddComponent<SpawningTank>();
     }
 
     public void SpawnTankAtPos(Vector3 pos) {
+        float USMoney = money.GetUSMoney();
+        float USSRMoney = money.GetUSSRMoney();
+
         spawnLocation = pos;
         spawnLocationFound = true;
 
@@ -164,5 +183,43 @@ public class SpawnTank : MonoBehaviour {
 
         GameObject.Instantiate(tempTank, pos, tempTank.transform.rotation);
         turnManager.GetComponent<TurnManager>().AddUnit(tempTank);
+        Debug.Log(tempTank.name);
+
+        switch (tempTank.name) {
+            case "SmallTankUSPrefab":
+            money.SetUSMoney(-200);
+            break;
+
+            case "MediumTankUSPrefab":
+            money.SetUSMoney(-400);
+            break;
+
+            case "LargeTankUSPrefab":
+            money.SetUSMoney(-800);
+            break;
+
+            case "SmallTankUSSRPrefab":
+            money.SetUSSRMoney(-200);
+            break;
+
+            case "MediumTankUSSRPrefab":
+            money.SetUSSRMoney(-400);
+            break;
+
+            case "LargeTankUSSRPrefab":
+            money.SetUSSRMoney(-800);
+            break;
+
+            default:
+            break;
+
+        }
+    }
+
+    public void CancelSpawn() {
+        Destroy(spawningTank.gameObject);
+
+        spawnLocationFound = false;
+        spawning = false;
     }
 }
