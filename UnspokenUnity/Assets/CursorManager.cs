@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Cursor : MonoBehaviour {
+public class CursorManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
