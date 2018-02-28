@@ -41,6 +41,7 @@ public class CameraScript : MonoBehaviour {
 
     float lerpTime = 1f;
     float currentLerpTime;
+    Quaternion initialRotation;
 
     //Resolution res;
 
@@ -72,7 +73,7 @@ public class CameraScript : MonoBehaviour {
         maxSpeed = speed * 2;
         minSpeed = speed;
 
-
+        initialRotation = transform.rotation;
     }
 
     // Update is called once per frame
@@ -119,7 +120,7 @@ public class CameraScript : MonoBehaviour {
                 transform.position -= transform.forward * zoomSpeed;
             }
 
-            Vector3 target = new Vector3(transform.position.x + transform.forward.x * 10, transform.position.y - 30f, transform.position.z + transform.forward.z * 10);
+            //Vector3 target = new Vector3(transform.position.x + transform.forward.x * 10, transform.position.y - 30f, transform.position.z + transform.forward.z * 10);
 
             if (Input.GetKey(KeyCode.Q)) {
                 focus = new Vector3(transform.position.x + transform.forward.x * 100, transform.position.y + transform.forward.y * 100, transform.position.z + transform.forward.z * 100);
@@ -128,6 +129,15 @@ public class CameraScript : MonoBehaviour {
             if (Input.GetKey(KeyCode.E)) {
                 focus = new Vector3(transform.position.x + transform.forward.x * 100, transform.position.y + transform.forward.y * 100, transform.position.z + transform.forward.z * 100);
                 transform.RotateAround(focus, Vector3.up, rotateSpeed);
+            }
+
+            if (Input.GetMouseButton(2)) {
+                Cursor.visible = false;
+                float mouseX = Input.GetAxis("Mouse X");
+                focus = new Vector3(transform.position.x + transform.forward.x * 100, transform.position.y + transform.forward.y * 100, transform.position.z + transform.forward.z * 100);
+                transform.RotateAround(focus, Vector3.up, rotateSpeed*mouseX);
+            } else {
+                Cursor.visible = true;
             }
         }
 
@@ -140,41 +150,53 @@ public class CameraScript : MonoBehaviour {
             canMove = false;
             float perc = currentLerpTime / lerpTime;
             transform.position = Vector3.Lerp(transform.position, cameraTarget, perc);
+            transform.rotation = Quaternion.Lerp(transform.rotation, initialRotation, perc);
             if (cameraTarget == transform.position) {
                 cameraMovement = false;
             }
         } else {
-            currentLerpTime = 0f;
             canMove = true;
         }
     }
 
-    public void RunEndTurnSwitch(string team, bool moving) {
+    // Camera Focus method for panning the camera to a specific point
+    public void CameraFocus(Vector3 targetPos) {
+        currentLerpTime = 0f;
+
+        bool moving = true;
         cameraMovement = moving;
         GameObject[] nearTanks = GameObject.FindGameObjectsWithTag("Unit");
 
-        if (team == "USA") {
-            GameObject USTank = null;
-            for(int i = 0; i < nearTanks.Length; i++) {
-                if (nearTanks[i].GetComponent<Unit>().GetTeam() == "USA") {
-                    USTank = nearTanks[i];
-                } else {
+        if (targetPos == new Vector3(0,0,0)) {
+            string team = turnManager.GetActiveTeam();
+
+            if (team == "USA") {
+                GameObject USTank = null;
+                for (int i = 0; i < nearTanks.Length; i++) {
+                    if (nearTanks[i].GetComponent<Unit>().GetTeam() == "USA") {
+                        USTank = nearTanks[i];
+                    } 
+                }
+                if (USTank == null) {
                     Debug.Log("No USA tanks, why this");
                 }
-            }
-            Vector3 USTankPos = USTank.transform.position;
-            cameraTarget = new Vector3(USTankPos.x, USTankPos.y+50, USTankPos.z -30);
-        } else {
-            GameObject USSRTank = null;
-            for (int i = 0; i < nearTanks.Length; i++) {
-                if (nearTanks[i].GetComponent<Unit>().GetTeam() == "USSR") {
-                    USSRTank = nearTanks[i];
-                } else {
+                Vector3 USTankPos = USTank.transform.position;
+                cameraTarget = new Vector3(USTankPos.x, USTankPos.y + 50, USTankPos.z - 50);
+            } else {
+                GameObject USSRTank = null;
+                for (int i = 0; i < nearTanks.Length; i++) {
+                    if (nearTanks[i].GetComponent<Unit>().GetTeam() == "USSR") {
+                        USSRTank = nearTanks[i];
+                    }
+                }
+                if (USSRTank == null) {
                     Debug.Log("No USSR tanks, why this");
                 }
+                Vector3 USSRTankPos = USSRTank.transform.position;
+                cameraTarget = new Vector3(USSRTankPos.x, USSRTankPos.y + 50, USSRTankPos.z - 50);
             }
-            Vector3 USSRTankPos = USSRTank.transform.position;
-            cameraTarget = new Vector3(USSRTankPos.x, USSRTankPos.y + 50, USSRTankPos.z - 30);
+        } else {
+            cameraTarget = new Vector3(targetPos.x, targetPos.y + 50, targetPos.z - 50);
         }
     }
 }
