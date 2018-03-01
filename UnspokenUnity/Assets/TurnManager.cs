@@ -200,14 +200,14 @@ public class TurnManager : MonoBehaviour
 
 	public void SetCurrentUnit(GameObject unit, string phase)
 	{
-		if ((unit.GetComponent<Unit>().GetTeam() == currentTeam) && !(unit.GetComponent<Unit>().HasFinishedTurn()) && (currentUnit != unit))
+		if ((unit.GetComponent<Unit>().GetTeam() == currentTeam) && !(unit.GetComponent<Unit>().HasFinishedTurn()))// && (currentUnit != unit))
 		{
 			if (currentUnit != null)
 			{
 				currentUnit.GetComponent<Unit>().SetSelected(false);
 			}
 			currentUnit = unit;
-			currentUnit.GetComponent<Unit>().SetSelected(true);
+			currentUnit.GetComponent<Unit>().SetSelected(true, phase);
 		}
 	}
 

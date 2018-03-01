@@ -118,6 +118,7 @@ public class Unit : MonoBehaviour
 			{
 				unitMoving = false;
 				unitMoved = true;
+				HasActionsLeft();
 				if (currentProjector != null)
 				{
 					Destroy(currentProjector);
@@ -129,6 +130,7 @@ public class Unit : MonoBehaviour
 		{
 			PositionAttackProjector();
 		}
+
 		if (unitTurnStatus == UnitTurnStatus.dying)
 		{
 			if (animTimer > 1.0f) {
@@ -233,16 +235,20 @@ public class Unit : MonoBehaviour
 	// Tell this unit if it's selected
 	public void SetSelected(bool selectedStatus, string phase)
 	{
+		Debug.Log(phase);
 		if (selectedStatus)
 		{
 			if (phase == "Move" && !unitMoved)
 			{
 				CreateMoveProjector();
+				unitPhaseMoving = true;
+				unitAttacking = false;
 			}
 			else if (phase == "Attack" && !unitAttacked)
 			{
-				CreateAttackProjector();
+				unitPhaseMoving = false;
 				unitAttacking = true;
+				CreateAttackProjector();
 			}
 		}
 		else if (currentProjector != null)
@@ -369,7 +375,7 @@ public class Unit : MonoBehaviour
 
 	public void MoveTo(Vector3 target)
 	{
-		if (Vector3.Distance(this.transform.position, target) < moveRangeLimit)
+		if ((!unitMoved && unitPhaseMoving) && InMoveRange(target))
 		{
 			navMeshAgent.destination = target;
 			unitMoving = true;
@@ -378,6 +384,32 @@ public class Unit : MonoBehaviour
 
 	public void FireAt(Vector3 target)
 	{
+		if ((unitAttacking) && (InAttackRange(target)))
+		{
+			Collider[] colliderArray = Physics.OverlapSphere(target, attackRadius);
+
+			foreach (Collider collider in colliderArray)
+			{
+				if (collider.gameObject != this.gameObject)
+				{
+					if (collider.CompareTag("Unit"))
+					{
+						collider.gameObject.GetComponent<HealthBar>().TakeDamage(attackStrength);
+						collider.gameObject.GetComponent<Unit>().UnitHit();
+					}
+					if (collider.CompareTag("WatchTower"))
+					{
+						collider.gameObject.GetComponent<WatchTowerHealth>().WatchTowerTakeDamage(attackStrength);
+						collider.gameObject.GetComponent<Unit>().UnitHit();
+					}
+				}
+			}
+
+			Destroy(currentProjector.gameObject);
+			unitAttacking = false;
+			unitAttacked = true;
+			HasActionsLeft();
+		}
 	}
 
 	public bool InMoveRange(Vector3 target)
@@ -396,5 +428,33 @@ public class Unit : MonoBehaviour
 			return true;
 		}
 		return false;
+	}
+
+	public string GetPhase()
+	{
+		if(unitPhaseMoving)
+		{
+			return "Move";
+		} else if (unitAttacking)
+		{
+			return "Attack";
+		}
+		return null;
+	}
+
+	private bool HasActionsLeft()
+	{
+		if (!unitMoved || !unitAttacked)
+		{
+			return true;
+		} else
+		{
+			foreach (MeshRenderer meshRenderer in this.GetComponentsInChildren<MeshRenderer>())
+			{
+				meshRenderer.material.color = Color.gray;
+			}
+
+			return false;
+		}
 	}
 }

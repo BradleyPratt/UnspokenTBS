@@ -41,10 +41,10 @@ public class CursorManager : MonoBehaviour {
 			if (hit.collider.tag == "Unit")
 			{
 				SetAction(CurrentAction.selecting);
-			} else if (unitSet && (((hit.collider.tag == "Terrain") && (turnManager.GetCurrentUnit().GetComponent<Unit>().GetTeam() == turnManager.GetActiveTeam())) && (turnManager.GetCurrentUnit().GetComponent<Unit>().InMoveRange(hit.point))))
+			} else if (unitSet && (((hit.collider.tag == "Terrain") && (turnManager.GetCurrentUnit().GetComponent<Unit>().GetTeam() == turnManager.GetActiveTeam())) && (turnManager.GetCurrentUnit().GetComponent<Unit>().GetPhase() == "Move") && (turnManager.GetCurrentUnit().GetComponent<Unit>().InMoveRange(hit.point))))
 			{
 				SetAction(CurrentAction.moving);
-			} else if (unitSet && ((turnManager.GetCurrentUnit().GetComponent<Unit>().GetTeam() == turnManager.GetActiveTeam()) && (turnManager.GetCurrentUnit().GetComponent<Unit>().InAttackRange(hit.point))))
+			} else if (unitSet && ((turnManager.GetCurrentUnit().GetComponent<Unit>().GetTeam() == turnManager.GetActiveTeam()) && (turnManager.GetCurrentUnit().GetComponent<Unit>().GetPhase() == "Attack") && (turnManager.GetCurrentUnit().GetComponent<Unit>().InAttackRange(hit.point))))
 			{
 				SetAction(CurrentAction.attacking);
 			} else
@@ -58,7 +58,7 @@ public class CursorManager : MonoBehaviour {
 				{
 					if (hit.collider.tag == "Unit")
 					{
-						turnManager.SetCurrentUnit(hit.collider.gameObject);
+						turnManager.SetCurrentUnit(hit.collider.gameObject, phase);
 					}
 				}
 				else if (currentAction == CurrentAction.moving)
@@ -77,6 +77,10 @@ public class CursorManager : MonoBehaviour {
 	private void SetAction(CurrentAction newCurrentAction)
 	{
 		currentAction = newCurrentAction;
+		if(newCurrentAction == CurrentAction.selecting)
+		{
+			
+		}
 	}
 
 	public void SetPhase(string newPhase)
