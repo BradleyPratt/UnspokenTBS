@@ -33,6 +33,7 @@ public class HealthBar : MonoBehaviour {
         if (healthSlider != null)
         {
             healthSlider.transform.position = new Vector3(gameObject.transform.position.x+4f, gameObject.transform.position.y+5f, gameObject.transform.position.z);
+            healthSlider.transform.rotation = Camera.main.transform.rotation;
         }
     }
 
@@ -45,7 +46,7 @@ public class HealthBar : MonoBehaviour {
 			gameObject.tag = ("Untagged");
 			numOfUnits--;
 			GameObject.FindGameObjectWithTag("GameManager").GetComponent<TurnManager>().RemoveUnit(gameObject);
-			Destroy(gameObject);
+			gameObject.GetComponent<Unit>().UnitKilled();
 		}
 	}
 
