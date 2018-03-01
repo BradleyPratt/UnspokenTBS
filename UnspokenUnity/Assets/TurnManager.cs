@@ -19,6 +19,10 @@ public class TurnManager : MonoBehaviour
 	// Number of current turn.
 	private int turnCounter = 1;
 
+    // Is a tank being placed
+    bool tankSpawning = false; // Note to Josh, don't know how to modify your end turn method without breaking anything, I've added a method to change this value when necessary.
+                               // Need to make it so you cant end turn while this value is true.
+
 	// Use this for initialization
 	void Start()
 	{
@@ -126,6 +130,8 @@ public class TurnManager : MonoBehaviour
         RunCheckpoints();
 		gameObject.GetComponent<Money>().UpdateMoneyUI();
 		UpdateTeamIndicator();
+
+        Camera.main.GetComponent<CameraScript>().CameraFocus(new Vector3(0, 0, 0));
 	}
 
 	public void AutoEndTurn()
@@ -245,5 +251,9 @@ public class TurnManager : MonoBehaviour
                 gameObject.GetComponent<Money>().SetUSSRMoney(100);
             }
         }
+    }
+
+    public void SetTankSpawning(bool spawning) {
+        tankSpawning = spawning;
     }
 }
