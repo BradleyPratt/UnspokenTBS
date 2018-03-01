@@ -99,13 +99,7 @@ public class Unit : MonoBehaviour
 		heightOffsetV = new Vector3(0, combinedMesh.bounds.extents.y + heightOffset, 0);
 		lengthOffsetV = new Vector3(combinedMesh.bounds.extents.x, 0, 0);
 
-
-		int layer = 8; // Layer 8 is the terrain.
-		int layermask = 1 << layer; // Turn the int into the layermask.
-
-		RaycastHit hit;
-		Physics.Raycast(transform.position, new Vector3(0, -1, 0), hitInfo: out hit, maxDistance: Mathf.Infinity, layerMask: layermask);
-		transform.position = hit.point + heightOffsetV;
+		Debug.Log(transform.position);
 	}
 
 	// Update is called once per frame
@@ -325,10 +319,10 @@ public class Unit : MonoBehaviour
 				meshRenderer.material.color = Color.white;
 			}
 		}
-		unitTurnStatus = UnitTurnStatus.idle;
+		unitPhaseMoving = unitMoving = unitMoved = unitAttacking = unitAttacked = unitSelected = false;
 	}
 
-	public void UnitKilled()
+public void UnitKilled()
 	{
 		animTimer = 0.0f;
 		unitTurnStatus = UnitTurnStatus.dying;

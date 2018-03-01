@@ -77,9 +77,19 @@ public class CursorManager : MonoBehaviour {
 	private void SetAction(CurrentAction newCurrentAction)
 	{
 		currentAction = newCurrentAction;
-		if(newCurrentAction == CurrentAction.selecting)
+		if(newCurrentAction == CurrentAction.idle)
 		{
-			
+			Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
+		}
+		else if (newCurrentAction == CurrentAction.selecting)
+		{
+			Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
+		} else if (newCurrentAction == CurrentAction.moving)
+		{
+			Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
+		} else if (newCurrentAction == CurrentAction.attacking)
+		{
+			Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
 		}
 	}
 
