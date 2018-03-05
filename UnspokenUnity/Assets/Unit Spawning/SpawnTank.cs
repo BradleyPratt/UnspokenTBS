@@ -181,8 +181,8 @@ public class SpawnTank : MonoBehaviour {
 
         Destroy(spawningTank.gameObject);
 
-        GameObject.Instantiate(tempTank, pos, tempTank.transform.rotation);
-        turnManager.GetComponent<TurnManager>().AddUnit(tempTank);
+        GameObject newTank = GameObject.Instantiate(tempTank, pos, tempTank.transform.rotation);
+        turnManager.GetComponent<TurnManager>().AddUnit(newTank);
         Debug.Log(tempTank.name);
 
         switch (tempTank.name) {
