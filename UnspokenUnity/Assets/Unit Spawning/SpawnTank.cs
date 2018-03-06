@@ -164,8 +164,13 @@ public class SpawnTank : MonoBehaviour {
 
         spawningTank.name = "SpawningTank";
         spawningTank.tag = "SpawningTank";
-        Destroy(spawningTank.GetComponent<Unit>());
-        Destroy(spawningTank.GetComponent<HealthBar>());
+        foreach (Transform t in spawningTank.transform)
+        {
+            t.gameObject.tag = "SpawningTank";
+        }
+        Destroy(spawningTank.transform.GetComponentInChildren<Unit>());
+        Destroy(spawningTank.transform.GetComponentInChildren<HealthBar>());
+        Destroy(spawningTank.transform.GetComponentInChildren<UnityEngine.AI.NavMeshAgent>());
         spawningTank.AddComponent<SpawningTank>();
     }
 
