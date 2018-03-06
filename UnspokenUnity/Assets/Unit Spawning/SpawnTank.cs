@@ -185,12 +185,12 @@ public class SpawnTank : MonoBehaviour {
         turnManager.SetTankSpawning(spawning);
 
         Destroy(spawningTank.gameObject);
-		
 
 		// We create a temporary variable and store the instantiated object there.
 		GameObject newTank = GameObject.Instantiate(tempTank, pos, tempTank.transform.rotation);
-		// Then pass it to the turn manager. (If we pass the TurnManager tempTank, it gets a reference to the prefab instead of the new tank.)
-        turnManager.GetComponent<TurnManager>().AddUnit(newTank);
+        Debug.Log(newTank.name);
+        // Then pass it to the turn manager. (If we pass the TurnManager tempTank, it gets a reference to the prefab instead of the new tank.)
+        turnManager.GetComponent<TurnManager>().AddUnit(newTank.transform.GetChild(0).gameObject);
         Debug.Log(tempTank.name);
 
         switch (tempTank.name) {
