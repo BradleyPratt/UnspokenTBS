@@ -100,8 +100,6 @@ public class Unit : MonoBehaviour
 
 		heightOffsetV = new Vector3(0, combinedMesh.bounds.extents.y + heightOffset, 0);
 		lengthOffsetV = new Vector3(combinedMesh.bounds.extents.x, 0, 0);
-
-		Debug.Log(transform.position);
 	}
 
 	// Update is called once per frame
