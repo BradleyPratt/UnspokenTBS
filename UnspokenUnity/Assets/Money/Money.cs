@@ -44,7 +44,7 @@ public class Money : MonoBehaviour {
     {
 		if ((USMoney + amount) >= 0)
 		{
-			USMoney = USMoney + amount;
+            USMoney = USMoney + amount;
 			UpdateMoneyUI();
 			return true;
 		}
@@ -78,11 +78,11 @@ public class Money : MonoBehaviour {
         activeTeam = turnManager.GetActiveTeam();
 		if (activeTeam == "USA")
 		{
-			moneyText.text = USMoney.ToString();
+			moneyText.text = USMoney.ToString() + "$";
 		}
 		else
 		{
-			moneyText.text = USSRMoney.ToString();
+			moneyText.text = USSRMoney.ToString() + "₽";
 		}
 	}
 }

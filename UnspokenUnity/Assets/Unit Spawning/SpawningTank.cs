@@ -62,7 +62,7 @@ public class SpawningTank : MonoBehaviour {
 
         if (Physics.Raycast(ray, out hit)) {
             Vector3 lastPos = movePos;
-            if (hit.collider.tag != "Unit" && hit.collider.tag != "SpawningTank" && hit.point.y > 10) {
+            if (hit.collider.tag != "Unit" && hit.collider.tag != "SpawningTank" && hit.collider.tag != "MainCamera" &&hit.point.y > 12) {
                 movePos = hit.point;
                 lastPos = movePos;
             } else {

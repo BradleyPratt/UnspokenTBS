@@ -43,15 +43,15 @@ public class CameraScript : MonoBehaviour {
     float currentLerpTime;
     Quaternion initialRotation;
 
-    //Resolution res;
+    Resolution res;
 
     // Use this for initialization
     void Start() {
-        /*res = Screen.currentResolution;
+        res = Screen.currentResolution;
         if (res.refreshRate == 60)
             QualitySettings.vSyncCount = 1;
         if (res.refreshRate == 120)
-            QualitySettings.vSyncCount = 2;*/
+            QualitySettings.vSyncCount = 2;
 
         spawnPointUS = new Vector3(-300, 50, -170);
         spawnPointUSSR = new Vector3(300, 50, -100);
