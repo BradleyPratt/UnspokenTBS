@@ -269,4 +269,9 @@ public class TurnManager : MonoBehaviour
     public void SetTankSpawning(bool spawning) {
         tankSpawning = spawning;
     }
+
+	public void RunTurrets()
+	{
+
+	}
 }

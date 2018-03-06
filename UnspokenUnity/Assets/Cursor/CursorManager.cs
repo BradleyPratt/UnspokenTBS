@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.EventSystems;
 
 public class CursorManager : MonoBehaviour {
 
@@ -22,6 +24,7 @@ public class CursorManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start() {
+		Cursor.SetCursor(idle, new Vector2(0, 0), CursorMode.Auto);
 		turnManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<TurnManager>();
 	}
 
@@ -76,20 +79,23 @@ public class CursorManager : MonoBehaviour {
 
 	private void SetAction(CurrentAction newCurrentAction)
 	{
-		currentAction = newCurrentAction;
-		if(newCurrentAction == CurrentAction.idle)
+		if (currentAction != newCurrentAction)
 		{
-			Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
-		}
-		else if (newCurrentAction == CurrentAction.selecting)
-		{
-			Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
-		} else if (newCurrentAction == CurrentAction.moving)
-		{
-			Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
-		} else if (newCurrentAction == CurrentAction.attacking)
-		{
-			Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
+			if(newCurrentAction == CurrentAction.idle)
+			{
+				Cursor.SetCursor(idle, Vector2.zero, CursorMode.Auto);
+			}
+			else if (newCurrentAction == CurrentAction.selecting)
+			{
+				Cursor.SetCursor(null, new Vector2(125, 125), CursorMode.Auto);
+			} else if (newCurrentAction == CurrentAction.moving)
+			{
+				Cursor.SetCursor(moving, new Vector2(125, 125), CursorMode.Auto);
+			} else if (newCurrentAction == CurrentAction.attacking)
+			{
+				Cursor.SetCursor(attacking, new Vector2(125, 125), CursorMode.Auto);
+			}
+			currentAction = newCurrentAction;
 		}
 	}
 

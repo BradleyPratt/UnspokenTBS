@@ -57,6 +57,8 @@ public class Unit : MonoBehaviour
 	GameObject moveRangeProjector;
 	[SerializeField]
 	GameObject attackRangeProjector;
+	[SerializeField]
+	GameObject projectile;
 
 	[SerializeField]
 	Material redProjectorMaterial;
@@ -107,8 +109,8 @@ public class Unit : MonoBehaviour
 	{
 		if (unitMoving)
 		{
-			Debug.Log(navMeshAgent.remainingDistance);
-			if(navMeshAgent.remainingDistance < 0.0002)
+
+			if (navMeshAgent.remainingDistance < 0.0002)
 			{
 				unitMoving = false;
 				unitMoved = true;
@@ -117,6 +119,7 @@ public class Unit : MonoBehaviour
 				{
 					Destroy(currentProjector);
 				}
+				GameObject.FindGameObjectWithTag("GameManager").GetComponent<TurnManager>().RunTurrets();
 			}
 		}
 
@@ -380,6 +383,8 @@ public void UnitKilled()
 	{
 		if ((unitAttacking) && (InAttackRange(target)))
 		{
+			GameObject tempObject = Instantiate(projectile, transform.position, transform.rotation);
+			tempObject.GetComponent<Projectile>().SetTarget(target);
 			Collider[] colliderArray = Physics.OverlapSphere(target, attackRadius);
 
 			foreach (Collider collider in colliderArray)
@@ -426,7 +431,7 @@ public void UnitKilled()
 
 	public string GetPhase()
 	{
-		if(unitPhaseMoving)
+		if(unitPhaseMoving && !unitMoved)
 		{
 			return "Move";
 		} else if (unitAttacking)
