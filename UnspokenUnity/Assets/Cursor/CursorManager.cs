@@ -32,6 +32,7 @@ public class CursorManager : MonoBehaviour {
 	void Update() {
 		if (Time.timeScale != 0)
 		{
+			
 			bool unitSet = false;
 			if (turnManager.GetCurrentUnit() != null)
 			{
@@ -41,7 +42,7 @@ public class CursorManager : MonoBehaviour {
 			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 			Physics.Raycast(ray.origin, ray.direction, hitInfo: out hit, maxDistance: Mathf.Infinity);
 
-			if (hit.collider.tag == "Unit")
+			if (hit.collider.tag == "Unit" && (turnManager.GetActiveTeam() == hit.collider.gameObject.GetComponent<Unit>().GetTeam()))
 			{
 				SetAction(CurrentAction.selecting);
 			} else if (unitSet && (((hit.collider.tag == "Terrain") && (turnManager.GetCurrentUnit().GetComponent<Unit>().GetTeam() == turnManager.GetActiveTeam())) && (turnManager.GetCurrentUnit().GetComponent<Unit>().GetPhase() == "Move") && (turnManager.GetCurrentUnit().GetComponent<Unit>().InMoveRange(hit.point))))
