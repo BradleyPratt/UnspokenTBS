@@ -24,7 +24,7 @@ public class SpawningTank : MonoBehaviour {
         tankTeam = new ArrayList();
 
         foreach (GameObject tank in nearTanks) {
-            if (tank.GetComponent<Unit>().GetTeam() == currentTeam) {
+            if (tank.GetComponent<Unit>().GetTeam() == currentTeam && tank.name == transform.GetChild(0).gameObject.name) {
                 tankTeam.Add(tank);
             }
         }
