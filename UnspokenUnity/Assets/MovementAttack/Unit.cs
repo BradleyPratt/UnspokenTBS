@@ -385,25 +385,8 @@ public void UnitKilled()
 		{
 			GameObject tempObject = Instantiate(projectile, transform.position, transform.rotation);
 			tempObject.GetComponent<Projectile>().SetTarget(target);
-			Collider[] colliderArray = Physics.OverlapSphere(target, attackRadius);
-
-			foreach (Collider collider in colliderArray)
-			{
-				if (collider.gameObject != this.gameObject)
-				{
-					if (collider.CompareTag("Unit"))
-					{
-						collider.gameObject.GetComponent<HealthBar>().TakeDamage(attackStrength);
-						collider.gameObject.GetComponent<Unit>().UnitHit();
-					}
-					if (collider.CompareTag("WatchTower"))
-					{
-						collider.gameObject.GetComponent<WatchTowerHealth>().WatchTowerTakeDamage(attackStrength);
-						collider.gameObject.GetComponent<Unit>().UnitHit();
-					}
-				}
-			}
-
+			tempObject.GetComponent<Projectile>().SetAttackRadius(attackRadius);
+			tempObject.GetComponent<Projectile>().SetAttackStrength(attackStrength);
 			Destroy(currentProjector.gameObject);
 			unitAttacking = false;
 			unitAttacked = true;
