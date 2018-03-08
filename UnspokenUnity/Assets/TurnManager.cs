@@ -61,7 +61,13 @@ public class TurnManager : MonoBehaviour
 	// Update is called once per frame
 	void Update()
 	{
-
+		if(UnitsRemaining("USA") <= 0)
+		{
+			Debug.Log("USSR won.");
+		} else if (UnitsRemaining("USSR") <= 0)
+		{
+			Debug.Log("USA won.");
+		}
 	}
 
 	public void EndTurn()
