@@ -59,6 +59,8 @@ public class Unit : MonoBehaviour
 	GameObject attackRangeProjector;
 	[SerializeField]
 	GameObject projectile;
+	[SerializeField]
+	GameObject locationMarker;
 
 	[SerializeField]
 	Material redProjectorMaterial;
@@ -84,6 +86,14 @@ public class Unit : MonoBehaviour
 	// Use this for initialization
 	void Start()
 	{
+		if (projectile == null)
+		{
+			projectile = Resources.Load<GameObject>("Projectile");
+		}
+		if (locationMarker == null)
+		{
+			locationMarker = Resources.Load<GameObject>("LocationMarker");
+		}
 		rayCamera = Camera.main;
 		navMeshAgent = GetComponentInParent<NavMeshAgent>();
 						MeshFilter[] meshFilters = this.GetComponentsInChildren<MeshFilter>();
@@ -374,6 +384,7 @@ public void UnitKilled()
 	{
 		if ((!unitMoved && unitPhaseMoving) && InMoveRange(target))
 		{
+			Instantiate(locationMarker, target, new Quaternion());
 			navMeshAgent.destination = target;
 			unitMoving = true;
 		}
