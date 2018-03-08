@@ -131,11 +131,6 @@ public class Unit : MonoBehaviour
 			}
 		}
 
-		if (unitAttacking)
-		{
-			PositionAttackProjector();
-		}
-
 		if (unitTurnStatus == UnitTurnStatus.dying)
 		{
 			if (animTimer > 1.0f) {
@@ -154,6 +149,14 @@ public class Unit : MonoBehaviour
 			System.Random rand = new System.Random();
 			Vector3 adjustment = new Vector3(rand.Next(-5, 5)*(float)0.03, 0, rand.Next(-5, 5) * (float)0.03);
 			transform.position+=adjustment;
+		}
+	}
+
+	void LateUpdate()
+	{
+		if (unitAttacking)
+		{
+			PositionAttackProjector();
 		}
 	}
 

@@ -38,11 +38,18 @@ public class CursorManager : MonoBehaviour {
 			{
 				unitSet = true;
 			}
+
 			RaycastHit hit;
 			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 			Physics.Raycast(ray.origin, ray.direction, hitInfo: out hit, maxDistance: Mathf.Infinity);
 
-			if (hit.collider.tag == "Unit" && (turnManager.GetActiveTeam() == hit.collider.gameObject.GetComponent<Unit>().GetTeam()))
+			bool colliderIsUnit = false;
+			if (hit.collider.gameObject.GetComponent<Unit>() != null)
+			{
+				colliderIsUnit = true;
+			}
+
+			if (hit.collider.tag == "Unit" && colliderIsUnit && (turnManager.GetActiveTeam() == hit.collider.gameObject.GetComponent<Unit>().GetTeam()))
 			{
 				SetAction(CurrentAction.selecting);
 			} else if (unitSet && (((hit.collider.tag == "Terrain") && (turnManager.GetCurrentUnit().GetComponent<Unit>().GetTeam() == turnManager.GetActiveTeam())) && (turnManager.GetCurrentUnit().GetComponent<Unit>().GetPhase() == "Move") && (turnManager.GetCurrentUnit().GetComponent<Unit>().InMoveRange(hit.point))))
