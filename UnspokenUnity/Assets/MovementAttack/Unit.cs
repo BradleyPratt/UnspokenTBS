@@ -59,6 +59,8 @@ public class Unit : MonoBehaviour
 	GameObject attackRangeProjector;
 	[SerializeField]
 	GameObject projectile;
+	[SerializeField]
+	GameObject locationMarker;
 
 	[SerializeField]
 	Material redProjectorMaterial;
@@ -84,6 +86,14 @@ public class Unit : MonoBehaviour
 	// Use this for initialization
 	void Start()
 	{
+		if (projectile == null)
+		{
+			projectile = Resources.Load<GameObject>("Projectile");
+		}
+		if (locationMarker == null)
+		{
+			locationMarker = Resources.Load<GameObject>("LocationMarker");
+		}
 		rayCamera = Camera.main;
 		navMeshAgent = GetComponentInParent<NavMeshAgent>();
 						MeshFilter[] meshFilters = this.GetComponentsInChildren<MeshFilter>();
@@ -372,6 +382,7 @@ public void UnitKilled()
 	{
 		if ((!unitMoved && unitPhaseMoving) && InMoveRange(target))
 		{
+			Instantiate(locationMarker, target, new Quaternion());
 			navMeshAgent.destination = target;
 			unitMoving = true;
 		}
@@ -383,25 +394,8 @@ public void UnitKilled()
 		{
 			GameObject tempObject = Instantiate(projectile, transform.position, transform.rotation);
 			tempObject.GetComponent<Projectile>().SetTarget(target);
-			Collider[] colliderArray = Physics.OverlapSphere(target, attackRadius);
-
-			foreach (Collider collider in colliderArray)
-			{
-				if (collider.gameObject != this.gameObject)
-				{
-					if (collider.CompareTag("Unit"))
-					{
-						collider.gameObject.GetComponent<HealthBar>().TakeDamage(attackStrength);
-						collider.gameObject.GetComponent<Unit>().UnitHit();
-					}
-					if (collider.CompareTag("WatchTower"))
-					{
-						collider.gameObject.GetComponent<WatchTowerHealth>().WatchTowerTakeDamage(attackStrength);
-						collider.gameObject.GetComponent<Unit>().UnitHit();
-					}
-				}
-			}
-
+			tempObject.GetComponent<Projectile>().SetAttackRadius(attackRadius);
+			tempObject.GetComponent<Projectile>().SetAttackStrength(attackStrength);
 			Destroy(currentProjector.gameObject);
 			unitAttacking = false;
 			unitAttacked = true;
