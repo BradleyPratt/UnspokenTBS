@@ -27,7 +27,6 @@ public class HealthBar : MonoBehaviour {
         if (numOfUnits < GameObject.FindGameObjectsWithTag("Unit").Length)
         {
             BuildUnits();
-            Debug.Log("Ran buildunits()");
         }
 
         if (healthSlider != null)

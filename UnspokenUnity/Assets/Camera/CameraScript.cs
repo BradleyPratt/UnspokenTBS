@@ -122,12 +122,13 @@ public class CameraScript : MonoBehaviour {
 
             //Vector3 target = new Vector3(transform.position.x + transform.forward.x * 10, transform.position.y - 30f, transform.position.z + transform.forward.z * 10);
 
+            float cameraValue = 100 * (transform.position.y / 100 );
             if (Input.GetKey(KeyCode.Q)) {
-                focus = new Vector3(transform.position.x + transform.forward.x * 100, transform.position.y + transform.forward.y * 100, transform.position.z + transform.forward.z * 100);
+                focus = new Vector3(transform.position.x + transform.forward.x * cameraValue, transform.position.y + transform.forward.y * cameraValue, transform.position.z + transform.forward.z * cameraValue);
                 transform.RotateAround(focus, -Vector3.up, rotateSpeed);
             }
             if (Input.GetKey(KeyCode.E)) {
-                focus = new Vector3(transform.position.x + transform.forward.x * 100, transform.position.y + transform.forward.y * 100, transform.position.z + transform.forward.z * 100);
+                focus = new Vector3(transform.position.x + transform.forward.x * cameraValue, transform.position.y + transform.forward.y * cameraValue, transform.position.z + transform.forward.z * cameraValue);
                 transform.RotateAround(focus, Vector3.up, rotateSpeed);
             }
 

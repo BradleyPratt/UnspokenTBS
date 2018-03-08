@@ -66,7 +66,6 @@ public class TurnManager : MonoBehaviour
 
 	public void EndTurn()
 	{
-		Debug.Log("TurnEnded");
 		if (currentUnit != null)
 		{
 			currentUnit.GetComponent<Unit>().SetSelected(false);
@@ -255,7 +254,6 @@ public class TurnManager : MonoBehaviour
         foreach (GameObject checkpoint in checkpoints)
         {
             string owner = checkpoint.GetComponent<Checkpoint>().GetCheckpointOwner();
-			Debug.Log(owner);
             if (owner == "USA" && currentTeam == "USSR")
             {
                 gameObject.GetComponent<Money>().SetUSMoney(100);
