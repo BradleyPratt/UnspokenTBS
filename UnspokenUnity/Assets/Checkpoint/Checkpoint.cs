@@ -15,8 +15,12 @@ public class Checkpoint : MonoBehaviour {
     public GameObject checkpointBlue;
     public GameObject checkpointNeutral;
 
-    // Update is called once per frame
-    void Update () {
+	void Start()
+	{
+		GetComponentInChildren<Projector>().orthographicSize = radius;
+	}
+	// Update is called once per frame
+	void Update () {
         Colliding(transform.position, radius);
     }
 
@@ -45,7 +49,10 @@ public class Checkpoint : MonoBehaviour {
             if (!neutralCheckpointBuilt) {
                 foreach (Transform child in transform)
                 {
-                    GameObject.Destroy(child.gameObject);
+					if(!child.name.Equals("RangeProjector"))
+					{
+						GameObject.Destroy(child.gameObject);
+					}
                 }
                 Instantiate(checkpointNeutral, transform);
             }
@@ -57,9 +64,12 @@ public class Checkpoint : MonoBehaviour {
         {
             if (!blueCheckpointBuilt) {
                 foreach (Transform child in transform)
-                {
-                    GameObject.Destroy(child.gameObject);
-                }
+				{
+					if (!child.name.Equals("RangeProjector"))
+					{
+						GameObject.Destroy(child.gameObject);
+					}
+				}
                 Instantiate(checkpointBlue, transform);
             }
             blueCheckpointBuilt = true;
@@ -69,9 +79,12 @@ public class Checkpoint : MonoBehaviour {
         else {
             if (!redCheckpointBuilt) {
                 foreach (Transform child in transform)
-                {
-                    GameObject.Destroy(child.gameObject);
-                }
+				{
+					if (!child.name.Equals("RangeProjector"))
+					{
+						GameObject.Destroy(child.gameObject);
+					}
+				}
                 Instantiate(checkpointRed, transform);
             }
             redCheckpointBuilt = true;
