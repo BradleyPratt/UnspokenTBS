@@ -11,14 +11,18 @@ public class Checkpoint : MonoBehaviour {
     bool redCheckpointBuilt = false;
     bool blueCheckpointBuilt = false;
 
-    public GameObject checkpointRed;
-    public GameObject checkpointBlue;
-    public GameObject checkpointNeutral;
+    GameObject checkpointRed;
+    GameObject checkpointBlue;
+    GameObject checkpointNeutral;
 
 	void Start()
 	{
 		GetComponentInChildren<Projector>().orthographicSize = radius;
-	}
+
+        checkpointRed = (GameObject)Resources.Load("ControlPointUSSR");
+        checkpointBlue = (GameObject)Resources.Load("ControlPointUS");
+        checkpointNeutral = (GameObject)Resources.Load("ControlPointNeutral");
+    }
 	// Update is called once per frame
 	void Update () {
         Colliding(transform.position, radius);

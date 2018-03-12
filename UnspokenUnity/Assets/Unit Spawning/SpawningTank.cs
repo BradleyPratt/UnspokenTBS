@@ -24,14 +24,20 @@ public class SpawningTank : MonoBehaviour {
         tankTeam = new ArrayList();
 
         foreach (GameObject tank in nearTanks) {
-            if (tank.GetComponent<Unit>().GetTeam() == currentTeam && tank.name == transform.GetChild(0).gameObject.name) {
-                tankTeam.Add(tank);
+            if (tank.GetComponent<Unit>().GetTeam() == currentTeam/* && tank.name == transform.GetChild(0).gameObject.name*/) {
+                if (transform.GetChild(0).gameObject.name.Contains("Small") && (tank.name.Contains("Small") || tank.name.Contains("Medium") || tank.name.Contains("Large"))) {
+                    tankTeam.Add(tank);
+                } else if (transform.GetChild(0).gameObject.name.Contains("Medium") && (tank.name.Contains("Medium") || tank.name.Contains("Large"))) {
+                    tankTeam.Add(tank);
+                } else if (transform.GetChild(0).gameObject.name.Contains("Large") && tank.name.Contains("Large")) {
+                    tankTeam.Add(tank);
+                }
             }
         }
     }
-	
-	// Update is called once per frame
-	void Update () {
+
+    // Update is called once per frame
+    void Update () {
         GameObject nearestTank = null;
         float minDist = 1000;
         Vector3 currentPos = transform.position;
