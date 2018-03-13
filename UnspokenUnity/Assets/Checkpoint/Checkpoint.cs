@@ -11,12 +11,20 @@ public class Checkpoint : MonoBehaviour {
     bool redCheckpointBuilt = false;
     bool blueCheckpointBuilt = false;
 
-    public GameObject checkpointRed;
-    public GameObject checkpointBlue;
-    public GameObject checkpointNeutral;
+    GameObject checkpointRed;
+    GameObject checkpointBlue;
+    GameObject checkpointNeutral;
 
-    // Update is called once per frame
-    void Update () {
+	void Start()
+	{
+		GetComponentInChildren<Projector>().orthographicSize = radius;
+
+        checkpointRed = (GameObject)Resources.Load("ControlPointUSSR");
+        checkpointBlue = (GameObject)Resources.Load("ControlPointUS");
+        checkpointNeutral = (GameObject)Resources.Load("ControlPointNeutral");
+    }
+	// Update is called once per frame
+	void Update () {
         Colliding(transform.position, radius);
     }
 
@@ -45,7 +53,10 @@ public class Checkpoint : MonoBehaviour {
             if (!neutralCheckpointBuilt) {
                 foreach (Transform child in transform)
                 {
-                    GameObject.Destroy(child.gameObject);
+					if(!child.name.Equals("RangeProjector"))
+					{
+						GameObject.Destroy(child.gameObject);
+					}
                 }
                 Instantiate(checkpointNeutral, transform);
             }
@@ -57,9 +68,12 @@ public class Checkpoint : MonoBehaviour {
         {
             if (!blueCheckpointBuilt) {
                 foreach (Transform child in transform)
-                {
-                    GameObject.Destroy(child.gameObject);
-                }
+				{
+					if (!child.name.Equals("RangeProjector"))
+					{
+						GameObject.Destroy(child.gameObject);
+					}
+				}
                 Instantiate(checkpointBlue, transform);
             }
             blueCheckpointBuilt = true;
@@ -69,9 +83,12 @@ public class Checkpoint : MonoBehaviour {
         else {
             if (!redCheckpointBuilt) {
                 foreach (Transform child in transform)
-                {
-                    GameObject.Destroy(child.gameObject);
-                }
+				{
+					if (!child.name.Equals("RangeProjector"))
+					{
+						GameObject.Destroy(child.gameObject);
+					}
+				}
                 Instantiate(checkpointRed, transform);
             }
             redCheckpointBuilt = true;

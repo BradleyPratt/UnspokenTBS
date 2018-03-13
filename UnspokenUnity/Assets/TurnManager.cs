@@ -19,6 +19,10 @@ public class TurnManager : MonoBehaviour
 	// Number of current turn.
 	private int turnCounter = 1;
 
+    // Is a tank being placed
+    bool tankSpawning = false; // Note to Josh, don't know how to modify your end turn method without breaking anything, I've added a method to change this value when necessary.
+                               // Need to make it so you cant end turn while this value is true.
+
 	// Use this for initialization
 	void Start()
 	{
@@ -30,10 +34,12 @@ public class TurnManager : MonoBehaviour
 			if (string.Equals(tempUnit.GetComponent<Unit>().GetTeam(), "USA"))
 			{
 				unitsUSA.Add(tempUnit);
+				tempUnit.GetComponentInChildren<MiniMapUnitIcon>().SetColor(Color.blue);
 			}
 			else if (string.Equals(tempUnit.GetComponent<Unit>().GetTeam(), "USSR"))
 			{
 				unitsUSSR.Add(tempUnit);
+				tempUnit.GetComponentInChildren<MiniMapUnitIcon>().SetColor(Color.red);
 			}
 		}
 
@@ -55,12 +61,17 @@ public class TurnManager : MonoBehaviour
 	// Update is called once per frame
 	void Update()
 	{
-
+		if(UnitsRemaining("USA") <= 0)
+		{
+			Debug.Log("USSR won.");
+		} else if (UnitsRemaining("USSR") <= 0)
+		{
+			Debug.Log("USA won.");
+		}
 	}
 
 	public void EndTurn()
 	{
-		Debug.Log("TurnEnded");
 		if (currentUnit != null)
 		{
 			currentUnit.GetComponent<Unit>().SetSelected(false);
@@ -71,7 +82,25 @@ public class TurnManager : MonoBehaviour
 			currentTeam = "USSR";
 			foreach (GameObject unit in unitsUSSR)
 			{
+				if (unit == null)
+				{
+					RemoveUnit(unit);
+				} else
+				{
+					unit.GetComponentInChildren<MiniMapUnitIcon>().SetColor(Color.blue);
+				}
+			}
+			foreach (GameObject unit in unitsUSA)
+			{
+				if (unit == null)
+				{
+					RemoveUnit(unit);
+				}
+				else
+				{
 				unit.GetComponent<Unit>().ResetUnitTurn();
+				unit.GetComponentInChildren<MiniMapUnitIcon>().SetColor(Color.red);
+				}
 			}
 		}
 		else
@@ -79,13 +108,35 @@ public class TurnManager : MonoBehaviour
 			currentTeam = "USA";
 			foreach (GameObject unit in unitsUSA)
 			{
+				if (unit == null)
+				{
+					RemoveUnit(unit);
+				}
+				else
+				{
+				unit.GetComponentInChildren<MiniMapUnitIcon>().SetColor(Color.blue);
+				}
+			}
+			foreach (GameObject unit in unitsUSSR)
+			{
+				if (unit == null)
+				{
+					RemoveUnit(unit);
+				}
+				else
+				{
 				unit.GetComponent<Unit>().ResetUnitTurn();
+				unit.GetComponentInChildren<MiniMapUnitIcon>().SetColor(Color.red);
+				}
 			}
 		}
 		turnCounter++;
 
         RunCheckpoints();
+		gameObject.GetComponent<Money>().UpdateMoneyUI();
 		UpdateTeamIndicator();
+
+        Camera.main.GetComponent<CameraScript>().CameraFocus(new Vector3(0, 0, 0));
 	}
 
 	public void AutoEndTurn()
@@ -121,18 +172,23 @@ public class TurnManager : MonoBehaviour
 		}
 	}
 
-	// Remove a unit from the turn manager.
-	public void RemoveUnit(GameObject deadUnit)
-	{
-		if (string.Equals(deadUnit.GetComponent<Unit>().GetTeam(), "USA"))
-		{
-			unitsUSA.Remove(deadUnit);
-		}
-		else if (string.Equals(deadUnit.GetComponent<Unit>().GetTeam(), "USSR"))
-		{
-			unitsUSSR.Remove(deadUnit);
-		}
-	}
+    // Remove a unit from the turn manager.
+    public void RemoveUnit(GameObject deadUnit) {
+        if (string.Equals(deadUnit.GetComponent<Unit>().GetTeam(), "USA")) {
+            unitsUSA.Remove(deadUnit);
+        } else if (string.Equals(deadUnit.GetComponent<Unit>().GetTeam(), "USSR")) {
+            unitsUSSR.Remove(deadUnit);
+        }
+    }  
+    
+    // add a unit to the turn manager.
+    public void AddUnit(GameObject newUnit) {
+        if (string.Equals(newUnit.GetComponent<Unit>().GetTeam(), "USA")) {
+            unitsUSA.Add(newUnit);
+        } else if (string.Equals(newUnit.GetComponent<Unit>().GetTeam(), "USSR")) {
+            unitsUSSR.Add(newUnit);
+        }
+    }
 
 	public void SetCurrentUnit(GameObject unit)
 	{
@@ -144,6 +200,19 @@ public class TurnManager : MonoBehaviour
 			}
 			currentUnit = unit;
 			currentUnit.GetComponent<Unit>().SetSelected(true);
+		}
+	}
+
+	public void SetCurrentUnit(GameObject unit, string phase)
+	{
+		if ((unit.GetComponent<Unit>().GetTeam() == currentTeam) && !(unit.GetComponent<Unit>().HasFinishedTurn()))// && (currentUnit != unit))
+		{
+			if (currentUnit != null)
+			{
+				currentUnit.GetComponent<Unit>().SetSelected(false);
+			}
+			currentUnit = unit;
+			currentUnit.GetComponent<Unit>().SetSelected(true, phase);
 		}
 	}
 
@@ -191,7 +260,6 @@ public class TurnManager : MonoBehaviour
         foreach (GameObject checkpoint in checkpoints)
         {
             string owner = checkpoint.GetComponent<Checkpoint>().GetCheckpointOwner();
-			Debug.Log(owner);
             if (owner == "USA" && currentTeam == "USSR")
             {
                 gameObject.GetComponent<Money>().SetUSMoney(100);
@@ -201,4 +269,13 @@ public class TurnManager : MonoBehaviour
             }
         }
     }
+
+    public void SetTankSpawning(bool spawning) {
+        tankSpawning = spawning;
+    }
+
+	public void RunTurrets()
+	{
+
+	}
 }

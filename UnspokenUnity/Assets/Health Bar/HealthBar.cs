@@ -27,12 +27,12 @@ public class HealthBar : MonoBehaviour {
         if (numOfUnits < GameObject.FindGameObjectsWithTag("Unit").Length)
         {
             BuildUnits();
-            Debug.Log("Ran buildunits()");
         }
 
         if (healthSlider != null)
         {
             healthSlider.transform.position = new Vector3(gameObject.transform.position.x+4f, gameObject.transform.position.y+5f, gameObject.transform.position.z);
+            healthSlider.transform.rotation = Camera.main.transform.rotation;
         }
     }
 
