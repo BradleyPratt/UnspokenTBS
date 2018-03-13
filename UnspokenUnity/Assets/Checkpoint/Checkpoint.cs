@@ -15,13 +15,24 @@ public class Checkpoint : MonoBehaviour {
     GameObject checkpointBlue;
     GameObject checkpointNeutral;
 
-	void Start()
+    Projector projector;
+
+    Material circleProjectorRed;
+    Material circleProjectorBlue;
+    Material circleProjectorNeutral;
+
+    void Start()
 	{
-		GetComponentInChildren<Projector>().orthographicSize = radius;
+        projector = GetComponentInChildren<Projector>();
+        projector.orthographicSize = radius;
 
         checkpointRed = (GameObject)Resources.Load("ControlPointUSSR");
         checkpointBlue = (GameObject)Resources.Load("ControlPointUS");
         checkpointNeutral = (GameObject)Resources.Load("ControlPointNeutral");
+
+        circleProjectorRed = (Material)Resources.Load("circleProjectorRed");
+        circleProjectorBlue = (Material)Resources.Load("circleProjectorBlue");
+        circleProjectorNeutral = (Material)Resources.Load("circleProjector");
     }
 	// Update is called once per frame
 	void Update () {
@@ -55,9 +66,11 @@ public class Checkpoint : MonoBehaviour {
                 {
 					if(!child.name.Equals("RangeProjector"))
 					{
-						GameObject.Destroy(child.gameObject);
+                        projector.material = circleProjectorNeutral;
+                        GameObject.Destroy(child.gameObject);
 					}
                 }
+                projector.material = circleProjectorNeutral;
                 Instantiate(checkpointNeutral, transform);
             }
             neutralCheckpointBuilt = true;
@@ -71,9 +84,11 @@ public class Checkpoint : MonoBehaviour {
 				{
 					if (!child.name.Equals("RangeProjector"))
 					{
-						GameObject.Destroy(child.gameObject);
+                        projector.material = circleProjectorNeutral;
+                        GameObject.Destroy(child.gameObject);
 					}
 				}
+                projector.material = circleProjectorBlue;
                 Instantiate(checkpointBlue, transform);
             }
             blueCheckpointBuilt = true;
@@ -86,9 +101,11 @@ public class Checkpoint : MonoBehaviour {
 				{
 					if (!child.name.Equals("RangeProjector"))
 					{
-						GameObject.Destroy(child.gameObject);
+                        projector.material = circleProjectorNeutral;
+                        GameObject.Destroy(child.gameObject);
 					}
 				}
+                projector.material = circleProjectorRed;
                 Instantiate(checkpointRed, transform);
             }
             redCheckpointBuilt = true;
