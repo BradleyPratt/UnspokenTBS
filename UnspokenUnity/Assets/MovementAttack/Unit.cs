@@ -426,7 +426,7 @@ public void UnitKilled()
 
 	public string GetPhase()
 	{
-		if(unitPhaseMoving && !unitMoved)
+		if(unitPhaseMoving && !unitMoved && !unitMoving)
 		{
 			return "Move";
 		} else if (unitAttacking)
