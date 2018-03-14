@@ -68,6 +68,7 @@ public class Unit : MonoBehaviour
 	Material greenProjectorMaterial;
 
 	private GameObject currentProjector;
+	private GameObject currentMarker;
 
 	private Vector3 newPosition;
 	private Vector3 movePosition;
@@ -127,6 +128,7 @@ public class Unit : MonoBehaviour
 				{
 					Destroy(currentProjector);
 				}
+				Destroy(currentMarker);
 				GameObject.FindGameObjectWithTag("GameManager").GetComponent<TurnManager>().RunTurrets();
 			}
 		}
@@ -385,7 +387,7 @@ public void UnitKilled()
 	{
 		if ((!unitMoved && unitPhaseMoving) && InMoveRange(target))
 		{
-			Instantiate(locationMarker, target, new Quaternion());
+			currentMarker = Instantiate(locationMarker, target, new Quaternion());
 			navMeshAgent.destination = target;
 			unitMoving = true;
 		}
