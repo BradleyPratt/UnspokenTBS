@@ -116,22 +116,7 @@ public class Unit : MonoBehaviour
 	// Update is called once per frame
 	void Update()
 	{
-		if (unitMoving)
-		{
-
-			if (navMeshAgent.remainingDistance < 0.0002)
-			{
-				unitMoving = false;
-				unitMoved = true;
-				HasActionsLeft();
-				if (currentProjector != null)
-				{
-					Destroy(currentProjector);
-				}
-				Destroy(currentMarker);
-				GameObject.FindGameObjectWithTag("GameManager").GetComponent<TurnManager>().RunTurrets();
-			}
-		}
+		
 
 		if (unitTurnStatus == UnitTurnStatus.dying)
 		{
@@ -156,6 +141,22 @@ public class Unit : MonoBehaviour
 
 	void LateUpdate()
 	{
+		if (unitMoving)
+		{
+			if ((navMeshAgent.remainingDistance < 0.0002) && (navMeshAgent.pathPending == false))
+			{
+				unitMoving = false;
+				unitMoved = true;
+				HasActionsLeft();
+				if (currentProjector != null)
+				{
+					Destroy(currentProjector);
+				}
+				Destroy(currentMarker);
+				GameObject.FindGameObjectWithTag("GameManager").GetComponent<TurnManager>().RunTurrets();
+			}
+		}
+
 		if (unitAttacking)
 		{
 			PositionAttackProjector();
