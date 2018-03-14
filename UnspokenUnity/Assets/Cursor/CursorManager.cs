@@ -24,7 +24,7 @@ public class CursorManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start() {
-		Cursor.SetCursor(idle, new Vector2(0, 0), CursorMode.Auto);
+		Cursor.SetCursor(idle, new Vector2(4, 132), CursorMode.Auto);
 		turnManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<TurnManager>();
 	}
 
@@ -91,11 +91,11 @@ public class CursorManager : MonoBehaviour {
 		{
 			if(newCurrentAction == CurrentAction.idle)
 			{
-				Cursor.SetCursor(idle, Vector2.zero, CursorMode.Auto);
+				Cursor.SetCursor(idle, new Vector2(4, 132), CursorMode.Auto);
 			}
 			else if (newCurrentAction == CurrentAction.selecting)
 			{
-				Cursor.SetCursor(selecting, new Vector2(0, 0), CursorMode.Auto);
+				Cursor.SetCursor(selecting, new Vector2(16, 140), CursorMode.Auto);
 			} else if (newCurrentAction == CurrentAction.moving)
 			{
 				Cursor.SetCursor(moving, new Vector2(125, 125), CursorMode.Auto);
