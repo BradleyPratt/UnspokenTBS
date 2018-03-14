@@ -95,7 +95,7 @@ public class CursorManager : MonoBehaviour {
 			}
 			else if (newCurrentAction == CurrentAction.selecting)
 			{
-				Cursor.SetCursor(null, new Vector2(125, 125), CursorMode.Auto);
+				Cursor.SetCursor(selecting, new Vector2(0, 0), CursorMode.Auto);
 			} else if (newCurrentAction == CurrentAction.moving)
 			{
 				Cursor.SetCursor(moving, new Vector2(125, 125), CursorMode.Auto);
