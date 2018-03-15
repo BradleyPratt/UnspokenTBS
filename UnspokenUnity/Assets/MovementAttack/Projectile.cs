@@ -12,6 +12,7 @@ public class Projectile : MonoBehaviour
 	float attackStrength;
 	float oldDist = 0;
 	bool collisionOn = false;
+	private GameObject explosionEffect;
 
 	public void SetInfo(Vector3 target, float radius, float strength, GameObject creator)
 	{
@@ -31,6 +32,7 @@ public class Projectile : MonoBehaviour
 	// Use this for initialization
 	void Start()
 	{
+		explosionEffect = (GameObject)Resources.Load("Explosion");
 	}
 
 	// Update is called once per frame
@@ -39,7 +41,7 @@ public class Projectile : MonoBehaviour
 
 		if (Vector2.Distance(new Vector2(transform.position.x, transform.position.z), new Vector2(target.x, target.z)) > oldDist)
 		{
-			Detonate();
+			Detonate(target);
 		}
 		else
 		{
@@ -78,7 +80,7 @@ public class Projectile : MonoBehaviour
 		ignoreColliders.Add(objectToIgnore);
 	}
 
-	private void Detonate()
+	private void Detonate(Vector3 detinationPoint)
 	{
 
 		Collider[]
@@ -102,6 +104,9 @@ public class Projectile : MonoBehaviour
 		}
 
 		Destroy(this.gameObject);
+
+		GameObject newEffect = Instantiate(explosionEffect, detinationPoint, new Quaternion());
+		Destroy(newEffect, 5.0f);
 	}
 
 	void OnCollisionEnter(Collision col)
@@ -109,7 +114,7 @@ public class Projectile : MonoBehaviour
 		if (!ignoreColliders.Contains(col.gameObject))
 		{
 			Debug.Log(col.gameObject);
-			Detonate();
+			Detonate(transform.position);
 		}
 	}
 }
