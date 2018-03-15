@@ -5,7 +5,10 @@ using UnityEngine.UI;
 
 public class HealthBar : MonoBehaviour {
 
-    public float totalHp = 100;
+    public float largeHP;
+    public float mediumHP;
+    public float smallHP; 
+
     public float currentHp; 
     Slider healthSlider; //HealthSlider, needed for creating Health Sliders
     GameObject[] units; 
@@ -15,7 +18,42 @@ public class HealthBar : MonoBehaviour {
     // Use this for initialization
     void Start ()
     {
-        currentHp = totalHp;
+        largeHP = GameObject.Find("GameManager").GetComponent<HealthBar>().largeHP;
+        mediumHP = GameObject.Find("GameManager").GetComponent<HealthBar>().mediumHP;
+        smallHP = GameObject.Find("GameManager").GetComponent<HealthBar>().mediumHP; // This and above to make sure difference instances maintain the same value
+
+        float health = 0;
+
+        switch (name) {
+            case "SmallTankUS":
+            health = smallHP;
+            break;
+
+            case "MediumTankUS":
+            health = mediumHP;
+            break;
+
+            case "LargeTankUS":
+            health = largeHP;
+            break;
+
+            case "SmallTankUSSR":
+            health = smallHP;
+            break;
+
+            case "MediumTankUSSR":
+            health = mediumHP;
+            break;
+
+            case "LargeTankUSSR":
+            health = largeHP;
+            break;
+
+            default:
+            break;
+        }
+        Debug.Log(health + "" + name);
+        currentHp = health;
 
         BuildUnits();
     }
