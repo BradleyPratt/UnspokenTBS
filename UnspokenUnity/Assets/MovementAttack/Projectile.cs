@@ -103,6 +103,7 @@ public class Projectile : MonoBehaviour
 	void OnCollisionEnter(Collision col)
 	{
 		if (!ignoreColliders.Contains(col.gameObject))
+		{
 			Detonate();
 		}
 	}
