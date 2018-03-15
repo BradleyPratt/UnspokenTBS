@@ -142,7 +142,7 @@ public class CameraScript : MonoBehaviour {
             }
         }
 
-        currentLerpTime += Time.deltaTime * 0.25f;
+        currentLerpTime += Time.deltaTime * 0.5f;
         if (currentLerpTime > lerpTime) {
             currentLerpTime = lerpTime;
         }
