@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Projectile : MonoBehaviour
 {
-
+	private List<GameObject> ignoreColliders = new List<GameObject>();
 	Vector3 target, initialPos;
 	Vector2 normalizedHorizontalChange;
 	float sv, uv, vv, av, tv, sh, uh, vh, ah, th;
@@ -26,7 +26,6 @@ public class Projectile : MonoBehaviour
 		if (Vector2.Distance(new Vector2(transform.position.x, transform.position.z), new Vector2(target.x, target.z)) < 0.1)
 		{
 			Detonate();
-			Destroy(this.gameObject);
 		}
 		else
 		{
@@ -38,7 +37,7 @@ public class Projectile : MonoBehaviour
 		Vector3 tempVector3 = new Vector3();//initialPos;
 		tempVector3.x = (normalizedHorizontalChange * sh).x;
 		tempVector3.z = (normalizedHorizontalChange * sh).y;
-		transform.Translate(tempVector3 * Time.deltaTime, Space.World);
+		transform.Translate(tempVector3, Space.World);
 	}
 
 	public void SetTarget(Vector3 newTarget)
@@ -57,6 +56,11 @@ public class Projectile : MonoBehaviour
 	public void SetAttackStrength(float newStrength)
 	{
 		attackStrength = newStrength;
+	}
+
+	public void IgnoreObject(GameObject objectToIgnore)
+	{
+		ignoreColliders.Add(objectToIgnore);
 	}
 
 	private void Detonate()
@@ -81,11 +85,15 @@ public class Projectile : MonoBehaviour
 				}
 			}
 		}
+
+		Destroy(this.gameObject);
 	}
 
 	void OnCollisionEnter(Collision col)
 	{
-		Debug.Log("collided");
-		Detonate();
+		if (ignoreColliders.Contains(col.gameObject))
+		{
+			Detonate();
+		}
 	}
 }
