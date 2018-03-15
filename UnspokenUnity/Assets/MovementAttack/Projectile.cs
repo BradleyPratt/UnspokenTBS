@@ -35,10 +35,10 @@ public class Projectile : MonoBehaviour
 		tv += Time.deltaTime;
 
 		sh = uh * th;
-		Vector3 tempVector3 = initialPos;
-		tempVector3.x += (normalizedHorizontalChange * sh).x;
-		tempVector3.z += (normalizedHorizontalChange * sh).y;
-		transform.position = tempVector3;
+		Vector3 tempVector3 = new Vector3();//initialPos;
+		tempVector3.x = (normalizedHorizontalChange * sh).x;
+		tempVector3.z = (normalizedHorizontalChange * sh).y;
+		transform.Translate(tempVector3 * Time.deltaTime, Space.World);
 	}
 
 	public void SetTarget(Vector3 newTarget)
@@ -63,7 +63,7 @@ public class Projectile : MonoBehaviour
 	{
 
 		Collider[]
-		colliderArray = Physics.OverlapSphere(target, attackRadius);
+		colliderArray = Physics.OverlapSphere(transform.position, attackRadius);
 
 		foreach (Collider collider in colliderArray)
 		{
@@ -83,5 +83,9 @@ public class Projectile : MonoBehaviour
 		}
 	}
 
-
+	void OnCollisionEnter(Collision col)
+	{
+		Debug.Log("collided");
+		Detonate();
+	}
 }
