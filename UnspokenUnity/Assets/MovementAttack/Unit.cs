@@ -402,6 +402,7 @@ public void UnitKilled()
 			tempObject.GetComponent<Projectile>().SetTarget(target);
 			tempObject.GetComponent<Projectile>().SetAttackRadius(attackRadius);
 			tempObject.GetComponent<Projectile>().SetAttackStrength(attackStrength);
+			tempObject.GetComponent<Projectile>().IgnoreObject(this.gameObject);
 			Destroy(currentProjector.gameObject);
 			unitAttacking = false;
 			unitAttacked = true;
