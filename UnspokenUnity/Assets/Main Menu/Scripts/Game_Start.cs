@@ -17,17 +17,17 @@ public class Game_Start : MonoBehaviour {
     void TaskOnClick()
     {
         Debug.Log("It Works");
-        LoadByIndex(1);
+        SceneManager.LoadScene("UnitImprovement");
     }
 
     public void LoadByIndex(int sceneIndex)
     {
-        SceneManager.LoadScene("Pause Test Scene");
+        //SceneManager.LoadScene("Pause Test Scene");
     }
 
     public void BacktoMenu(int sceneIndex)
     {
-        SceneManager.LoadScene("Main Menu Test");
+        SceneManager.LoadScene("UnitImprovement");
     }
 
 }
