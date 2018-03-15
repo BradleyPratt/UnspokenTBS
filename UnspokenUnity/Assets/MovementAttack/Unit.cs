@@ -68,6 +68,7 @@ public class Unit : MonoBehaviour
 	Material greenProjectorMaterial;
 
 	private GameObject currentProjector;
+	private GameObject currentMarker;
 
 	private Vector3 newPosition;
 	private Vector3 movePosition;
@@ -115,21 +116,7 @@ public class Unit : MonoBehaviour
 	// Update is called once per frame
 	void Update()
 	{
-		if (unitMoving)
-		{
-
-			if (navMeshAgent.remainingDistance < 0.0002)
-			{
-				unitMoving = false;
-				unitMoved = true;
-				HasActionsLeft();
-				if (currentProjector != null)
-				{
-					Destroy(currentProjector);
-				}
-				GameObject.FindGameObjectWithTag("GameManager").GetComponent<TurnManager>().RunTurrets();
-			}
-		}
+		
 
 		if (unitTurnStatus == UnitTurnStatus.dying)
 		{
@@ -154,6 +141,22 @@ public class Unit : MonoBehaviour
 
 	void LateUpdate()
 	{
+		if (unitMoving)
+		{
+			if ((navMeshAgent.remainingDistance < 0.0002) && (navMeshAgent.pathPending == false))
+			{
+				unitMoving = false;
+				unitMoved = true;
+				HasActionsLeft();
+				if (currentProjector != null)
+				{
+					Destroy(currentProjector);
+				}
+				Destroy(currentMarker);
+				GameObject.FindGameObjectWithTag("GameManager").GetComponent<TurnManager>().RunTurrets();
+			}
+		}
+
 		if (unitAttacking)
 		{
 			PositionAttackProjector();
@@ -385,7 +388,7 @@ public void UnitKilled()
 	{
 		if ((!unitMoved && unitPhaseMoving) && InMoveRange(target))
 		{
-			Instantiate(locationMarker, target, new Quaternion());
+			currentMarker = Instantiate(locationMarker, target, new Quaternion());
 			navMeshAgent.destination = target;
 			unitMoving = true;
 		}
@@ -426,7 +429,7 @@ public void UnitKilled()
 
 	public string GetPhase()
 	{
-		if(unitPhaseMoving && !unitMoved)
+		if(unitPhaseMoving && !unitMoved && !unitMoving)
 		{
 			return "Move";
 		} else if (unitAttacking)

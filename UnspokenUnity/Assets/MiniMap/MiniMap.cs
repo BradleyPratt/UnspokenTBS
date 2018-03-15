@@ -8,7 +8,11 @@ public class MiniMap : MonoBehaviour {
 	void Start () {
 		foreach(GameObject item in GameObject.FindGameObjectsWithTag("MiniMapItem"))
 		{
-			item.GetComponent<MeshRenderer>().enabled = true;
+			MeshRenderer meshRenderer = item.GetComponent<MeshRenderer>();
+			if(meshRenderer != null)
+			{
+				meshRenderer.enabled = true;
+			}
 		}
 	}
 	

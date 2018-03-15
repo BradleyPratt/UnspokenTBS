@@ -9,53 +9,63 @@ public class SpawningTank : MonoBehaviour {
 
     ArrayList tankTeam;
 
+    GameObject USBase;
+    GameObject USSRBase;
+    GameObject boundary;
+
+    Vector3 boundaryRightPos;
+    Vector3 boundaryLeftPos;
+    Vector3 boundaryForwardPos;
+    Vector3 boundaryBackPos;
+
     string currentTeam;
 
     bool far = false;
 
     // Use this for initialization
     void Start () {
+        USBase = GameObject.Find("USBase");
+        USSRBase = GameObject.Find("USSRBase");
+
+
+
         spawnTank = GameObject.Find("GameManager").GetComponent<SpawnTank>();
         turnManager = GameObject.Find("GameManager").GetComponent<TurnManager>();
 
         currentTeam = turnManager.GetActiveTeam();
 
-        GameObject[] nearTanks = GameObject.FindGameObjectsWithTag("Unit");
-        tankTeam = new ArrayList();
-
-        foreach (GameObject tank in nearTanks) {
-            if (tank.GetComponent<Unit>().GetTeam() == currentTeam/* && tank.name == transform.GetChild(0).gameObject.name*/) {
-                if (transform.GetChild(0).gameObject.name.Contains("Small") && (tank.name.Contains("Small") || tank.name.Contains("Medium") || tank.name.Contains("Large"))) {
-                    tankTeam.Add(tank);
-                } else if (transform.GetChild(0).gameObject.name.Contains("Medium") && (tank.name.Contains("Medium") || tank.name.Contains("Large"))) {
-                    tankTeam.Add(tank);
-                } else if (transform.GetChild(0).gameObject.name.Contains("Large") && tank.name.Contains("Large")) {
-                    tankTeam.Add(tank);
-                }
-            }
+        if (currentTeam == "USA") {
+            boundary = USBase;
+        } else {
+            boundary = USSRBase;
         }
+
+        Vector3 boundaryOffsetX = boundary.transform.right * (boundary.transform.localScale.x / 2f) * -1f;
+        Vector3 boundaryOffsetY = boundary.transform.up * (boundary.transform.localScale.y / 2f) * -1f;
+        Vector3 boundaryOffsetZ = boundary.transform.forward * (boundary.transform.localScale.z / 2f) * -1f;
+
+        boundaryLeftPos = boundary.transform.position + boundaryOffsetX;
+        boundaryRightPos = boundary.transform.position - boundaryOffsetX;
+        boundaryBackPos = boundary.transform.position + boundaryOffsetZ;
+        boundaryForwardPos = boundary.transform.position - boundaryOffsetZ;
+
     }
 
     // Update is called once per frame
     void Update () {
-        GameObject nearestTank = null;
-        float minDist = 1000;
-        Vector3 currentPos = transform.position;
-        foreach (GameObject tank in tankTeam) {
-            float dist = Vector3.Distance(tank.transform.position, currentPos);
-            if (dist < minDist) {
-                nearestTank = tank;
-                minDist = dist;
-            }
+        if (transform.position.z > boundaryForwardPos.z) {
+            far = true;
+        } else if (transform.position.z < boundaryBackPos.z) {
+            far = true;
+        } else if (transform.position.x < boundaryLeftPos.x) {
+            far = true;
+        } else if (transform.position.x > boundaryRightPos.x) {
+            far = true;
+        } else {
+            far = false;
         }
 
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hit;
-
-        float distance = Vector3.Distance(nearestTank.transform.position, transform.position);
-        if (distance > 50) {
-            far = true;
-
+        if (far) {
             foreach (Renderer rend in GetComponentsInChildren<Renderer>()) {
                 rend.material.color = Color.red;
             }
@@ -63,8 +73,10 @@ public class SpawningTank : MonoBehaviour {
             foreach (Renderer rend in GetComponentsInChildren<Renderer>()) {
                 rend.material.color = Color.white;
             }
-            far = false;
         }
+
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
 
         if (Physics.Raycast(ray, out hit)) {
             Vector3 lastPos = movePos;
