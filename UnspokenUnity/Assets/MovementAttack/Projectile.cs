@@ -10,14 +10,25 @@ public class Projectile : MonoBehaviour
 	float sv, uv, vv, av, tv, sh, uh, vh, ah, th;
 	float attackRadius;
 	float attackStrength;
-	// Use this for initialization
-	void Start()
+	bool collisionOn = false;
+
+	public void SetInfo(Vector3 target, float radius, float strength, GameObject creator)
 	{
+		SetTarget(target);
+		attackRadius = radius;
+		attackStrength = strength;
+		ignoreColliders.Add(creator);
 		uh = vh = 10;
 		sh = ah = th = 0;
 		sv = 0;
 		uv = 10;
 		vv = 0;
+		collisionOn = true;
+	}
+
+	// Use this for initialization
+	void Start()
+	{
 	}
 
 	// Update is called once per frame
@@ -91,8 +102,7 @@ public class Projectile : MonoBehaviour
 
 	void OnCollisionEnter(Collision col)
 	{
-		if (ignoreColliders.Contains(col.gameObject))
-		{
+		if (!ignoreColliders.Contains(col.gameObject))
 			Detonate();
 		}
 	}
