@@ -10,6 +10,7 @@ public class Projectile : MonoBehaviour
 	float sv, uv, vv, av, tv, sh, uh, vh, ah, th;
 	float attackRadius;
 	float attackStrength;
+	float oldDist = 0;
 	bool collisionOn = false;
 
 	public void SetInfo(Vector3 target, float radius, float strength, GameObject creator)
@@ -24,6 +25,7 @@ public class Projectile : MonoBehaviour
 		uv = 10;
 		vv = 0;
 		collisionOn = true;
+		oldDist = Vector2.Distance(new Vector2(transform.position.x, transform.position.z), new Vector2(target.x, target.z));
 	}
 
 	// Use this for initialization
@@ -34,12 +36,14 @@ public class Projectile : MonoBehaviour
 	// Update is called once per frame
 	void Update()
 	{
-		if (Vector2.Distance(new Vector2(transform.position.x, transform.position.z), new Vector2(target.x, target.z)) < 0.1)
+
+		if (Vector2.Distance(new Vector2(transform.position.x, transform.position.z), new Vector2(target.x, target.z)) > oldDist)
 		{
 			Detonate();
 		}
 		else
 		{
+			oldDist = Vector2.Distance(new Vector2(transform.position.x, transform.position.z), new Vector2(target.x, target.z));
 		}
 		th += Time.deltaTime;
 		tv += Time.deltaTime;
@@ -104,6 +108,7 @@ public class Projectile : MonoBehaviour
 	{
 		if (!ignoreColliders.Contains(col.gameObject))
 		{
+			Debug.Log(col.gameObject);
 			Detonate();
 		}
 	}
