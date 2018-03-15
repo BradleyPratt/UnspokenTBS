@@ -6,31 +6,19 @@ using UnityEngine.UI;
 
 public class Option : MonoBehaviour
 {
-
-    void Start()
-    {
-        activeScreenResIndex = PlayerPrefs.GetInt("screen res index");
-        bool isFullscreen = (PlayerPrefs.GetInt("fullscreen") == 1) ? true : false;
-
-        for (int i = 0; i < resolutionToggles.Length; i++)
-        {
-            resolutionToggles[i].isOn = i == activeScreenResIndex;
-        }
-
-        SetFullscreen(isFullscreen);
-    }
-
-    // Menu manager for options Menu
-
     public GameObject PauseHolder;
     public GameObject optionsMenuHolder;
     public Slider[] volumeSliders;
-    public Toggle[] resolutionToggles;
-    public int[] screenWidths;
+    public Toggle fullscreenToggles;
     int activeScreenResIndex;
     public bool optionsOpen;
+    public bool fullscreen;
+    public int resolutionIndex;
+    public int textureQuality;
 
-    // switch canvas for main menu and options menu
+    public Resolution[] resolution;
+
+   
     public void OptionMenu()
     {
         PauseHolder.SetActive(false);
@@ -45,36 +33,21 @@ public class Option : MonoBehaviour
         optionsOpen = false;
     }
 
-    // setting ingame resolution 
-    public void SetScreenResolution(int i)
+    void OnEnable()
     {
-        if (resolutionToggles[i].isOn)
-        {
-            activeScreenResIndex = i;
-            float aspectRatio = 16 / 9f;
-            Screen.SetResolution(screenWidths[i], (int)screenWidths[i] / (int)aspectRatio, false);
-        }
+        resolution = Screen.resolutions;
+    }
+
+    public void OnFullscreenToggle()
+    {
+
+    }
+    public void OnResolutionChange()
+    {
+
     }
 
 
-    // in fullscreen it will disable all other resolution options to prevent bug
-    public void SetFullscreen(bool isFullscreen)
-    {
-        for (int i = 0; i < resolutionToggles.Length; i++)
-        {
-            resolutionToggles[i].interactable = !isFullscreen;
-        }
-        if (isFullscreen)
-        {
-            Resolution[] allResolutions = Screen.resolutions;
-            Resolution maxResolution = allResolutions[allResolutions.Length - 1];
-            Screen.SetResolution(maxResolution.width, maxResolution.height, true);
-        }
-        else
-        {
-            SetScreenResolution(activeScreenResIndex);
-        }
-    }
 
     //When the ingame Audio is finished, please add the audio manager to here in order to adjust the volume in the future
     public void SetMasterVolume(float value)

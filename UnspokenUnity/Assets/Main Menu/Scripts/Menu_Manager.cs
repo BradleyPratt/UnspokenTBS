@@ -1,31 +1,26 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class Menu_Manager : MonoBehaviour {
 
-    void Start ()
-    {
-        activeScreenResIndex = PlayerPrefs.GetInt("screen res index");
-        bool isFullscreen = (PlayerPrefs.GetInt("fullscreen") == 1)?true:false;
-
-        for (int i = 0; i < resolutionToggles.Length; i++)
-        {
-            resolutionToggles[i].isOn = i == activeScreenResIndex;
-        }
-
-        SetFullscreen(isFullscreen);
-    }
-
-    // Menu manager for options Menu
-
     public GameObject mainMenuHolder;
     public GameObject optionsMenuHolder;
     public Slider[] volumeSliders;
-    public Toggle[] resolutionToggles;
-    public int[] screenWidths;
-    int activeScreenResIndex;
+    public Toggle fullscreenToggle;
+    public Dropdown resolutionDropdown;
+    public Button applyButton;
+    public Dropdown textureQualityDropdown;
+
+    public Resolution[] resolution;
+    public Option option;
+
+
+
+    // Menu manager for options Menu
+
 
     // switch canvas for main menu and options menu
     public void OptionMenu()
@@ -40,36 +35,58 @@ public class Menu_Manager : MonoBehaviour {
         optionsMenuHolder.SetActive(false);
     }
 
-    // setting ingame resolution 
-    public void SetScreenResolution(int i)
+    void OnEnable()
     {
-        if (resolutionToggles[i].isOn)
+        option = new Option();
+
+       fullscreenToggle.onValueChanged.AddListener(delegate { OnFullscreenToggle(); });
+       resolutionDropdown.onValueChanged.AddListener(delegate { OnResolutionChange(); });
+       
+        applyButton.onClick.AddListener(delegate { onApplyButtonClick(); });
+
+        resolution = Screen.resolutions;
+        foreach(Resolution resolution in resolution)
         {
-            activeScreenResIndex = i;
-            float aspectRatio = 16 / 9f;
-            Screen.SetResolution(screenWidths[i], (int)screenWidths[i] / (int) aspectRatio, false);
+            resolutionDropdown.options.Add(new Dropdown.OptionData(resolution.ToString()));
         }
+
+        LoadSettings();
+    }
+
+    public void OnFullscreenToggle()
+    {
+      option.fullscreen =  Screen.fullScreen = fullscreenToggle.isOn;
+    }
+
+    public void OnResolutionChange()
+    {
+        Screen.SetResolution(resolution[resolutionDropdown.value].width, resolution[resolutionDropdown.value].height, Screen.fullScreen);
     }
 
 
-    // in fullscreen it will disable all other resolution options to prevent bug
-    public void SetFullscreen(bool isFullscreen)
+    public void onApplyButtonClick()
     {
-        for (int i = 0; i < resolutionToggles.Length; i++)
-        {
-            resolutionToggles[i].interactable = !isFullscreen;
-        }
-        if (isFullscreen)
-        {
-            Resolution[] allResolutions = Screen.resolutions;
-            Resolution maxResolution = allResolutions[allResolutions.Length - 1];
-            Screen.SetResolution(maxResolution.width, maxResolution.height, true);
-        }
-        else
-        {
-            SetScreenResolution(activeScreenResIndex);
-        }
+        SaveSettings();
+        mainMenuHolder.SetActive(true);
+        optionsMenuHolder.SetActive(false);
     }
+
+    public void SaveSettings()
+    {
+        string jsonData = JsonUtility.ToJson(option, true);
+        File.WriteAllText(Application.persistentDataPath + "/option.json", jsonData);
+
+    }
+
+    public void LoadSettings()
+    {
+        option = JsonUtility.FromJson<Option>(Application.persistentDataPath + "/option.json");
+
+        resolutionDropdown.value = option.resolutionIndex;
+        fullscreenToggle.isOn = option.fullscreen;
+    }
+
+
 
     //When the ingame Audio is finished, please add the audio manager to here in order to adjust the volume in the future
     public void SetMasterVolume(float value)
