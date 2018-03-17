@@ -20,7 +20,7 @@ public class HealthBar : MonoBehaviour {
     {
         largeHP = GameObject.Find("GameManager").GetComponent<HealthBar>().largeHP;
         mediumHP = GameObject.Find("GameManager").GetComponent<HealthBar>().mediumHP;
-        smallHP = GameObject.Find("GameManager").GetComponent<HealthBar>().mediumHP; // This and above to make sure difference instances maintain the same value
+        smallHP = GameObject.Find("GameManager").GetComponent<HealthBar>().smallHP; // This and above to make sure difference instances maintain the same value
 
         float health = 0;
 
