@@ -246,7 +246,6 @@ public class Unit : MonoBehaviour
 	// Tell this unit if it's selected
 	public void SetSelected(bool selectedStatus, string phase)
 	{
-		Debug.Log(phase);
 		if (selectedStatus)
 		{
 			if (phase == "Move" && !unitMoved)
@@ -361,7 +360,6 @@ public void UnitKilled()
 		while (targetTime < 1)
 		{
 			targetTime += Time.deltaTime;
-			Debug.Log(targetTime);
 			yield return null;
 		}
 		unitHit = false;
@@ -398,7 +396,7 @@ public void UnitKilled()
 	{
 		if ((unitAttacking) && (InAttackRange(target)))
 		{
-			GameObject tempObject = Instantiate(projectile, transform.position, Quaternion.Euler(0, transform.Find("Turret").localRotation.eulerAngles.z, 0));
+			GameObject tempObject = Instantiate(projectile, transform.position, Quaternion.Euler(0, transform.parent.localRotation.eulerAngles.z + transform.Find("Turret").localRotation.eulerAngles.z, 0));
 			Projectile projectileS = tempObject.GetComponent<Projectile>();
 				projectileS.SetInfo(target, attackRadius, attackStrength, this.gameObject);
 			Destroy(currentProjector.gameObject);
