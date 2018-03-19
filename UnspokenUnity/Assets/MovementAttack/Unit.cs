@@ -313,7 +313,31 @@ public class Unit : MonoBehaviour
 
 	public bool HasFinishedTurn()
 	{
-		return (unitTurnStatus == UnitTurnStatus.attacked);
+		return (unitMoved && unitAttacked);
+	}
+
+	public bool HasMoved()
+	{
+		return (unitMoved);
+	}
+
+	public bool HasAttacked()
+	{
+		return (unitMoved);
+	}
+
+	public bool HasPerformedAction(string action)
+	{
+		if(action == "Move")
+		{
+			return HasMoved();
+		} else if (action == "Attack")
+		{
+			return HasAttacked();
+		} else
+		{
+			return false;
+		}
 	}
 
 	public void ResetUnitTurn()
