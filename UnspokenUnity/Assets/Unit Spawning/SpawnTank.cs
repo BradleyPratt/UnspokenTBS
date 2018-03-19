@@ -70,39 +70,43 @@ public class SpawnTank : MonoBehaviour {
     }
 
     private void SmallTaskOnClick() {
-        float USMoney = money.GetUSMoney();
-        float USSRMoney = money.GetUSSRMoney();
+        if (!spawning) {
+            float USMoney = money.GetUSMoney();
+            float USSRMoney = money.GetUSSRMoney();
 
-        if (turnManager.GetActiveTeam() == "USA") {
-            isUS = true;
-        } else {
-            isUS = false;
-        }
+            if (turnManager.GetActiveTeam() == "USA") {
+                isUS = true;
+            } else {
+                isUS = false;
+            }
 
-        if (smallButton.name == "SmallSpawnButton") {
-            if (isUS && USMoney - 200 >= 0) {
-                PlaceTank(smallTankUS);
-            } else if (!isUS && USSRMoney - 200 >= 0) {
-                PlaceTank(smallTankUSSR);
+            if (smallButton.name == "SmallSpawnButton") {
+                if (isUS && USMoney - 200 >= 0) {
+                    PlaceTank(smallTankUS);
+                } else if (!isUS && USSRMoney - 200 >= 0) {
+                    PlaceTank(smallTankUSSR);
+                }
             }
         }
     }
 
     private void MediumTaskOnClick() {
-        float USMoney = money.GetUSMoney();
-        float USSRMoney = money.GetUSSRMoney();
+        if (!spawning) {
+            float USMoney = money.GetUSMoney();
+            float USSRMoney = money.GetUSSRMoney();
 
-        if (turnManager.GetActiveTeam() == "USA") {
-            isUS = true;
-        } else {
-            isUS = false;
-        }
+            if (turnManager.GetActiveTeam() == "USA") {
+                isUS = true;
+            } else {
+                isUS = false;
+            }
 
-        if (mediumButton.name == "MediumSpawnButton") {
-            if (isUS && USMoney - 400 >= 0) {
-                PlaceTank(mediumTankUS);
-            } else if (!isUS && USSRMoney - 400 >= 0) {
-                PlaceTank(mediumTankUSSR);
+            if (mediumButton.name == "MediumSpawnButton") {
+                if (isUS && USMoney - 400 >= 0) {
+                    PlaceTank(mediumTankUS);
+                } else if (!isUS && USSRMoney - 400 >= 0) {
+                    PlaceTank(mediumTankUSSR);
+                }
             }
         }
     }

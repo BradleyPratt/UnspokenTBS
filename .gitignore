@@ -5,6 +5,8 @@
 UnspokenUnity/[Ll]ibrary/*
 UnspokenUnity/[Tt]emp/*
 UnspokenUnity/obj/Debug/*
+UnspokenUnity/Library/*
+UnspokenUnity/Temp/*
 
 *.csproj
 [Bb]uild

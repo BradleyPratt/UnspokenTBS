@@ -398,10 +398,9 @@ public void UnitKilled()
 	{
 		if ((unitAttacking) && (InAttackRange(target)))
 		{
-			GameObject tempObject = Instantiate(projectile, transform.position, transform.rotation);
-			tempObject.GetComponent<Projectile>().SetTarget(target);
-			tempObject.GetComponent<Projectile>().SetAttackRadius(attackRadius);
-			tempObject.GetComponent<Projectile>().SetAttackStrength(attackStrength);
+			GameObject tempObject = Instantiate(projectile, transform.position, Quaternion.Euler(0, transform.Find("Turret").localRotation.eulerAngles.z, 0));
+			Projectile projectileS = tempObject.GetComponent<Projectile>();
+				projectileS.SetInfo(target, attackRadius, attackStrength, this.gameObject);
 			Destroy(currentProjector.gameObject);
 			unitAttacking = false;
 			unitAttacked = true;
