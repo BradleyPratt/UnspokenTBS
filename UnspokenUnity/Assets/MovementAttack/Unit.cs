@@ -323,7 +323,7 @@ public class Unit : MonoBehaviour
 
 	public bool HasAttacked()
 	{
-		return (unitMoved);
+		return (unitAttacked);
 	}
 
 	public bool HasPerformedAction(string action)
