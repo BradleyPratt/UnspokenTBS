@@ -83,10 +83,13 @@ public class Unit : MonoBehaviour
 	private bool unitHit;
 	private bool unitPhaseMoving, unitMoving, unitMoved, unitAttacking, unitAttacked, unitSelected = false;
 	private NavMeshAgent navMeshAgent;
+	private TurnManager turnManager;
 
 	// Use this for initialization
 	void Start()
 	{
+		turnManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<TurnManager>();
+
 		if (projectile == null)
 		{
 			projectile = Resources.Load<GameObject>("Projectile");
@@ -121,12 +124,13 @@ public class Unit : MonoBehaviour
 		if (unitTurnStatus == UnitTurnStatus.dying)
 		{
 			if (animTimer > 1.0f) {
-				Destroy(this.gameObject);
+				turnManager.UnitKilled(team);
 				System.Random rand = new System.Random();
 				if (!(GameObject.FindGameObjectWithTag("GameManager").GetComponent<TurnManager>().GetActiveTeam() == team))
 				{
 					GameObject.FindGameObjectWithTag("GameManger").GetComponent<Money>().SetMoney((rewardMoney - 5) + rand.Next(0, 10), team);
 				}
+				Destroy(this.gameObject);
 			}
 			animTimer += Time.deltaTime;
 		}
