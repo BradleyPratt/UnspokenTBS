@@ -345,20 +345,13 @@ public class Unit : MonoBehaviour
 		if (unitTurnStatus == UnitTurnStatus.dying)
 		{
 			Destroy(this.gameObject);
-		} else if (unitTurnStatus == UnitTurnStatus.moving)
-		{
-			transform.position = newPosition + heightOffsetV;
-		} else if (unitTurnStatus == UnitTurnStatus.rotating)
-		{
-			transform.rotation = Quaternion.Euler(new Vector3(-90, -finalAngle + angleOffset, 0));
-			transform.position = newPosition + heightOffsetV;
-		} else if (unitTurnStatus == UnitTurnStatus.attacked)
-		{
-			foreach (MeshRenderer meshRenderer in this.GetComponentsInChildren<MeshRenderer>())
-			{
-				meshRenderer.material.color = Color.white;
-			}
 		}
+
+		foreach (MeshRenderer meshRenderer in this.GetComponentsInChildren<MeshRenderer>())
+		{
+			meshRenderer.material.color = Color.white;
+		}
+
 		unitPhaseMoving = unitMoving = unitMoved = unitAttacking = unitAttacked = unitSelected = false;
 	}
 
@@ -420,7 +413,7 @@ public void UnitKilled()
 	{
 		if ((unitAttacking) && (InAttackRange(target)))
 		{
-			GameObject tempObject = Instantiate(projectile, transform.position, Quaternion.Euler(0, transform.parent.localRotation.eulerAngles.z + transform.Find("Turret").localRotation.eulerAngles.z, 0));
+			GameObject tempObject = Instantiate(projectile, transform.position, Quaternion.Euler(0, transform.parent.localRotation.eulerAngles.y + transform.Find("Turret").localRotation.eulerAngles.z, 0));
 			Projectile projectileS = tempObject.GetComponent<Projectile>();
 				projectileS.SetInfo(target, attackRadius, attackStrength, this.gameObject);
 			Destroy(currentProjector.gameObject);
