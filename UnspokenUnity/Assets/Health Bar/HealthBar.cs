@@ -14,6 +14,7 @@ public class HealthBar : MonoBehaviour {
     GameObject[] units; 
     public Slider healthBar; //Only needed for instantiation
     static int numOfUnits;
+    float health;
 
     // Use this for initialization
     void Start ()
@@ -22,7 +23,7 @@ public class HealthBar : MonoBehaviour {
         mediumHP = GameObject.Find("GameManager").GetComponent<HealthBar>().mediumHP;
         smallHP = GameObject.Find("GameManager").GetComponent<HealthBar>().smallHP; // This and above to make sure difference instances maintain the same value
 
-        float health = 0;
+        health = 0;
 
         switch (name) {
             case "SmallTankUS":
@@ -52,10 +53,9 @@ public class HealthBar : MonoBehaviour {
             default:
             break;
         }
-        Debug.Log(health + "" + name);
         currentHp = health;
 
-        BuildUnits();
+        //BuildUnits();
     }
 	
 	// Update is called once per frame
@@ -76,6 +76,7 @@ public class HealthBar : MonoBehaviour {
 
     public void TakeDamage(float damage)
     {
+        healthSlider.maxValue = health;
         currentHp-=damage;
         healthSlider.value = currentHp;
 		if (currentHp <= 0)
