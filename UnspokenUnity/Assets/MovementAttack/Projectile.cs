@@ -88,7 +88,7 @@ public class Projectile : MonoBehaviour
 
 		foreach (Collider collider in colliderArray)
 		{
-			if (collider.gameObject != this.gameObject)
+			if ((collider.gameObject != this.gameObject) && (!ignoreColliders.Contains(collider.gameObject)))
 			{
 				if (collider.CompareTag("Unit"))
 				{

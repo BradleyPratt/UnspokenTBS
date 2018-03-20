@@ -9,7 +9,7 @@ public class MiniMapUnitIcon : MonoBehaviour {
 		// Make object become independant, apply scaling, then re-attach to parent.
 		Transform parent = transform.parent;
 		transform.parent = null;
-		transform.localScale = new Vector3(8,1,8);
+		transform.localScale = new Vector3(16,1,16);
 		transform.parent = parent;
 	}
 	

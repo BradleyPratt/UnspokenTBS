@@ -21,7 +21,10 @@ public class TurnManager : MonoBehaviour
 
     // Is a tank being placed
     bool tankSpawning = false; // Note to Josh, don't know how to modify your end turn method without breaking anything, I've added a method to change this value when necessary.
-                               // Need to make it so you cant end turn while this value is true.
+							   // Need to make it so you cant end turn while this value is true.
+	// Kill counts. USSRKills is how many tanks the USSR kills, USAKills is how many tanks the USA kills.
+	private int USSRKills = 0;
+	private int USAKills = 0;
 
 	// Use this for initialization
 	void Start()
@@ -274,8 +277,46 @@ public class TurnManager : MonoBehaviour
         tankSpawning = spawning;
     }
 
+	public int GetKills(string team)
+	{
+		if (team == "USA") {
+			return GetUSAKills();
+		} else if (team == "USSR")
+		{
+			return GetUSSRKills();
+		}
+		else
+		{
+			return 0;
+		}
+	}
+
+	public int GetUSSRKills()
+	{
+		return USSRKills;
+	}
+
+	public int GetUSAKills()
+	{
+		return USAKills;
+	}
+
+	public void UnitKilled(string team)
+	{
+		if (team == "USA")
+		{
+			USSRKills++;
+		} else if (team == "USSR")
+		{
+			USAKills++;
+		}
+	}
+
 	public void RunTurrets()
 	{
-
+		foreach(GameObject turret in GameObject.FindGameObjectsWithTag("Turret"))
+		{
+			turret.GetComponent<Turret>().CheckForTargets();
+		}
 	}
 }
