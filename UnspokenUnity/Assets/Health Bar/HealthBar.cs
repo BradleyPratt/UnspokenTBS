@@ -5,13 +5,15 @@ using UnityEngine.UI;
 
 public class HealthBar : MonoBehaviour {
 
+    public float turretHP;
     public float largeHP;
     public float mediumHP;
-    public float smallHP; 
+    public float smallHP;
 
     public float currentHp; 
     Slider healthSlider; //HealthSlider, needed for creating Health Sliders
-    GameObject[] units; 
+    GameObject[] units;
+    GameObject[] turrets;
     public Slider healthBar; //Only needed for instantiation
     static int numOfUnits;
     float health;
@@ -19,6 +21,7 @@ public class HealthBar : MonoBehaviour {
     // Use this for initialization
     void Start ()
     {
+        turretHP = GameObject.Find("GameManager").GetComponent<HealthBar>().turretHP;
         largeHP = GameObject.Find("GameManager").GetComponent<HealthBar>().largeHP;
         mediumHP = GameObject.Find("GameManager").GetComponent<HealthBar>().mediumHP;
         smallHP = GameObject.Find("GameManager").GetComponent<HealthBar>().smallHP; // This and above to make sure difference instances maintain the same value
@@ -50,6 +53,10 @@ public class HealthBar : MonoBehaviour {
             health = largeHP;
             break;
 
+            case "Turret":
+            health = largeHP;
+            break;
+
             default:
             break;
         }
@@ -62,7 +69,7 @@ public class HealthBar : MonoBehaviour {
 	void Update ()
     {
         //BuildUnits();
-        if (numOfUnits < GameObject.FindGameObjectsWithTag("Unit").Length)
+        if (numOfUnits < GameObject.FindGameObjectsWithTag("Unit").Length + GameObject.FindGameObjectsWithTag("Turret").Length)
         {
             BuildUnits();
         }
@@ -89,7 +96,8 @@ public class HealthBar : MonoBehaviour {
 	}
 
     private void BuildUnits() {
-        units=GameObject.FindGameObjectsWithTag( "Unit" );
+        units=GameObject.FindGameObjectsWithTag("Unit");
+        turrets = GameObject.FindGameObjectsWithTag("Turret");
 
         for (int i = numOfUnits; i<units.Length; i++) {
             numOfUnits++;
@@ -99,6 +107,16 @@ public class HealthBar : MonoBehaviour {
             Vector3 position = new Vector3( unit.transform.position.x-1f, unit.transform.position.y, unit.transform.position.z );
 
             InstantiateHealthBar( unit, position );
+        }
+
+        for (int i = numOfUnits; i < turrets.Length; i++) {
+            numOfUnits++;
+            GameObject turret;
+            turret = turrets[i];
+
+            Vector3 position = new Vector3(turret.transform.position.x - 1f, turret.transform.position.y, turret.transform.position.z);
+
+            InstantiateHealthBar(turret, position);
         }
     }
 

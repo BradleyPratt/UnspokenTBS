@@ -267,12 +267,13 @@ public class TurnManager : MonoBehaviour
         foreach (GameObject checkpoint in checkpoints)
         {
             string owner = checkpoint.GetComponent<Checkpoint>().GetCheckpointOwner();
+            float value = checkpoint.GetComponent<Checkpoint>().value;
             if (owner == "USA" && currentTeam == "USSR")
             {
-                gameObject.GetComponent<Money>().SetUSMoney(100);
+                gameObject.GetComponent<Money>().SetUSMoney(value);
             } else if (owner == "USSR" && currentTeam == "USA")
             {
-                gameObject.GetComponent<Money>().SetUSSRMoney(100);
+                gameObject.GetComponent<Money>().SetUSSRMoney(value);
             }
         }
     }
