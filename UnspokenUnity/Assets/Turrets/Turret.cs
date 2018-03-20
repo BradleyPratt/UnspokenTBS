@@ -15,9 +15,12 @@ public class Turret : MonoBehaviour {
 	[SerializeField]
 	float attackRadius = 50.0f;
 
+	[SerializeField]
+	private GameObject projectile;
+
 	// Use this for initialization
 	void Start () {
-		
+		projectile = (GameObject)Resources.Load("Projectile");
 	}
 	
 	// Update is called once per frame
@@ -44,24 +47,9 @@ public class Turret : MonoBehaviour {
 		RotateToFace(target.transform.position);
 		// todo - switch to physical projectile.
 
-			Collider[] colliderArray = Physics.OverlapSphere(target.transform.position, attackRadius);
-
-			foreach (Collider collider in colliderArray)
-			{
-				if (collider.gameObject != this.gameObject)
-				{
-					if (collider.CompareTag("Unit"))
-					{
-						collider.gameObject.GetComponent<HealthBar>().TakeDamage(attackStrength);
-						collider.gameObject.GetComponent<Unit>().UnitHit();
-					}
-					if (collider.CompareTag("WatchTower"))
-					{
-						collider.gameObject.GetComponent<WatchTowerHealth>().WatchTowerTakeDamage(attackStrength);
-						collider.gameObject.GetComponent<Unit>().UnitHit();
-					}
-				}
-			}
+		GameObject tempObject = Instantiate(projectile, transform.position, Quaternion.Euler(0, 0, 0));// transform.parent.localRotation.eulerAngles.y + transform.Find("Turret").localRotation.eulerAngles.z, 0));
+		Projectile projectileS = tempObject.GetComponent<Projectile>();
+		projectileS.SetInfo(target.transform.position, attackRadius, attackStrength, this.gameObject);
 	}
 
 	public void RotateToFace(Vector3 target)
@@ -72,11 +60,16 @@ public class Turret : MonoBehaviour {
 		angleTarget.z = angleTarget.z - transform.position.z;
 		float finalAngle = Mathf.Atan2(angleTarget.z, angleTarget.x) * Mathf.Rad2Deg;
 		
-		transform.Find("Turret").rotation = Quaternion.Euler(new Vector3(0, -finalAngle, 0));
+		//transform.Find("Turret").rotation = Quaternion.Euler(new Vector3(0, -finalAngle, 0));
 	}
 
 	public void KillTurret()
 	{
 		Destroy(this);
+	}
+
+	public void ResetTurret()
+	{
+		alreadyHit.Clear();
 	}
 }

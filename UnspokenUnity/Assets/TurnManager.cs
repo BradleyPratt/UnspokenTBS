@@ -314,6 +314,9 @@ public class TurnManager : MonoBehaviour
 
 	public void RunTurrets()
 	{
-
+		foreach(GameObject turret in GameObject.FindGameObjectsWithTag("Turret"))
+		{
+			turret.GetComponent<Turret>().CheckForTargets();
+		}
 	}
 }
