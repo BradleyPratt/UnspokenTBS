@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class TurnManager : MonoBehaviour
 {
+	private StaticData staticData;
 
 	// A list each containing all units (and watchtowers) on each side.
 	private List<GameObject> unitsUSA = new List<GameObject>();
@@ -29,7 +31,7 @@ public class TurnManager : MonoBehaviour
 	// Use this for initialization
 	void Start()
 	{
-
+		staticData = GetComponent<StaticData>();
         // Find all units and add them to their team's list.
         GameObject[] tempUnits = GameObject.FindGameObjectsWithTag("Unit");
 		foreach (GameObject tempUnit in tempUnits)
@@ -66,10 +68,12 @@ public class TurnManager : MonoBehaviour
 	{
 		if(UnitsRemaining("USA") <= 0)
 		{
-			Debug.Log("USSR won.");
+			staticData.SetWinningTeam("USSR");
+			SceneManager.LoadScene("WinScene");
 		} else if (UnitsRemaining("USSR") <= 0)
 		{
-			Debug.Log("USA won.");
+			staticData.SetWinningTeam("USA");
+			SceneManager.LoadScene("WinScene");
 		}
 	}
 
