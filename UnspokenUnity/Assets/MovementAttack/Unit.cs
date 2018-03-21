@@ -79,13 +79,14 @@ public class Unit : MonoBehaviour
 	// Currently active location marker
 	private GameObject currentMarker;
 
+	// Used when positioning the attack projector
 	private Vector3 newPosition;
-	private Vector3 movePosition;
+	
+	// Final angle to rotate turret to each frame
 	private float finalAngle;
-	private Vector3 lengthOffsetV;
 
+	// floats used for timing 'animations'
 	private float animTimer = 0.0f;
-	private float angleProg = 0.0f;
 	private float angleAdjustment = 0.0f;
 	private float angleChange;
 	private bool unitHit;
@@ -120,7 +121,6 @@ public class Unit : MonoBehaviour
 						Mesh combinedMesh = new Mesh();
 						combinedMesh.CombineMeshes(combine);
 		
-		lengthOffsetV = new Vector3(combinedMesh.bounds.extents.x, 0, 0);
 	}
 
 	// Update is called once per frame
@@ -365,6 +365,9 @@ public class Unit : MonoBehaviour
 			meshRenderer.material.color = Color.white;
 		}
 
+		// Teleport the tank to it's destination on turn end
+		// Add the base offset to stop it 'sinking' into the ground
+		navMeshAgent.Warp(navMeshAgent.destination + new Vector3(0, navMeshAgent.baseOffset,0));
 		unitPhaseMoving = unitMoving = unitMoved = unitAttacking = unitAttacked = unitSelected = false;
 	}
 
