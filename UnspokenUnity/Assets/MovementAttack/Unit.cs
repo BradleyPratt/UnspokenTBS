@@ -6,6 +6,7 @@ using UnityEngine.AI;
 
 public class Unit : MonoBehaviour
 {
+	// Enum for the Unit's current state; due to changes to how units work, only idle and dying are now used.
 	enum UnitTurnStatus
 	{
 		idle,
@@ -16,64 +17,71 @@ public class Unit : MonoBehaviour
 		dying
 	};
 
+	// Used to pass angle to rotate to between functions
 	private float absAngle;
+	// Status of the unit; ultimatley, is is dying or not?
 	private UnitTurnStatus unitTurnStatus = UnitTurnStatus.idle;
-	private bool lockInput = false;
 
+	// Team this unit is on
 	[SerializeField]
 	private string team = "USA";
 
+	// Camera used for raycasts
 	[SerializeField]
 	private Camera rayCamera;
 
+	// How far the unit can move
 	[SerializeField]
 	private float moveRangeLimit = 50;
 
-	[SerializeField]
-	float moveSpeed = 10;
-
-	[SerializeField]
-	float rotationSpeed = 10;
-
+	// minimum/maxium range the unit can fire at
 	[SerializeField]
 	Vector2 attackRange = new Vector2(50, 150);
 
+	// impact range of the projectile
 	[SerializeField]
 	float attackRadius = 20;
 
+	// How much damage the projectile does
 	[SerializeField]
 	float attackStrength = 20;
 
+	// Money awarded for killing this unit
 	[SerializeField]
 	float rewardMoney = 0;
 
+	// Angle to offset turret rotation by
 	[SerializeField]
 	float angleOffset = 90;
 
-	[SerializeField]
-	float heightOffset = 0;
-
+	// Projector showing move range
 	[SerializeField]
 	GameObject moveRangeProjector;
+	// Projector showing attack location and size
 	[SerializeField]
 	GameObject attackRangeProjector;
+	// Prefab containing the projectile to fire
 	[SerializeField]
 	GameObject projectile;
+	// Prefab containing the location marker
 	[SerializeField]
 	GameObject locationMarker;
 
+	// Red material for projector
 	[SerializeField]
 	Material redProjectorMaterial;
+	// Green material for projector
 	[SerializeField]
 	Material greenProjectorMaterial;
 
+	// Currently active projector
 	private GameObject currentProjector;
+	// Currently active location marker
 	private GameObject currentMarker;
 
 	private Vector3 newPosition;
 	private Vector3 movePosition;
 	private float finalAngle;
-	private Vector3 heightOffsetV;
 	private Vector3 lengthOffsetV;
 
 	private float animTimer = 0.0f;
@@ -111,8 +119,7 @@ public class Unit : MonoBehaviour
 						}
 						Mesh combinedMesh = new Mesh();
 						combinedMesh.CombineMeshes(combine);
-
-		heightOffsetV = new Vector3(0, combinedMesh.bounds.extents.y + heightOffset, 0);
+		
 		lengthOffsetV = new Vector3(combinedMesh.bounds.extents.x, 0, 0);
 	}
 
@@ -156,7 +163,10 @@ public class Unit : MonoBehaviour
 				{
 					Destroy(currentProjector);
 				}
-				Destroy(currentMarker);
+				if (currentMarker != null)
+				{
+					Destroy(currentMarker);
+				}
 				GameObject.FindGameObjectWithTag("GameManager").GetComponent<TurnManager>().RunTurrets();
 			}
 		}
@@ -243,7 +253,6 @@ public class Unit : MonoBehaviour
 		{
 			Destroy(currentProjector.gameObject);
 		}
-		lockInput = selectedStatus;
 		unitSelected = selectedStatus;
 	}
 	
