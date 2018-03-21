@@ -128,7 +128,7 @@ public class Unit : MonoBehaviour
 				System.Random rand = new System.Random();
 				if (!(GameObject.FindGameObjectWithTag("GameManager").GetComponent<TurnManager>().GetActiveTeam() == team))
 				{
-					GameObject.FindGameObjectWithTag("GameManger").GetComponent<Money>().SetMoney((rewardMoney - 5) + rand.Next(0, 10), team);
+					GameObject.FindGameObjectWithTag("GameManager").GetComponent<Money>().SetMoney((rewardMoney - 5) + rand.Next(0, 10), team);
 				}
 				Destroy(this.gameObject);
 			}
