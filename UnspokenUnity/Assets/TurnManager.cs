@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class TurnManager : MonoBehaviour
@@ -66,10 +67,12 @@ public class TurnManager : MonoBehaviour
 	{
 		if(UnitsRemaining("USA") <= 0)
 		{
-			Debug.Log("USSR won.");
+			PlayerPrefs.SetString("winner", "USSR");
+			SceneManager.LoadScene("WinScene");
 		} else if (UnitsRemaining("USSR") <= 0)
 		{
-			Debug.Log("USA won.");
+			PlayerPrefs.SetString("winner", "USA");
+			SceneManager.LoadScene("WinScene");
 		}
 	}
 

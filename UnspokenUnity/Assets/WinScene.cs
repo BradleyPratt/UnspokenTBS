@@ -14,22 +14,19 @@ public class WinScene : MonoBehaviour {
 	Image backgroundImage;
 	Text winnerText;
 
-	StaticData staticData;
-
 	// Use this for initialization
 	void Start () {
 		backgroundImage = GetComponentInChildren<Image>();
 		winnerText = GetComponentInChildren<Text>();
-		staticData = GameObject.FindGameObjectWithTag("GameManager").GetComponent<StaticData>();
-
-		if (staticData.GetWinningTeam() == "USA")
+		string winner = PlayerPrefs.GetString("winner");
+		if (winner == "USA")
 		{
 			backgroundImage.sprite = USAFlag;
 			winnerText.text = "Winner: USA";
-		} else if (staticData.GetWinningTeam() == "USSR")
+		} else if (winner == "USSR")
 		{
 			backgroundImage.sprite = USSRFlag;
-			winnerText.text = "Winner: USA";
+			winnerText.text = "Winner: USSR";
 		}
 	}
 	
