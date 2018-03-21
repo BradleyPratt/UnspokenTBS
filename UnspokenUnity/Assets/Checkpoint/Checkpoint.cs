@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Checkpoint : MonoBehaviour {
     public float radius = 200;
+    public float value = 100;
 
     float counter;
 
