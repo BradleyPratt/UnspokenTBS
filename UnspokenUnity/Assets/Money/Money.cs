@@ -6,10 +6,10 @@ using UnityEngine.UI;
 public class Money : MonoBehaviour {
     TurnManager turnManager;
 
-    string activeTeam;
+    string activeTeam = "USA";
 
-    float USMoney = 0;
-    float USSRMoney = 0;
+    float USMoney = 800;
+    float USSRMoney = 800;
 
     Text moneyText;
 
@@ -17,31 +17,50 @@ public class Money : MonoBehaviour {
 	void Start () {
         turnManager = GameObject.Find("GameManager").GetComponent<TurnManager>();
         moneyText = GameObject.Find("MoneyText").GetComponent<Text>();
+
+		UpdateMoneyUI();
 	}
 	
 	// Update is called once per frame
 	void Update () {
-        activeTeam = turnManager.GetActiveTeam();
 
-        if (activeTeam == "USA")
-        {
-            moneyText.text = USMoney.ToString();
-        } else
-        {
-            moneyText.text = USSRMoney.ToString();
-        }
     }
 
-    public float SetUSMoney(float amount)
+	public bool SetMoney(float amount, string team)
+	{
+		if (team == "USA")
+		{
+			return SetUSMoney(amount);
+		} else if (team == "USSR")
+		{
+			return SetUSSRMoney(amount);
+		} else {
+			return false;
+		}
+	}
+
+	// true if money adjusted correctly, otherwise false.
+    public bool SetUSMoney(float amount)
     {
-        USMoney = USMoney + amount;
-        return USMoney;
+		if ((USMoney + amount) >= 0)
+		{
+            USMoney = USMoney + amount;
+			UpdateMoneyUI();
+			return true;
+		}
+        return false;
     }
 
-    public float SetUSSRMoney(float amount)
-    {
-        USSRMoney = USSRMoney + amount;
-        return USSRMoney;
+	// true if money adjusted correctly, otherwise false.
+	public bool SetUSSRMoney(float amount)
+	{
+		if ((USSRMoney + amount) >= 0)
+		{
+			USSRMoney = USSRMoney + amount;
+			UpdateMoneyUI();
+			return true;
+		}
+		return false;
     }
 
     public float GetUSMoney()
@@ -53,4 +72,17 @@ public class Money : MonoBehaviour {
     {
         return USSRMoney;
     }
+
+	public void UpdateMoneyUI()
+	{
+        activeTeam = turnManager.GetActiveTeam();
+		if (activeTeam == "USA")
+		{
+			moneyText.text = "$" + USMoney.ToString();
+		}
+		else
+		{
+			moneyText.text = "₽" + USSRMoney.ToString();
+		}
+	}
 }

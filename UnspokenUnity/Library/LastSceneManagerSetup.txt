@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/MainScene.unity
+- path: Assets/Main Menu/Pause Test Scene.unity
   isLoaded: 1
   isActive: 1

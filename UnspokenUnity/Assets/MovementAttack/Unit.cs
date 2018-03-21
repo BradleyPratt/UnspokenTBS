@@ -2,9 +2,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class Unit : MonoBehaviour
 {
+	// Enum for the Unit's current state; due to changes to how units work, only idle and dying are now used.
 	enum UnitTurnStatus
 	{
 		idle,
@@ -15,59 +17,98 @@ public class Unit : MonoBehaviour
 		dying
 	};
 
+	// Used to pass angle to rotate to between functions
+	private float absAngle;
+	// Status of the unit; ultimatley, is is dying or not?
 	private UnitTurnStatus unitTurnStatus = UnitTurnStatus.idle;
-	private bool unitSelected = false;
-	private bool lockInput = false;
 
+	// Team this unit is on
 	[SerializeField]
 	private string team = "USA";
 
+	// Camera used for raycasts
 	[SerializeField]
 	private Camera rayCamera;
 
+	// How far the unit can move
 	[SerializeField]
 	private float moveRangeLimit = 50;
 
-	[SerializeField]
-	float moveSpeed = 10;
-
+	// minimum/maxium range the unit can fire at
 	[SerializeField]
 	Vector2 attackRange = new Vector2(50, 150);
 
+	// impact range of the projectile
 	[SerializeField]
 	float attackRadius = 20;
 
+	// How much damage the projectile does
 	[SerializeField]
 	float attackStrength = 20;
 
+	// Money awarded for killing this unit
+	[SerializeField]
+	float rewardMoney = 0;
+
+	// Angle to offset turret rotation by
 	[SerializeField]
 	float angleOffset = 90;
 
-	[SerializeField]
-	float heightOffset = 0;
-
+	// Projector showing move range
 	[SerializeField]
 	GameObject moveRangeProjector;
+	// Projector showing attack location and size
 	[SerializeField]
 	GameObject attackRangeProjector;
+	// Prefab containing the projectile to fire
+	[SerializeField]
+	GameObject projectile;
+	// Prefab containing the location marker
+	[SerializeField]
+	GameObject locationMarker;
 
+	// Red material for projector
 	[SerializeField]
 	Material redProjectorMaterial;
+	// Green material for projector
 	[SerializeField]
 	Material greenProjectorMaterial;
 
+	// Currently active projector
 	private GameObject currentProjector;
+	// Currently active location marker
+	private GameObject currentMarker;
 
+	// Used when positioning the attack projector
 	private Vector3 newPosition;
-	private float yAngle;
-	private Vector3 heightOffsetV;
-	private Vector3 lengthOffsetV;
+	
+	// Final angle to rotate turret to each frame
+	private float finalAngle;
 
+	// floats used for timing 'animations'
 	private float animTimer = 0.0f;
+	private float angleAdjustment = 0.0f;
+	private float angleChange;
+	private bool unitHit;
+	private bool unitPhaseMoving, unitMoving, unitMoved, unitAttacking, unitAttacked, unitSelected = false;
+	private NavMeshAgent navMeshAgent;
+	private TurnManager turnManager;
 
 	// Use this for initialization
 	void Start()
 	{
+		turnManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<TurnManager>();
+
+		if (projectile == null)
+		{
+			projectile = Resources.Load<GameObject>("Projectile");
+		}
+		if (locationMarker == null)
+		{
+			locationMarker = Resources.Load<GameObject>("LocationMarker");
+		}
+		rayCamera = Camera.main;
+		navMeshAgent = GetComponentInParent<NavMeshAgent>();
 						MeshFilter[] meshFilters = this.GetComponentsInChildren<MeshFilter>();
 						CombineInstance[] combine = new CombineInstance[meshFilters.Length];
 						int i = 0;
@@ -79,123 +120,60 @@ public class Unit : MonoBehaviour
 						}
 						Mesh combinedMesh = new Mesh();
 						combinedMesh.CombineMeshes(combine);
-
-		//Debug.Log(combinedMesh.bounds.extents.z);
-		//Debug.Log(combinedMesh.bounds.extents.x);
-		heightOffsetV = new Vector3(0, combinedMesh.bounds.extents.y + heightOffset, 0);
-		lengthOffsetV = new Vector3(combinedMesh.bounds.extents.x, 0, 0);
+		
 	}
 
 	// Update is called once per frame
 	void Update()
 	{
-		if (!lockInput && unitSelected && (Time.timeScale != 0))
-		{
-			if (unitTurnStatus == UnitTurnStatus.idle)
-			{
-				if (Input.GetMouseButtonDown(0))
-				{
-					int layer = 8; // Layer 8 is the terrain.
-					int layermask = 1 << layer; // Turn the int into the layermask.
+		
 
-					RaycastHit hit;
-					Ray ray = rayCamera.ScreenPointToRay(Input.mousePosition);
-					Physics.Raycast(ray.origin, ray.direction, hitInfo: out hit, maxDistance: Mathf.Infinity, layerMask: layermask);
-
-					if (hit.collider.gameObject.tag == "Terrain")
-					{
-						newPosition = ray.origin + ray.direction * hit.distance;
-						//todo add offset
-
-						Vector3 direction = (newPosition) - transform.position;
-						RaycastHit obstacleFinder;
-						Physics.Raycast(transform.position, direction, out obstacleFinder, Vector3.Distance(transform.position, newPosition));
-
-						if (obstacleFinder.collider != null)
-						{
-							float temp = newPosition.y;
-							newPosition = (transform.position) + (Vector3.Normalize(direction) * (obstacleFinder.distance -lengthOffsetV.x));
-							newPosition.y = temp;
-						}
-
-						if (Vector3.Distance(newPosition, transform.position - heightOffsetV) <= moveRangeLimit)
-						{
-							unitTurnStatus = UnitTurnStatus.rotating;
-						}
-					}
-				}
-			} else if (unitTurnStatus == UnitTurnStatus.moved)
-			{
-				PositionAttackProjector();
-				if (Input.GetMouseButtonDown(0))
-				{
-					RaycastHit hit;
-					Ray ray = rayCamera.ScreenPointToRay(Input.mousePosition);
-					Physics.Raycast(ray.origin, ray.direction, out hit);
-					Vector3 target = ray.origin + ray.direction * hit.distance;
-
-					if ((attackRange.x <= Vector3.Distance(target, transform.position)) && (Vector3.Distance(target, transform.position) <= attackRange.y))
-					{
-						Collider[] colliderArray = Physics.OverlapSphere(target, attackRadius);
-
-						foreach (Collider collider in colliderArray)
-						{
-							if (collider.gameObject != this.gameObject)
-							{
-								if (collider.CompareTag("Unit"))
-								{
-									collider.gameObject.GetComponent<HealthBar>().TakeDamage(attackStrength);
-								}
-								if (collider.CompareTag("WatchTower"))
-								{
-									collider.gameObject.GetComponent<WatchTowerHealth>().WatchTowerTakeDamage(attackStrength);
-								}
-							}
-						}
-
-						Destroy(currentProjector.gameObject);
-						unitTurnStatus = UnitTurnStatus.attacked;
-					}
-				}
-			}
-		} else if (lockInput) {
-			if (Input.GetMouseButtonUp(0))
-			{
-				lockInput = false;
-			}
-		}
-
-
-		if (unitTurnStatus == UnitTurnStatus.rotating)
-		{
-			Vector3 angleTarget = newPosition;
-			angleTarget.x = angleTarget.x - transform.position.x;
-			angleTarget.z = angleTarget.z - transform.position.z;
-			float angle = Mathf.Atan2(angleTarget.z, angleTarget.x) * Mathf.Rad2Deg;
-			transform.rotation = Quaternion.Euler(new Vector3(-90, -angle + angleOffset, 0));
-
-			unitTurnStatus = UnitTurnStatus.moving;
-		}
-		else if (unitTurnStatus == UnitTurnStatus.moving)
-		{
-			if (!(transform.position == newPosition + heightOffsetV))
-			{
-				transform.position = Vector3.MoveTowards(transform.position, newPosition+ heightOffsetV, Time.deltaTime * moveSpeed);
-			}
-			else
-			{
-				unitTurnStatus = UnitTurnStatus.moved;
-				if (unitSelected)
-				{
-					CreateAttackProjector();
-				}
-			}
-		} else if (unitTurnStatus == UnitTurnStatus.dying)
+		if (unitTurnStatus == UnitTurnStatus.dying)
 		{
 			if (animTimer > 1.0f) {
+				turnManager.UnitKilled(team);
+				System.Random rand = new System.Random();
+				if (!(GameObject.FindGameObjectWithTag("GameManager").GetComponent<TurnManager>().GetActiveTeam() == team))
+				{
+					GameObject.FindGameObjectWithTag("GameManager").GetComponent<Money>().SetMoney((rewardMoney - 5) + rand.Next(0, 10), team);
+				}
 				Destroy(this.gameObject);
 			}
 			animTimer += Time.deltaTime;
+		}
+
+		if (unitHit)
+		{
+			System.Random rand = new System.Random();
+			Vector3 adjustment = new Vector3(rand.Next(-5, 5)*(float)0.03, 0, rand.Next(-5, 5) * (float)0.03);
+			transform.position+=adjustment;
+		}
+	}
+
+	void LateUpdate()
+	{
+		if (unitMoving)
+		{
+			if ((navMeshAgent.remainingDistance < 0.0002) && (navMeshAgent.pathPending == false))
+			{
+				unitMoving = false;
+				unitMoved = true;
+				HasActionsLeft();
+				if (currentProjector != null)
+				{
+					Destroy(currentProjector);
+				}
+				if (currentMarker != null)
+				{
+					Destroy(currentMarker);
+				}
+				GameObject.FindGameObjectWithTag("GameManager").GetComponent<TurnManager>().RunTurrets();
+			}
+		}
+
+		if (unitAttacking)
+		{
+			PositionAttackProjector();
 		}
 	}
 
@@ -239,6 +217,22 @@ public class Unit : MonoBehaviour
 		{
 			currentProjector.GetComponent<Projector>().material = redProjectorMaterial;
 		}
+
+		Vector3 angleTarget = newPosition;
+		angleTarget.x = angleTarget.x - transform.position.x;
+		angleTarget.z = angleTarget.z - transform.position.z;
+		finalAngle = Mathf.Atan2(angleTarget.z, angleTarget.x) * Mathf.Rad2Deg;
+
+		Transform turret = transform.Find("Turret");
+
+		if (turret != null)
+		{
+			transform.Find("Turret").rotation = Quaternion.Euler(new Vector3(-90, -finalAngle + angleOffset, 0));
+		} else
+		{
+			Debug.Log("Cannot turn turret; turning full tank.");
+			transform.rotation = Quaternion.Euler(new Vector3(-90, -finalAngle + angleOffset, 0));
+		}
 	}
 
 	// Tell this unit if it's selected
@@ -249,14 +243,41 @@ public class Unit : MonoBehaviour
 			if (unitTurnStatus == UnitTurnStatus.idle)
 			{
 				CreateMoveProjector();
-			} else if (unitTurnStatus == UnitTurnStatus.moved)
+			}
+			else if (unitTurnStatus == UnitTurnStatus.moved)
 			{
 				CreateAttackProjector();
 			}
-		} else if (currentProjector != null) {
+		}
+		else if (currentProjector != null)
+		{
 			Destroy(currentProjector.gameObject);
 		}
-		lockInput = selectedStatus;
+		unitSelected = selectedStatus;
+	}
+	
+	// Tell this unit if it's selected
+	public void SetSelected(bool selectedStatus, string phase)
+	{
+		if (selectedStatus)
+		{
+			if (phase == "Move" && !unitMoved)
+			{
+				CreateMoveProjector();
+				unitPhaseMoving = true;
+				unitAttacking = false;
+			}
+			else if (phase == "Attack" && !unitAttacked)
+			{
+				unitPhaseMoving = false;
+				unitAttacking = true;
+				CreateAttackProjector();
+			}
+		}
+		else if (currentProjector != null)
+		{
+			Destroy(currentProjector.gameObject);
+		}
 		unitSelected = selectedStatus;
 	}
 
@@ -303,28 +324,164 @@ public class Unit : MonoBehaviour
 		}
 	}
 
-	private void OnMouseDown()
-	{
-		GameObject.FindGameObjectWithTag("GameManager").GetComponent<TurnManager>().SetCurrentUnit(this.gameObject);
-	}
-
 	public bool HasFinishedTurn()
 	{
-		return (unitTurnStatus == UnitTurnStatus.attacked);
+		return (unitMoved && unitAttacked);
+	}
+
+	public bool HasMoved()
+	{
+		return (unitMoved);
+	}
+
+	public bool HasAttacked()
+	{
+		return (unitAttacked);
+	}
+
+	public bool HasPerformedAction(string action)
+	{
+		if(action == "Move")
+		{
+			return HasMoved();
+		} else if (action == "Attack")
+		{
+			return HasAttacked();
+		} else
+		{
+			return false;
+		}
 	}
 
 	public void ResetUnitTurn()
 	{
-		unitTurnStatus = UnitTurnStatus.idle;
+		if (unitTurnStatus == UnitTurnStatus.dying)
+		{
+			Destroy(this.gameObject);
+		}
+
+		foreach (MeshRenderer meshRenderer in this.GetComponentsInChildren<MeshRenderer>())
+		{
+			meshRenderer.material.color = Color.white;
+		}
+
+		// Teleport the tank to it's destination on turn end
+		// Add the base offset to stop it 'sinking' into the ground
+		navMeshAgent.Warp(navMeshAgent.destination + new Vector3(0, navMeshAgent.baseOffset,0));
+		unitPhaseMoving = unitMoving = unitMoved = unitAttacking = unitAttacked = unitSelected = false;
 	}
 
-	public void UnitKilled()
+public void UnitKilled()
 	{
 		animTimer = 0.0f;
 		unitTurnStatus = UnitTurnStatus.dying;
 		foreach (MeshRenderer meshRenderer in this.GetComponentsInChildren<MeshRenderer>())
 		{
 			meshRenderer.material.color = Color.red;
+		}
+	}
+
+	IEnumerator ShakeUnit()
+	{
+		foreach (MeshRenderer meshRenderer in this.GetComponentsInChildren<MeshRenderer>())
+		{
+			meshRenderer.material.color = Color.red;
+		}
+		Vector3 oldPosition = transform.position;
+		unitHit = true;
+		float targetTime = 0.0f;
+		while (targetTime < 1)
+		{
+			targetTime += Time.deltaTime;
+			yield return null;
+		}
+		unitHit = false;
+		transform.position = oldPosition;
+
+		foreach (MeshRenderer meshRenderer in this.GetComponentsInChildren<MeshRenderer>())
+		{
+			meshRenderer.material.color = Color.white;
+		}
+	}
+
+	public void UnitHit()
+	{
+		StartCoroutine("ShakeUnit");
+	}
+
+	private float PositiveMod(float number, float divisor)
+	{
+		// Get the standard C# % value, then add the divisor again to make sure it's +ve, then apply % again to make sure it's in the right range if the first result was positive.
+		return ((number % divisor) + divisor) % divisor;
+	}
+
+	public void MoveTo(Vector3 target)
+	{
+		if ((!unitMoved && unitPhaseMoving) && InMoveRange(target))
+		{
+			currentMarker = Instantiate(locationMarker, target, new Quaternion());
+			navMeshAgent.destination = target;
+			unitMoving = true;
+		}
+	}
+
+	public void FireAt(Vector3 target)
+	{
+		if ((unitAttacking) && (InAttackRange(target)))
+		{
+			GameObject tempObject = Instantiate(projectile, transform.position, Quaternion.Euler(0, transform.parent.localRotation.eulerAngles.y + transform.Find("Turret").localRotation.eulerAngles.z, 0));
+			Projectile projectileS = tempObject.GetComponent<Projectile>();
+				projectileS.SetInfo(target, attackRadius, attackStrength, this.gameObject);
+			Destroy(currentProjector.gameObject);
+			unitAttacking = false;
+			unitAttacked = true;
+			HasActionsLeft();
+		}
+	}
+
+	public bool InMoveRange(Vector3 target)
+	{
+		if (Vector3.Distance(transform.position, target) <= moveRangeLimit)
+		{
+			return true;
+		}
+		return false;
+	}
+
+	public bool InAttackRange(Vector3 target)
+	{
+		if ((Vector3.Distance(transform.position, target) >= attackRange.x) && (Vector3.Distance(transform.position, target) <= attackRange.y))
+		{
+			return true;
+		}
+		return false;
+	}
+
+	public string GetPhase()
+	{
+		if(unitPhaseMoving && !unitMoved && !unitMoving)
+		{
+			return "Move";
+		} else if (unitAttacking)
+		{
+			return "Attack";
+		}
+		return null;
+	}
+
+	private bool HasActionsLeft()
+	{
+		if (!unitMoved || !unitAttacked)
+		{
+			return true;
+		} else
+		{
+			foreach (MeshRenderer meshRenderer in this.GetComponentsInChildren<MeshRenderer>())
+			{
+				meshRenderer.material.color = Color.gray;
+			}
+
+			return false;
 		}
 	}
 }

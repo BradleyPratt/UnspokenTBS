@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Checkpoint : MonoBehaviour {
     public float radius = 200;
+    public float value = 100;
 
     float counter;
 
@@ -11,12 +12,31 @@ public class Checkpoint : MonoBehaviour {
     bool redCheckpointBuilt = false;
     bool blueCheckpointBuilt = false;
 
-    public GameObject checkpointRed;
-    public GameObject checkpointBlue;
-    public GameObject checkpointNeutral;
+    GameObject checkpointRed;
+    GameObject checkpointBlue;
+    GameObject checkpointNeutral;
 
-    // Update is called once per frame
-    void Update () {
+    Projector projector;
+
+    Material circleProjectorRed;
+    Material circleProjectorBlue;
+    Material circleProjectorNeutral;
+
+    void Start()
+	{
+        projector = GetComponentInChildren<Projector>();
+        projector.orthographicSize = radius;
+
+        checkpointRed = (GameObject)Resources.Load("ControlPointUSSR");
+        checkpointBlue = (GameObject)Resources.Load("ControlPointUS");
+        checkpointNeutral = (GameObject)Resources.Load("ControlPointNeutral");
+
+        circleProjectorRed = (Material)Resources.Load("circleProjectorRed");
+        circleProjectorBlue = (Material)Resources.Load("circleProjectorBlue");
+        circleProjectorNeutral = (Material)Resources.Load("circleProjector");
+    }
+	// Update is called once per frame
+	void Update () {
         Colliding(transform.position, radius);
     }
 
@@ -45,8 +65,13 @@ public class Checkpoint : MonoBehaviour {
             if (!neutralCheckpointBuilt) {
                 foreach (Transform child in transform)
                 {
-                    GameObject.Destroy(child.gameObject);
+					if(!child.name.Equals("RangeProjector"))
+					{
+                        projector.material = circleProjectorNeutral;
+                        GameObject.Destroy(child.gameObject);
+					}
                 }
+                projector.material = circleProjectorNeutral;
                 Instantiate(checkpointNeutral, transform);
             }
             neutralCheckpointBuilt = true;
@@ -57,9 +82,14 @@ public class Checkpoint : MonoBehaviour {
         {
             if (!blueCheckpointBuilt) {
                 foreach (Transform child in transform)
-                {
-                    GameObject.Destroy(child.gameObject);
-                }
+				{
+					if (!child.name.Equals("RangeProjector"))
+					{
+                        projector.material = circleProjectorNeutral;
+                        GameObject.Destroy(child.gameObject);
+					}
+				}
+                projector.material = circleProjectorBlue;
                 Instantiate(checkpointBlue, transform);
             }
             blueCheckpointBuilt = true;
@@ -69,9 +99,14 @@ public class Checkpoint : MonoBehaviour {
         else {
             if (!redCheckpointBuilt) {
                 foreach (Transform child in transform)
-                {
-                    GameObject.Destroy(child.gameObject);
-                }
+				{
+					if (!child.name.Equals("RangeProjector"))
+					{
+                        projector.material = circleProjectorNeutral;
+                        GameObject.Destroy(child.gameObject);
+					}
+				}
+                projector.material = circleProjectorRed;
                 Instantiate(checkpointRed, transform);
             }
             redCheckpointBuilt = true;
