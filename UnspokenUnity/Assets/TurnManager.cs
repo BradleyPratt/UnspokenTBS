@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class TurnManager : MonoBehaviour
@@ -21,7 +22,10 @@ public class TurnManager : MonoBehaviour
 
     // Is a tank being placed
     bool tankSpawning = false; // Note to Josh, don't know how to modify your end turn method without breaking anything, I've added a method to change this value when necessary.
-                               // Need to make it so you cant end turn while this value is true.
+							   // Need to make it so you cant end turn while this value is true.
+	// Kill counts. USSRKills is how many tanks the USSR kills, USAKills is how many tanks the USA kills.
+	private int USSRKills = 0;
+	private int USAKills = 0;
 
 	// Use this for initialization
 	void Start()
@@ -63,10 +67,12 @@ public class TurnManager : MonoBehaviour
 	{
 		if(UnitsRemaining("USA") <= 0)
 		{
-			Debug.Log("USSR won.");
+			PlayerPrefs.SetString("winner", "USSR");
+			SceneManager.LoadScene("WinScene");
 		} else if (UnitsRemaining("USSR") <= 0)
 		{
-			Debug.Log("USA won.");
+			PlayerPrefs.SetString("winner", "USA");
+			SceneManager.LoadScene("WinScene");
 		}
 	}
 
@@ -260,12 +266,13 @@ public class TurnManager : MonoBehaviour
         foreach (GameObject checkpoint in checkpoints)
         {
             string owner = checkpoint.GetComponent<Checkpoint>().GetCheckpointOwner();
+            float value = checkpoint.GetComponent<Checkpoint>().value;
             if (owner == "USA" && currentTeam == "USSR")
             {
-                gameObject.GetComponent<Money>().SetUSMoney(100);
+                gameObject.GetComponent<Money>().SetUSMoney(value);
             } else if (owner == "USSR" && currentTeam == "USA")
             {
-                gameObject.GetComponent<Money>().SetUSSRMoney(100);
+                gameObject.GetComponent<Money>().SetUSSRMoney(value);
             }
         }
     }
@@ -274,8 +281,46 @@ public class TurnManager : MonoBehaviour
         tankSpawning = spawning;
     }
 
+	public int GetKills(string team)
+	{
+		if (team == "USA") {
+			return GetUSAKills();
+		} else if (team == "USSR")
+		{
+			return GetUSSRKills();
+		}
+		else
+		{
+			return 0;
+		}
+	}
+
+	public int GetUSSRKills()
+	{
+		return USSRKills;
+	}
+
+	public int GetUSAKills()
+	{
+		return USAKills;
+	}
+
+	public void UnitKilled(string team)
+	{
+		if (team == "USA")
+		{
+			USSRKills++;
+		} else if (team == "USSR")
+		{
+			USAKills++;
+		}
+	}
+
 	public void RunTurrets()
 	{
-
+		foreach(GameObject turret in GameObject.FindGameObjectsWithTag("Turret"))
+		{
+			turret.GetComponent<Turret>().CheckForTargets();
+		}
 	}
 }

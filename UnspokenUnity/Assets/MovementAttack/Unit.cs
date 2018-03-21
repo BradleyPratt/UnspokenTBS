@@ -83,10 +83,13 @@ public class Unit : MonoBehaviour
 	private bool unitHit;
 	private bool unitPhaseMoving, unitMoving, unitMoved, unitAttacking, unitAttacked, unitSelected = false;
 	private NavMeshAgent navMeshAgent;
+	private TurnManager turnManager;
 
 	// Use this for initialization
 	void Start()
 	{
+		turnManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<TurnManager>();
+
 		if (projectile == null)
 		{
 			projectile = Resources.Load<GameObject>("Projectile");
@@ -121,12 +124,13 @@ public class Unit : MonoBehaviour
 		if (unitTurnStatus == UnitTurnStatus.dying)
 		{
 			if (animTimer > 1.0f) {
-				Destroy(this.gameObject);
+				turnManager.UnitKilled(team);
 				System.Random rand = new System.Random();
 				if (!(GameObject.FindGameObjectWithTag("GameManager").GetComponent<TurnManager>().GetActiveTeam() == team))
 				{
-					GameObject.FindGameObjectWithTag("GameManger").GetComponent<Money>().SetMoney((rewardMoney - 5) + rand.Next(0, 10), team);
+					GameObject.FindGameObjectWithTag("GameManager").GetComponent<Money>().SetMoney((rewardMoney - 5) + rand.Next(0, 10), team);
 				}
+				Destroy(this.gameObject);
 			}
 			animTimer += Time.deltaTime;
 		}
@@ -246,7 +250,6 @@ public class Unit : MonoBehaviour
 	// Tell this unit if it's selected
 	public void SetSelected(bool selectedStatus, string phase)
 	{
-		Debug.Log(phase);
 		if (selectedStatus)
 		{
 			if (phase == "Move" && !unitMoved)
@@ -314,7 +317,31 @@ public class Unit : MonoBehaviour
 
 	public bool HasFinishedTurn()
 	{
-		return (unitTurnStatus == UnitTurnStatus.attacked);
+		return (unitMoved && unitAttacked);
+	}
+
+	public bool HasMoved()
+	{
+		return (unitMoved);
+	}
+
+	public bool HasAttacked()
+	{
+		return (unitAttacked);
+	}
+
+	public bool HasPerformedAction(string action)
+	{
+		if(action == "Move")
+		{
+			return HasMoved();
+		} else if (action == "Attack")
+		{
+			return HasAttacked();
+		} else
+		{
+			return false;
+		}
 	}
 
 	public void ResetUnitTurn()
@@ -322,20 +349,13 @@ public class Unit : MonoBehaviour
 		if (unitTurnStatus == UnitTurnStatus.dying)
 		{
 			Destroy(this.gameObject);
-		} else if (unitTurnStatus == UnitTurnStatus.moving)
-		{
-			transform.position = newPosition + heightOffsetV;
-		} else if (unitTurnStatus == UnitTurnStatus.rotating)
-		{
-			transform.rotation = Quaternion.Euler(new Vector3(-90, -finalAngle + angleOffset, 0));
-			transform.position = newPosition + heightOffsetV;
-		} else if (unitTurnStatus == UnitTurnStatus.attacked)
-		{
-			foreach (MeshRenderer meshRenderer in this.GetComponentsInChildren<MeshRenderer>())
-			{
-				meshRenderer.material.color = Color.white;
-			}
 		}
+
+		foreach (MeshRenderer meshRenderer in this.GetComponentsInChildren<MeshRenderer>())
+		{
+			meshRenderer.material.color = Color.white;
+		}
+
 		unitPhaseMoving = unitMoving = unitMoved = unitAttacking = unitAttacked = unitSelected = false;
 	}
 
@@ -361,7 +381,6 @@ public void UnitKilled()
 		while (targetTime < 1)
 		{
 			targetTime += Time.deltaTime;
-			Debug.Log(targetTime);
 			yield return null;
 		}
 		unitHit = false;
@@ -398,10 +417,9 @@ public void UnitKilled()
 	{
 		if ((unitAttacking) && (InAttackRange(target)))
 		{
-			GameObject tempObject = Instantiate(projectile, transform.position, transform.rotation);
-			tempObject.GetComponent<Projectile>().SetTarget(target);
-			tempObject.GetComponent<Projectile>().SetAttackRadius(attackRadius);
-			tempObject.GetComponent<Projectile>().SetAttackStrength(attackStrength);
+			GameObject tempObject = Instantiate(projectile, transform.position, Quaternion.Euler(0, transform.parent.localRotation.eulerAngles.y + transform.Find("Turret").localRotation.eulerAngles.z, 0));
+			Projectile projectileS = tempObject.GetComponent<Projectile>();
+				projectileS.SetInfo(target, attackRadius, attackStrength, this.gameObject);
 			Destroy(currentProjector.gameObject);
 			unitAttacking = false;
 			unitAttacked = true;
