@@ -6,6 +6,7 @@ public class MiniMap : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		// Find all mini map icons, and enable them when the game starts
 		foreach(GameObject item in GameObject.FindGameObjectsWithTag("MiniMapItem"))
 		{
 			MeshRenderer meshRenderer = item.GetComponent<MeshRenderer>();

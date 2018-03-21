@@ -59,51 +59,55 @@ public class CursorManager : MonoBehaviour
 				Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 				Physics.Raycast(ray.origin, ray.direction, hitInfo: out hit, maxDistance: Mathf.Infinity);
 
-				// Check if we hit a unit
-				bool colliderIsUnit = false;
-				if (hit.collider.gameObject.GetComponent<Unit>() != null)
+				// Check we hit something
+				if (hit.collider != null)
 				{
-					colliderIsUnit = true;
-				}
-
-				// If we hit a unit and it's on our team and can still perform the current action.
-				if (colliderIsUnit && (turnManager.GetActiveTeam() == hit.collider.gameObject.GetComponent<Unit>().GetTeam()) && (!hit.collider.gameObject.GetComponent<Unit>().HasPerformedAction(phase)))
-				{
-					SetAction(CurrentAction.selecting);
-				}
-				// If there's a current unit, we hit the ground, the unit is on our team, and it's in the move phase, and in movement range.
-				else if (unitSet && (((hit.collider.tag == "Terrain") && (turnManager.GetCurrentUnit().GetComponent<Unit>().GetTeam() == turnManager.GetActiveTeam())) && (turnManager.GetCurrentUnit().GetComponent<Unit>().GetPhase() == "Move") && (turnManager.GetCurrentUnit().GetComponent<Unit>().InMoveRange(hit.point))))
-				{
-					SetAction(CurrentAction.moving);
-				}
-				// If there's a current unit, and it's on our team, and it's in the attack phase, and in attack range.
-				else if (unitSet && ((turnManager.GetCurrentUnit().GetComponent<Unit>().GetTeam() == turnManager.GetActiveTeam()) && (turnManager.GetCurrentUnit().GetComponent<Unit>().GetPhase() == "Attack") && (turnManager.GetCurrentUnit().GetComponent<Unit>().InAttackRange(hit.point))))
-				{
-					SetAction(CurrentAction.attacking);
-				}
-				// Otherwise, it's just the idle cursor.
-				else
-				{
-					SetAction(CurrentAction.idle);
-				}
-
-				// If the user clicked, check what we're currently doing, then do that action
-				if (Input.GetMouseButtonDown(0))
-				{
-					if (currentAction == CurrentAction.selecting)
+					// Check if we hit a unit
+					bool colliderIsUnit = false;
+					if (hit.collider.gameObject.GetComponent<Unit>() != null)
 					{
-						if (hit.collider.tag == "Unit")
+						colliderIsUnit = true;
+					}
+
+					// If we hit a unit and it's on our team and can still perform the current action.
+					if (colliderIsUnit && (turnManager.GetActiveTeam() == hit.collider.gameObject.GetComponent<Unit>().GetTeam()) && (!hit.collider.gameObject.GetComponent<Unit>().HasPerformedAction(phase)))
+					{
+						SetAction(CurrentAction.selecting);
+					}
+					// If there's a current unit, we hit the ground, the unit is on our team, and it's in the move phase, and in movement range.
+					else if (unitSet && (((hit.collider.tag == "Terrain") && (turnManager.GetCurrentUnit().GetComponent<Unit>().GetTeam() == turnManager.GetActiveTeam())) && (turnManager.GetCurrentUnit().GetComponent<Unit>().GetPhase() == "Move") && (turnManager.GetCurrentUnit().GetComponent<Unit>().InMoveRange(hit.point))))
+					{
+						SetAction(CurrentAction.moving);
+					}
+					// If there's a current unit, and it's on our team, and it's in the attack phase, and in attack range.
+					else if (unitSet && ((turnManager.GetCurrentUnit().GetComponent<Unit>().GetTeam() == turnManager.GetActiveTeam()) && (turnManager.GetCurrentUnit().GetComponent<Unit>().GetPhase() == "Attack") && (turnManager.GetCurrentUnit().GetComponent<Unit>().InAttackRange(hit.point))))
+					{
+						SetAction(CurrentAction.attacking);
+					}
+					// Otherwise, it's just the idle cursor.
+					else
+					{
+						SetAction(CurrentAction.idle);
+					}
+
+					// If the user clicked, check what we're currently doing, then do that action
+					if (Input.GetMouseButtonDown(0))
+					{
+						if (currentAction == CurrentAction.selecting)
 						{
-							turnManager.SetCurrentUnit(hit.collider.gameObject, phase);
+							if (hit.collider.tag == "Unit")
+							{
+								turnManager.SetCurrentUnit(hit.collider.gameObject, phase);
+							}
 						}
-					}
-					else if (currentAction == CurrentAction.moving)
-					{
-						turnManager.GetCurrentUnit().GetComponent<Unit>().MoveTo(hit.point);
-					}
-					else if (currentAction == CurrentAction.attacking)
-					{
-						turnManager.GetCurrentUnit().GetComponent<Unit>().FireAt(hit.point);
+						else if (currentAction == CurrentAction.moving)
+						{
+							turnManager.GetCurrentUnit().GetComponent<Unit>().MoveTo(hit.point);
+						}
+						else if (currentAction == CurrentAction.attacking)
+						{
+							turnManager.GetCurrentUnit().GetComponent<Unit>().FireAt(hit.point);
+						}
 					}
 				}
 			}
