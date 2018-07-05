@@ -14,6 +14,9 @@ public class TurnManager : MonoBehaviour
 	// Unit which is currently active.
 	private GameObject currentUnit;
 
+    public Text Timertext;
+    public float Remaining = 10;
+
 	// The current active team. USA or USSR
 	private string currentTeam = "USA";
 
@@ -30,6 +33,7 @@ public class TurnManager : MonoBehaviour
 	// Use this for initialization
 	void Start()
 	{
+        Timertext = GetComponent<Text>();
 
         // Find all units and add them to their team's list.
         GameObject[] tempUnits = GameObject.FindGameObjectsWithTag("Unit");
@@ -65,6 +69,15 @@ public class TurnManager : MonoBehaviour
 	// Update is called once per frame
 	void Update()
 	{
+        Remaining -= Time.deltaTime;
+        Timertext.text = Remaining.ToString("F");
+        print(Remaining);
+
+        if(Remaining <= 0)
+        {
+            EndTurn();
+        }
+
 		if(UnitsRemaining("USA") <= 0)
 		{
 			PlayerPrefs.SetString("winner", "USSR");
@@ -75,6 +88,7 @@ public class TurnManager : MonoBehaviour
 			SceneManager.LoadScene("WinScene");
 		}
 	}
+
 
 	public void EndTurn()
 	{

@@ -9,6 +9,7 @@ public class HealthBar : MonoBehaviour {
     public float largeHP;
     public float mediumHP;
     public float smallHP;
+    public float tinyHP;
 
     public float currentHp; 
     Slider healthSlider; //HealthSlider, needed for creating Health Sliders
@@ -24,6 +25,7 @@ public class HealthBar : MonoBehaviour {
         turretHP = GameObject.Find("GameManager").GetComponent<HealthBar>().turretHP;
         largeHP = GameObject.Find("GameManager").GetComponent<HealthBar>().largeHP;
         mediumHP = GameObject.Find("GameManager").GetComponent<HealthBar>().mediumHP;
+        tinyHP = GameObject.Find("GameManager").GetComponent<HealthBar>().tinyHP;
         smallHP = GameObject.Find("GameManager").GetComponent<HealthBar>().smallHP; // This and above to make sure difference instances maintain the same value
 
         health = 0;
@@ -56,6 +58,10 @@ public class HealthBar : MonoBehaviour {
             case "Turret":
             health = largeHP;
             break;
+
+            case "Tiny":
+                health = largeHP;
+                break;
 
             default:
             break;

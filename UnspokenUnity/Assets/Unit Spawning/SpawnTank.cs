@@ -8,6 +8,7 @@ public class SpawnTank : MonoBehaviour {
     Button smallButton;
     Button mediumButton;
     Button largeButton;
+    Button SoldierButton;
 
     TurnManager turnManager;
     Money money;
@@ -15,6 +16,7 @@ public class SpawnTank : MonoBehaviour {
     GameObject largeTankUS;
     GameObject mediumTankUS;
     GameObject smallTankUS;
+    GameObject SoldierUS;
 
     GameObject largeTankUSSR;
     GameObject mediumTankUSSR;
@@ -39,10 +41,12 @@ public class SpawnTank : MonoBehaviour {
         smallButton = GameObject.Find("SmallSpawnButton").GetComponent<Button>();
         mediumButton = GameObject.Find("MediumSpawnButton").GetComponent<Button>();
         largeButton = GameObject.Find("LargeSpawnButton").GetComponent<Button>();
+        SoldierButton = GameObject.Find("SoldierSpawnButton").GetComponent<Button>();
 
         smallButton.onClick.AddListener(SmallTaskOnClick);
         mediumButton.onClick.AddListener(MediumTaskOnClick);
         largeButton.onClick.AddListener(LargeTaskOnClick);
+        SoldierButton.onClick.AddListener(SoldierTaskOnClick);
 
         //midPoint = new Vector3(-10, 16, -112);
         Vector3 checkPointMid = GameObject.Find("CheckpointMid").transform.position;
@@ -67,6 +71,7 @@ public class SpawnTank : MonoBehaviour {
         mediumTankUSSR = (GameObject)Resources.Load("MediumTankUSSRPrefab");
         largeTankUSSR = (GameObject)Resources.Load("LargeTankUSSRPrefab");
         spawningTank = (GameObject)Resources.Load("SpawningTank");
+        SoldierUS = (GameObject)Resources.Load("Soldier");
     }
 
     private void SmallTaskOnClick() {
@@ -111,6 +116,36 @@ public class SpawnTank : MonoBehaviour {
         }
     }
 
+    private void SoldierTaskOnClick()
+    {
+        if (!spawning)
+        {
+            float USMoney = money.GetUSMoney();
+            float USSRMoney = money.GetUSSRMoney();
+
+            if (turnManager.GetActiveTeam() == "USA")
+            {
+                isUS = true;
+            }
+            else
+            {
+                isUS = false;
+            }
+
+            if (mediumButton.name == "SoldierSpawnButton")
+            {
+                if (isUS && USMoney - 200 >= 0)
+                {
+                    PlaceTank(mediumTankUS);
+                }
+                else if (!isUS && USSRMoney - 200 >= 0)
+                {
+                    PlaceTank(mediumTankUSSR);
+                }
+            }
+        }
+    }
+
     private void LargeTaskOnClick() {
         if (!spawning) {
             float USMoney = money.GetUSMoney();
@@ -129,6 +164,7 @@ public class SpawnTank : MonoBehaviour {
 
             }
         }
+
 
     }
 
@@ -215,6 +251,10 @@ public class SpawnTank : MonoBehaviour {
 
             case "LargeTankUSSRPrefab":
             money.SetUSSRMoney(-800);
+            break;
+
+            case "Soldier":
+            money.SetUSSRMoney(-200);
             break;
 
             default:
